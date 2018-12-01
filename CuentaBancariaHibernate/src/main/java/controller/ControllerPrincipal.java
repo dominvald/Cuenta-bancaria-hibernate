@@ -1497,7 +1497,7 @@ public class ControllerPrincipal {
 					cadenaDatos = "###";
 					errorDatosIntroducidos = false;
 					mostrarMenuOperacionesConClientes();
-				} else if(cadenaDatos==""){
+				} else if(cadenaDatos==1){
 					if (cadenaDatos.equals(cadenaCancelar)) {
 						cadenaDatos = "%#%";
 					}
