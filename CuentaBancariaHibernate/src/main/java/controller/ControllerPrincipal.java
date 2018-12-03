@@ -186,6 +186,7 @@ public class ControllerPrincipal {
 	 * Guarda la cadena con el país nuevo a crear o modificar de la tabla dirección.
 	 */
 	private String paisNuevo = "";
+	private int idDireccionOperaciones=0;
 
 	/**
 	 * Guarda el Nº de registros a mostrar por página.
@@ -539,7 +540,7 @@ public class ControllerPrincipal {
 	private void mostrarMenuOperacionesConClientes() throws Exception {
 		while (true) {
 			viewMain.verClienteDireccionSaldo(
-					daoClienteOperaciones.mostrarClienteDireccionSaldo(clienteOperaciones.getId()));
+					clienteDireccionSaldoOperaciones=daoClienteOperaciones.mostrarClienteDireccionSaldo(clienteOperaciones.getId()));
 			viewMain.escribirEnConsola("------------------------------------------");
 			viewMain.escribirEnConsola("|   PRÁCTICA CUENTAS BANCARIAS HIBERNATE  |");
 			viewMain.escribirEnConsola(
@@ -583,7 +584,8 @@ public class ControllerPrincipal {
 				break;
 			// 3. Modificar datos del cliente.
 			case "3":
-				viewMain.verClienteDireccionSaldo(clienteDireccionSaldoOperaciones);
+				//viewMain.verClienteDireccionSaldo(clienteDireccionSaldoOperaciones);
+				//System.out.println("clienteDireccionSaldoOperaciones: "+clienteDireccionSaldoOperaciones.getDireccionDireccion());
 				mostrarMenuModificarDatosPersonalesDireccionClientes();
 				break;
 			// 4. Eliminar cliente.
@@ -610,8 +612,11 @@ public class ControllerPrincipal {
 
 	private void mostrarMenuModificarDatosPersonalesDireccionClientes() throws Exception {
 		while (true) {
+			idDireccionOperaciones=daoClienteOperaciones.find(clienteOperaciones.getId()).getDireccion().getId();
+			direccionOperaciones.setId(idDireccionOperaciones);
 			viewMain.verClienteDireccionSaldo(
-					daoClienteOperaciones.mostrarClienteDireccionSaldo(clienteOperaciones.getId()));
+					clienteDireccionSaldoOperaciones=daoClienteOperaciones.mostrarClienteDireccionSaldo(clienteOperaciones.getId()));
+			
 			viewMain.verCliente(clienteOperaciones, "CLIENTE A MODIFICAR.");
 			viewMain.escribirEnConsola("------------------------------------------");
 			viewMain.escribirEnConsola("|   PRÁCTICA CUENTAS BANCARIAS HIBERNATE. |");
@@ -640,16 +645,11 @@ public class ControllerPrincipal {
 			switch (opcionStringSeleccionadaMenu) {
 			// 1. Modificar datos del cliente.
 			case "1":
-				extraerDatosClienteSeleccionado();
-				imprimirDatosClienteSeleccionado();
-				// solicitarDatosCliente();
-				System.out.println("He salido");
-				// modificarDatos();
+				solicitudDatosClienteModificar();
 				break;
 			// 2. Modificar dirección.
 			case "2":
-				// imprimirDatosDireccionSeleccionado();
-				// modificarDireccion();
+				solicitudDireccionClienteModificar();
 				break;
 			// 3. Volver atrás.
 			case "3":
@@ -1136,7 +1136,6 @@ public class ControllerPrincipal {
 					return null;
 				}
 				try {
-					System.out.println("cadenaDatos vale: " + cadenaDatos);
 					Cliente cliente = serviceCliente.find(Integer.parseInt(cadenaDatos));
 					// Devolvemos el cliente
 					return cliente;
@@ -1378,6 +1377,8 @@ public class ControllerPrincipal {
 				if (idClienteNuevo != -1) {
 					viewMain.escribirEnConsola("\n\tCliente creado correctamente");
 					viewMain.muestraDatosClienteNuevo(cifNuevo, nombreNuevo, apellido1Nuevo, apellido2Nuevo);
+					ejecutarOrdenIntroducciónDatosSiNoCancelar("¿Quiere añadir una dirección?",
+							"<<< Formato: Sí<s> No<n> Cancelar<" + cadenaCancelar + "> >>>", "Introducir dirección.");
 					// Para que salga
 					todoCorrecto = false;
 				} else {
@@ -1385,12 +1386,9 @@ public class ControllerPrincipal {
 				}
 			} else {
 				Sonido.sonar();
-				viewMain.escribirEnConsola("\n\n\tCLIENTE NO CREADO porque no está todo correcto");
+				viewMain.escribirEnConsola(
+						"\n\n\tCLIENTE NO CREADO porque no está todo correcto o el usuario ha cancelado la operación.");
 			}
-		}
-		if (todoCorrecto) {
-			ejecutarOrdenIntroducciónDatosSiNoCancelar("¿Quiere añadir una dirección?",
-					"<<< Formato: Sí<s> No<n> Cancelar<" + cadenaCancelar + "> >>>", "Introducir dirección.");
 		}
 
 	}
@@ -1451,6 +1449,33 @@ public class ControllerPrincipal {
 
 	}
 
+	private void solicitudDatosClienteModificar() {
+
+		ejecutarOrdenIntroducciónDatosSiNoCancelar("¿Quiere modificar el CIF?",
+				"<<< Formato: Sí<s> No<n> Cancelar<" + cadenaCancelar + "> >>>", "Modificar CIF.");
+		ejecutarOrdenIntroducciónDatosSiNoCancelar("¿Quiere modificar el Nombre?",
+				"<<< Formato: Sí<s> No<n> Cancelar<" + cadenaCancelar + "> >>>", "Modificar Nombre.");
+		ejecutarOrdenIntroducciónDatosSiNoCancelar("¿Quiere modificar el Primer apellido?",
+				"<<< Formato: Sí<s> No<n> Cancelar<" + cadenaCancelar + "> >>>", "Modificar Primer apellido.");
+		ejecutarOrdenIntroducciónDatosSiNoCancelar("¿Quiere modificar el Segundo apellido?",
+				"<<< Formato: Sí<s> No<n> Cancelar<" + cadenaCancelar + "> >>>", "Modificar Segundo apellido.");
+
+	}
+	private void solicitudDireccionClienteModificar() {
+
+		ejecutarOrdenIntroducciónDatosSiNoCancelar("¿Quiere modificar la Dirección?",
+				"<<< Formato: Sí<s> No<n> Cancelar<" + cadenaCancelar + "> >>>", "Modificar Dirección.");
+		ejecutarOrdenIntroducciónDatosSiNoCancelar("¿Quiere modificar el C.P.?",
+				"<<< Formato: Sí<s> No<n> Cancelar<" + cadenaCancelar + "> >>>", "Modificar C.P.");
+		ejecutarOrdenIntroducciónDatosSiNoCancelar("¿Quiere modificar la Provincia?",
+				"<<< Formato: Sí<s> No<n> Cancelar<" + cadenaCancelar + "> >>>", "Modificar Provincia.");
+		ejecutarOrdenIntroducciónDatosSiNoCancelar("¿Quiere modificar la Población?",
+				"<<< Formato: Sí<s> No<n> Cancelar<" + cadenaCancelar + "> >>>", "Modificar Población.");
+		ejecutarOrdenIntroducciónDatosSiNoCancelar("¿Quiere modificar el País?",
+				"<<< Formato: Sí<s> No<n> Cancelar<" + cadenaCancelar + "> >>>", "Modificar País.");
+
+	}
+
 	// MOVIMIENTOS
 	private void datosMovimientoNuevo() throws SQLException, Exception {
 		/**
@@ -1474,39 +1499,58 @@ public class ControllerPrincipal {
 			// Comprobamos que el saldo es mayor de 0.00 €
 			if (saldoClienteSeleccionado.compareTo(datosBigDecimal) == 1) {
 				retirar = true;
-				viewMain.escribirEnConsola("<<< Formato. Cancelar<"
-						+ cadenaCancelar + "> Ingresar<i> o Retirar<r> >>>");
-				cadenaDatos = scanner.nextLine().toLowerCase();
-				if (verSiCancelado(cadenaDatos, "Hacer un ingreso")) {
-					cadenaDatos = "###";
-					errorDatosIntroducidos = false;
-					mostrarMenuOperacionesConClientes();
-				} else {
-					if (cadenaDatos.equals(cadenaCancelar)) {
-						cadenaDatos = "%#%";
+				do {
+					viewMain.escribirEnConsola("¿Ingresar <i> o Retirar<r>. Cancelar<" + cadenaCancelar + ">");
+					cadenaDatos = scanner.nextLine().toLowerCase();
+					if (verSiCancelado(cadenaDatos, "Hacer un ingreso")) {
+						cadenaDatos = "###";
+						mostrarMenuOperacionesConClientes();
+					} else {
+						if (cadenaDatos.equals(cadenaCancelar)) {
+							cadenaDatos = "%#%";
+							errorDatosIntroducidos = false;
+						} else {
+							if (cadenaDatos.equals("i")) {
+								errorDatosIntroducidos = true;
+							} else if (cadenaDatos.equals("r")) {
+								errorDatosIntroducidos = true;
+							} else {
+								viewMain.escribirEnConsola("Datos no válidos");
+								errorDatosIntroducidos = false;
+							}
+						}
 					}
-				}
+				} while (errorDatosIntroducidos == false);
 				// Si el saldo es 0.00 €, sólo podrá ingresar
 			} else {
 				retirar = false;
-				viewMain.escribirEnConsola(
-						"Su saldo es de 0.00€. Sólo podrá hacer ingresos. ¿Desea hacer un ingreso? <s/n>. \n<<< Formato. Cancelar<"
-								+ cadenaCancelar + "> Sí<s>. No<n>. Cancelar<+cadenaCancelar+>  >>>");
-				cadenaDatos = scanner.nextLine().toLowerCase();
-				if (verSiCancelado(cadenaDatos, "Hacer un ingreso")) {
-					cadenaDatos = "###";
-					errorDatosIntroducidos = false;
-					mostrarMenuOperacionesConClientes();
-				} //else if(cadenaDatos==1){
-					if (cadenaDatos.equals(cadenaCancelar)) {
-						cadenaDatos = "%#%";
+				do {
+					viewMain.escribirEnConsola(
+							"Su saldo es de 0.00€. Sólo podrá hacer ingresos. ¿Desea hacer un ingreso? <s/n>. \\n<<< Formato. Cancelar<\"\r\n"
+									+ "								+ cadenaCancelar + \"> Sí<s>. No<n>. Cancelar<+cadenaCancelar+>  >>>");
+					cadenaDatos = scanner.nextLine().toLowerCase();
+					if (verSiCancelado(cadenaDatos, "Hacer un ingreso")) {
+						cadenaDatos = "###";
+						mostrarMenuOperacionesConClientes();
+					} else {
+						if (cadenaDatos.equals(cadenaCancelar)) {
+							cadenaDatos = "%#%";
+							errorDatosIntroducidos = false;
+						} else {
+							if (cadenaDatos.toLowerCase().equals("n")) {
+								viewMain.escribirEnConsola("Operación cancelada por el cliente");
+								mostrarMenuOperacionesConClientes();
+							} else if (cadenaDatos.toLowerCase().equals("s")) {
+								cadenaDatos = "i";
+								errorDatosIntroducidos = true;
+							} else {
+								viewMain.escribirEnConsola("Datos no válidos");
+								errorDatosIntroducidos = false;
+							}
+						}
 					}
-				}
-				else {
-					if (cadenaDatos.equals(cadenaCancelar)) {
-						cadenaDatos = "%#%";
-					}
-				}
+				} while (errorDatosIntroducidos == false);
+
 			}
 			if (cadenaDatos.toLowerCase().equals("i")) {
 				do {
@@ -1519,7 +1563,7 @@ public class ControllerPrincipal {
 							errorDatosIntroducidos = true;
 							mostrarMenuOperacionesConClientes();
 						} else {
-							if (cadenaDatos.equals(cadenaCancelar)) {
+							if (cadenaDatos.toLowerCase().equals(cadenaCancelar)) {
 								cadenaDatos = "%#%";
 								errorDatosIntroducidos = false;
 							} else {
@@ -1592,7 +1636,7 @@ public class ControllerPrincipal {
 					errorDatosIntroducidos = false;
 				} else {
 					if (!cadenaDatos.equals("%#%")) {
-						System.out.println("cadenaDatos vale:"+cadenaDatos);
+						System.out.println("cadenaDatos vale:" + cadenaDatos);
 						viewMain.escribirEnConsola("Datos no válidos.");
 						errorDatosIntroducidos = true;
 					}
@@ -1619,7 +1663,80 @@ public class ControllerPrincipal {
 				if (cadenaDatos.equals("s")) {
 					if (orden.equals("¿Quiere añadir una dirección?")) {
 						solicitudDatosDirecciónGeneral(idClienteNuevo);
-						serviceCliente.updateDireccion(idClienteNuevo, direccionOperaciones);
+						serviceCliente.updateClienteSinDireccion(idClienteNuevo, direccionOperaciones);
+						todoCorrecto = false;
+					} else if (orden.equals("¿Quiere modificar el CIF?")) {
+						viewMain.escribirEnConsola("CIF actual:" + clienteOperaciones.getCif());
+						solicitarDatosCorrectosOno("CIF", "Introducir CIF", 9, 9, false, false,
+								"El CIF debe contener: 9 dígitos");
+						clienteOperaciones.setCif(cadenaDatos);
+						serviceCliente.updateClienteDatos(clienteOperaciones.getId(), clienteOperaciones);
+						viewMain.escribirEnConsola("CIF actualizado correctamente");
+						todoCorrecto = false;
+					} else if (orden.equals("¿Quiere modificar el Nombre?")) {
+						viewMain.escribirEnConsola("Nombre actual:" + clienteOperaciones.getNombre());
+						solicitarDatosCorrectosOno("Nombre", "Introducir Nombre", 1, 30, false, false,
+								"Nombre: Longitud mínima: 1. Longitud máxima: 30");
+						clienteOperaciones.setNombre(cadenaDatos);
+						serviceCliente.updateClienteDatos(clienteOperaciones.getId(), clienteOperaciones);
+						viewMain.escribirEnConsola("Nombre actualizado correctamente");
+						todoCorrecto = false;
+					} else if (orden.equals("¿Quiere modificar el Primer apellido?")) {
+						viewMain.escribirEnConsola("Primer apellido actual:" + clienteOperaciones.getApellido1());
+						solicitarDatosCorrectosOno("Primer apellido", "Introducir Primer apellido", 1, 30, false, false,
+								"Primer apellido: Longitud mínima: 1. Longitud máxima: 30");
+						clienteOperaciones.setApellido1(cadenaDatos);
+						serviceCliente.updateClienteDatos(clienteOperaciones.getId(), clienteOperaciones);
+						viewMain.escribirEnConsola("Primer apellido actualizado correctamente");
+						todoCorrecto = false;
+					} else if (orden.equals("¿Quiere modificar el Segundo apellido?")) {
+						viewMain.escribirEnConsola("Segundo apellido actual:" + clienteOperaciones.getApellido2());
+						solicitarDatosCorrectosOno("Segundo apellido", "Introducir Primer apellido", 1, 30, false,
+								false, "Segundo apellido: Longitud mínima: 1. Longitud máxima: 30");
+						clienteOperaciones.setApellido2(cadenaDatos);
+						serviceCliente.updateClienteDatos(clienteOperaciones.getId(), clienteOperaciones);
+						viewMain.escribirEnConsola("Segundo apellido actualizado correctamente");
+						todoCorrecto = false;
+					}else if (orden.equals("¿Quiere modificar la Dirección?")) {
+						viewMain.escribirEnConsola("Dirección actual:" + clienteDireccionSaldoOperaciones.getDireccionDireccion());
+						solicitarDatosCorrectosOno("Dirección", "Introducir Dirección", 1, 30, false,
+								false, "Dirección: Longitud mínima: 1. Longitud máxima: 30");
+						direccionOperaciones.setDireccion(cadenaDatos);
+						serviceCliente.updateClienteDireccion(direccionOperaciones.getId(), direccionOperaciones,"direccion");
+						viewMain.escribirEnConsola("Dirección actualizada correctamente");
+						todoCorrecto = false;
+					}else if (orden.equals("¿Quiere modificar el C.P.?")) {
+						viewMain.escribirEnConsola("C.P actual:" + clienteDireccionSaldoOperaciones.getDireccionCp());
+						solicitarDatosCorrectosOno("C.P", "Introducir C.P:", 5, 5, true,
+								false, "C.P: Longitud mínima: 5. Longitud máxima: 5");
+						direccionOperaciones.setCp(cadenaDatos);
+						serviceCliente.updateClienteDireccion(direccionOperaciones.getId(), direccionOperaciones,"cp");
+						viewMain.escribirEnConsola("C.P actualizado correctamente");
+						todoCorrecto = false;
+					}else if (orden.equals("¿Quiere modificar la Provincia?")) {
+						viewMain.escribirEnConsola("Provincia actual:" + clienteDireccionSaldoOperaciones.getDireccionProvincia());
+						solicitarDatosCorrectosOno("Provincia", "Introducir Provincia:", 1, 30, false,
+								false, "Provincia: Longitud mínima: 1. Longitud máxima: 30");
+						direccionOperaciones.setProvincia(cadenaDatos);
+						serviceCliente.updateClienteDireccion(direccionOperaciones.getId(), direccionOperaciones,"provincia");
+						viewMain.escribirEnConsola("Provincia actualizada correctamente");
+						todoCorrecto = false;
+					}else if (orden.equals("¿Quiere modificar la Población?")) {
+						viewMain.escribirEnConsola("Población actual:" + clienteDireccionSaldoOperaciones.getDireccionPoblacion());
+						solicitarDatosCorrectosOno("Población", "Introducir Población:", 1, 30, false,
+								false, "Población: Longitud mínima: 1. Longitud máxima: 30");
+						direccionOperaciones.setPoblacion(cadenaDatos);
+						serviceCliente.updateClienteDireccion(direccionOperaciones.getId(), direccionOperaciones,"poblacion");
+						viewMain.escribirEnConsola("Población actualizada correctamente");
+						todoCorrecto = false;
+					}else if (orden.equals("¿Quiere modificar el País?")) {
+						viewMain.escribirEnConsola("País actual:" + clienteDireccionSaldoOperaciones.getDireccionPais());
+						solicitarDatosCorrectosOno("País", "Introducir País:", 1, 30, false,
+								false, "País: Longitud mínima: 1. Longitud máxima: 30");
+						direccionOperaciones.setPais(cadenaDatos);
+						serviceCliente.updateClienteDireccion(direccionOperaciones.getId(), direccionOperaciones,"pais");
+						viewMain.escribirEnConsola("País actualizado correctamente");
+						todoCorrecto = false;
 					}
 					// Si dice que no, salimos del do while
 				} else if (cadenaDatos.equals("n")) {

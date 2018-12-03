@@ -78,8 +78,14 @@ public class ServiceCliente {
 	}
 
 	// UPDATE
-	public void updateDireccion(int ClienteID, Direccion direccion) {
-		daoClienteOperaciones.updateCliente(ClienteID, direccion);
+	public void updateClienteDatos(int ClienteID, Cliente cliente) {
+		daoClienteOperaciones.updateClienteDatos(ClienteID, cliente);
+	}
+	public void updateClienteDireccion(int ClienteID, Direccion direccion, String campo) {
+		daoClienteOperaciones.updateClienteDireccion(ClienteID, direccion,campo);
+	}
+	public void updateClienteSinDireccion(int ClienteID, Direccion direccion) {
+		daoClienteOperaciones.updateClienteSinDireccion(ClienteID, direccion);
 	}
 
 	// DELETE

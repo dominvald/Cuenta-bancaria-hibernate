@@ -43,7 +43,7 @@ public class ClientesDireccionSaldo {
 	 * Sirva para guardar el Código Postal de la dirección en la dirección de cada
 	 * cliente
 	 */
-	private int direccionCp = 0;
+	private String direccionCp = "";
 	/**
 	 * Sirva para guardar la provincia de la dirección en la dirección de cada
 	 * cliente
@@ -83,7 +83,7 @@ public class ClientesDireccionSaldo {
 	 */
 	public ClientesDireccionSaldo(int clienteId, String clienteCif, String clienteNombre,
 			String clienteApellido1, String clienteApellido2, int direccionId, String direccionDireccion,
-			int direccionCp, String direccionProvincia, String direccionPoblacion, String direccionPais,
+			String direccionCp, String direccionProvincia, String direccionPoblacion, String direccionPais,
 			BigDecimal saldo) {
 		super();
 		this.clienteId = clienteId;
@@ -257,7 +257,7 @@ public class ClientesDireccionSaldo {
 	 * 
 	 * @return
 	 */
-	public int getDireccionCp() {
+	public String getDireccionCp() {
 		return direccionCp;
 	}
 
@@ -266,7 +266,7 @@ public class ClientesDireccionSaldo {
 	 * 
 	 * @param direccionCp
 	 */
-	public void setDireccionCp(int direccionCp) {
+	public void setDireccionCp(String direccionCp) {
 		this.direccionCp = direccionCp;
 	}
 
@@ -351,7 +351,7 @@ public class ClientesDireccionSaldo {
 		result = prime * result + ((clienteCif == null) ? 0 : clienteCif.hashCode());
 		result = prime * result + clienteId;
 		result = prime * result + ((clienteNombre == null) ? 0 : clienteNombre.hashCode());
-		result = prime * result + direccionCp;
+		result = prime * result + ((direccionCp == null) ? 0 : direccionCp.hashCode());
 		result = prime * result + ((direccionDireccion == null) ? 0 : direccionDireccion.hashCode());
 		result = prime * result + direccionId;
 		result = prime * result + ((direccionPais == null) ? 0 : direccionPais.hashCode());
@@ -393,7 +393,10 @@ public class ClientesDireccionSaldo {
 				return false;
 		} else if (!clienteNombre.equals(other.clienteNombre))
 			return false;
-		if (direccionCp != other.direccionCp)
+		if (direccionCp == null) {
+			if (other.direccionCp != null)
+				return false;
+		} else if (!direccionCp.equals(other.direccionCp))
 			return false;
 		if (direccionDireccion == null) {
 			if (other.direccionDireccion != null)
@@ -436,8 +439,5 @@ public class ClientesDireccionSaldo {
 				+ ", direccionPoblacion=" + direccionPoblacion + ", direccionPais=" + direccionPais + ", saldo=" + saldo
 				+ "]";
 	}
-
-
-
 
 }
