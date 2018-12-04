@@ -2,6 +2,7 @@ package services;
 
 import java.math.BigDecimal;
 import java.util.List;
+
 import daoImplementaciones.MovimientoDaoImplementacion;
 import model.Cliente;
 import model.Movimiento;
@@ -45,7 +46,7 @@ public class ServiceMovimiento {
 	 * @return List<Movimiento>
 	 * @throws Exception
 	 */
-	public List<Movimiento> list(int id) throws Exception {
+	public List<Movimiento> list(int id, int... firstResultAndMaxResult) throws Exception {
 		return daoMovimiento.list(id);
 
 	}

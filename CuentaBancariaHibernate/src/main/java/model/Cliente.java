@@ -1,5 +1,8 @@
 package model;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,9 +14,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * 
@@ -58,19 +58,21 @@ public class Cliente {
 	@OneToOne(fetch = FetchType.EAGER, cascade = { CascadeType.ALL })
 	@JoinColumn(name = "id_direccion")
 	private Direccion direccion;
-	
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "cliente",cascade=CascadeType.ALL)
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "cliente", cascade = CascadeType.ALL)
 	private Set<Movimiento> movimientos = new HashSet<Movimiento>(0);
 
 	public Cliente() {
 		super();
 	}
+
 	public Cliente(String cif, String nombre, String apellido1, String apellido2) {
 		this.cifCliente = cif;
 		this.nombreCliente = nombre;
 		this.apellido1Cliente = apellido1;
 		this.apellido2Cliente = apellido2;
 	}
+
 	/**
 	 * Constructor que recibe 4 argumentos, este lo usamos cuando queremos crear un
 	 * cliente nuevo, no necesitamos el id porque lo genera automáticamente la base
@@ -109,8 +111,6 @@ public class Cliente {
 		this.apellido2Cliente = apellido2;
 		this.direccion = direccion;
 	}
-
-
 
 	/**
 	 * @return the id
@@ -194,6 +194,7 @@ public class Cliente {
 	public void setDireccion(Direccion direccion) {
 		this.direccion = direccion;
 	}
+
 	public Set<Movimiento> getMovimientos() {
 		return movimientos;
 	}
@@ -201,6 +202,7 @@ public class Cliente {
 	public void setMovimientos(Set<Movimiento> movimientos) {
 		this.movimientos = movimientos;
 	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -214,6 +216,7 @@ public class Cliente {
 		result = prime * result + ((nombreCliente == null) ? 0 : nombreCliente.hashCode());
 		return result;
 	}
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -257,13 +260,12 @@ public class Cliente {
 			return false;
 		return true;
 	}
+
 	@Override
 	public String toString() {
 		return "Cliente [id=" + id + ", cifCliente=" + cifCliente + ", nombreCliente=" + nombreCliente
 				+ ", apellido1Cliente=" + apellido1Cliente + ", apellido2Cliente=" + apellido2Cliente + ", direccion="
 				+ direccion + ", movimientos=" + movimientos + "]";
 	}
-
-
 
 }

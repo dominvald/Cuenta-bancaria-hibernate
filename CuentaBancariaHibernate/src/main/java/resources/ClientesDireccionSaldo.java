@@ -81,10 +81,9 @@ public class ClientesDireccionSaldo {
 	 * @param direccionPais
 	 * @param saldo
 	 */
-	public ClientesDireccionSaldo(int clienteId, String clienteCif, String clienteNombre,
-			String clienteApellido1, String clienteApellido2, int direccionId, String direccionDireccion,
-			String direccionCp, String direccionProvincia, String direccionPoblacion, String direccionPais,
-			BigDecimal saldo) {
+	public ClientesDireccionSaldo(int clienteId, String clienteCif, String clienteNombre, String clienteApellido1,
+			String clienteApellido2, int direccionId, String direccionDireccion, String direccionCp,
+			String direccionProvincia, String direccionPoblacion, String direccionPais, BigDecimal saldo) {
 		super();
 		this.clienteId = clienteId;
 		this.clienteCif = clienteCif;

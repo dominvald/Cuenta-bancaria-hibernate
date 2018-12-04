@@ -1,13 +1,7 @@
 
 package daoImplementaciones;
 
-import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -16,21 +10,20 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 
-import controller.ControllerPrincipal;
-import model.Cliente;
 import model.Direccion;
 import resources.HibernateUtil;
-public class DireccionDaoImplementacion{
+
+public class DireccionDaoImplementacion {
 	private static SessionFactory sessFact = HibernateUtil.getSessionFactory();
 	/**
 	 * log: logger para la clase
 	 */
-	private final static Logger LOG = Logger.getLogger("DireccionDaoImplementacion.class");
+	private final static Logger lOG = Logger.getLogger("file_connections");
 	/**
 	 * cadenaDatos: la utilizamos para enviar al correspondiente controlador el
 	 * texto, que debe enviar a la vista en cada momento
 	 */
-	private  static String cadenaDatos = "";
+	private static String cadenaDatos = "";
 
 	/**
 	 * errorSqlSW : lo utilizamos para poder imprimir los errores SQL, que nos da el
@@ -44,15 +37,25 @@ public class DireccionDaoImplementacion{
 	 */
 	private static Boolean errorSQL = false;
 
-
 	// GETTERS AND SETTERS
+	/**
+	 * No utilizado
+	 * 
+	 * @return
+	 */
 	public StringWriter getErrorSqlSW() {
 		return errorSqlSW;
 	}
 
+	/**
+	 * No utilizado
+	 * 
+	 * @return
+	 */
 	public void setErrorSqlSW(StringWriter errorSqlSW) {
 		this.errorSqlSW = errorSqlSW;
 	}
+
 	/**
 	 * Devuelve la cadena de datos
 	 */
@@ -66,7 +69,7 @@ public class DireccionDaoImplementacion{
 	 * @param cadenaDatos
 	 */
 	public void setCadenaDatos(String cadenaDatos) {
-		this.cadenaDatos = cadenaDatos;
+		DireccionDaoImplementacion.cadenaDatos = cadenaDatos;
 	}
 
 	/**
@@ -86,11 +89,21 @@ public class DireccionDaoImplementacion{
 
 	// CREATE
 
-	/* Método para crear un cliente y la dirección en la bd */
-	public Direccion create(String direccionNuevo,String cpNuevo, String provinciaNuevo, String poblacionNuevo, String paisNuevo) {
+	/* Método para crear una dirección en la bd */
+	/**
+	 * Método para crear una dirección en la bd.
+	 * 
+	 * @param direccionNuevo
+	 * @param cpNuevo
+	 * @param provinciaNuevo
+	 * @param poblacionNuevo
+	 * @param paisNuevo
+	 * @return
+	 */
+	public Direccion create(String direccionNuevo, String cpNuevo, String provinciaNuevo, String poblacionNuevo,
+			String paisNuevo) {
 		Session session = sessFact.getCurrentSession();
 		Transaction tx = null;
-		Integer direccionID = null;
 		Direccion direccion = null;
 
 		try {
@@ -117,7 +130,7 @@ public class DireccionDaoImplementacion{
 	}
 
 	/**
-	 * Actualiza la dirección
+	 * Actualiza la dirección No implementado todavía
 	 */
 
 	public void update(Direccion direccion) {
@@ -134,7 +147,8 @@ public class DireccionDaoImplementacion{
 	}
 
 	/**
-	 * Busca una dirección y la devuelve dado el id de un cliente.
+	 * Busca una dirección y la devuelve dado el id de un cliente. No implementado
+	 * todavía
 	 */
 	public void find(int identificador) {
 	}

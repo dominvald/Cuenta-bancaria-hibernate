@@ -103,7 +103,7 @@ public final class Recursos {
 		return resultadoBarras;
 	}
 
-// Métodos para comprobaciones numéricas y aritméticas.
+	// Métodos para comprobaciones numéricas y aritméticas.
 	/**
 	 * Comprueba que sólo se haya introducido 2 decimales
 	 * 
@@ -205,8 +205,7 @@ public final class Recursos {
 	 */
 	public static Boolean noHayErroresEnDatos(String cadena, int longitudMinima, int longitudMaxima, Boolean numerico,
 			Boolean importe, String mensajeFormato) {
-		BigDecimal bigDecimal=BigDecimal.ZERO;
-		int intNumerico=0;
+		BigDecimal bigDecimal = BigDecimal.ZERO;
 		// Comprobamos que cumple con la longitud mínima es mayor o igual que la que se
 		// le pasa
 		// que la longitud máxima es menor o igual que longitudMaxima que se nos pasa
@@ -219,8 +218,8 @@ public final class Recursos {
 				} catch (Exception e) {
 					return false;
 				}
-			} 
-			bigDecimal=BigDecimal.ZERO;
+			}
+			bigDecimal = BigDecimal.ZERO;
 			// Cumple, devuelve true
 			return true;
 		} else {
@@ -230,7 +229,7 @@ public final class Recursos {
 
 	}
 
-//PAGINACION
+	// PAGINACION
 	// Método para contar registros y paginación
 	/**
 	 * Sirve para consultar el número de registros y las páginas que necesitaremos

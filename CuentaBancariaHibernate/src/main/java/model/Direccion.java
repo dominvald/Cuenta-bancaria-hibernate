@@ -16,7 +16,6 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "direcciones")
 public class Direccion {
-	
 
 	/**
 	 * Identificador de la dirección.

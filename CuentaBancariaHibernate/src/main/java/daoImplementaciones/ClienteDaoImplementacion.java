@@ -4,10 +4,10 @@ package daoImplementaciones;
 import java.io.StringWriter;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
 import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
@@ -15,7 +15,6 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
-import controller.ControllerPrincipal;
 import model.Cliente;
 import model.Direccion;
 import model.Movimiento;
@@ -188,13 +187,13 @@ public class ClienteDaoImplementacion {
 		Session session = sessFact.getCurrentSession();
 		Transaction tx = null;
 		try {
-			tx = session.beginTransaction();		
+			tx = session.beginTransaction();
 			Cliente cliente = (Cliente) session.get(Cliente.class, clienteId);
 			session.delete(cliente);
 
-				tx.commit();
+			tx.commit();
 
-				return true;
+			return true;
 		} catch (HibernateException e) {
 			if (tx != null)
 				tx.rollback();
@@ -378,6 +377,7 @@ public class ClienteDaoImplementacion {
 		} catch (HibernateException e) {
 			e.printStackTrace();
 		}
+		BigDecimal cero = BigDecimal.ZERO;
 		/**
 		 * Lo utilizamos para así poder dividir el saldo total en el banco, entre él
 		 * usándolo como denominador o divisor una vez le pasa el valor el contador de
@@ -386,11 +386,20 @@ public class ClienteDaoImplementacion {
 		 */
 
 		BigDecimal divisor = new BigDecimal(contadorInternoClientesEncontrados);
-		saldoMedio = sumaSaldoClientes.divide(divisor, 2, RoundingMode.HALF_EVEN);
-		Estadisticas estadisticas = new Estadisticas(contadorInternoClientesEncontrados,
-				contadorInternoClientesSaldoCero, contadorInternoClientesSaldoPositivo,
-				contadorInternoClientesSinDirección, saldoMedio, sumaSaldoClientes);
-		return estadisticas;
+		int resultado = 0;
+		resultado = divisor.compareTo(cero);
+		if (resultado != 0) {
+			saldoMedio = sumaSaldoClientes.divide(divisor, 2, RoundingMode.HALF_EVEN);
+
+			Estadisticas estadisticas = new Estadisticas(contadorInternoClientesEncontrados,
+					contadorInternoClientesSaldoCero, contadorInternoClientesSaldoPositivo,
+					contadorInternoClientesSinDirección, saldoMedio, sumaSaldoClientes);
+			return estadisticas;
+		} else {
+			Estadisticas estadisticas = new Estadisticas(0, 0, 0, 0, cero, cero);
+			return estadisticas;
+		}
+
 	}
 
 	//
@@ -516,32 +525,34 @@ public class ClienteDaoImplementacion {
 	/**
 	 * Consigue el saldo del cliente pasado.
 	 */
-		public BigDecimal consigueSaldo(int clienteId) {
-			BigDecimal saldo = BigDecimal.ZERO;
-			Session session = sessFact.getCurrentSession();
-			List listaMovimientos=new ArrayList<>();
-			Movimiento movimientoOperaciones=new Movimiento();
-			Transaction tx = null;
-			try {
-				tx = session.beginTransaction();
-				//Query query= session.createQuery("from Movimiento mov where cliente_id=:clienteId order by mov.fecha desc, mov.id desc");
-				//Query query= session.createSQLQuery("SELECT saldo FROM movimientos WHERE cliente_id=:clienteId ORDER BY fecha DESC, id desc");
-				Query query=session.getNamedQuery("CONSIGUE_SALDO");
-				query.setParameter("clienteId", clienteId);
-				listaMovimientos =  query.setMaxResults(1).list();
-			for(Object str : listaMovimientos) {
-				String saldoString=str.toString();
-				saldo=new BigDecimal(saldoString);
+	public BigDecimal consigueSaldo(int clienteId) {
+		BigDecimal saldo = BigDecimal.ZERO;
+		Session session = sessFact.getCurrentSession();
+		List listaMovimientos = new ArrayList<>();
+		Movimiento movimientoOperaciones = new Movimiento();
+		Transaction tx = null;
+		try {
+			tx = session.beginTransaction();
+			// Query query= session.createQuery("from Movimiento mov where
+			// cliente_id=:clienteId order by mov.fecha desc, mov.id desc");
+			// Query query= session.createSQLQuery("SELECT saldo FROM movimientos WHERE
+			// cliente_id=:clienteId ORDER BY fecha DESC, id desc");
+			Query query = session.getNamedQuery("CONSIGUE_SALDO");
+			query.setParameter("clienteId", clienteId);
+			listaMovimientos = query.setMaxResults(1).list();
+			for (Object str : listaMovimientos) {
+				String saldoString = str.toString();
+				saldo = new BigDecimal(saldoString);
 			}
-				
-			} catch (HibernateException e) {
-				e.printStackTrace();
-			} finally {
-				session.close();
-			}
-			return saldo;
 
+		} catch (HibernateException e) {
+			e.printStackTrace();
+		} finally {
+			session.close();
 		}
+		return saldo;
+
+	}
 
 	/**
 	 * Comprueba que si existe un CIF en la base de datos.

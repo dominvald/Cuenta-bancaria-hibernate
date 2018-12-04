@@ -9,14 +9,13 @@ import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.Scanner;
+
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 
-import daoImplementaciones.ClienteDaoImplementacion;
 import model.Cliente;
 import model.Direccion;
 import model.Movimiento;
-import view.ViewMain;
 import resources.ClientesDireccionSaldo;
 import resources.Estadisticas;
 import resources.HibernateUtil;
@@ -25,6 +24,7 @@ import resources.Sonido;
 import services.ServiceCliente;
 import services.ServiceDireccion;
 import services.ServiceMovimiento;
+import view.ViewMain;
 
 /**
  * 
@@ -72,7 +72,7 @@ public class ControllerPrincipal {
 
 	// Variables para guardar los datos antiguos o actuales del cliente
 	// seleccionado.
-	private int idClienteSeleccionado=0;
+	private int idClienteSeleccionado = 0;
 
 	/**
 	 * cifSeleccionado: guarda el cif antiguo o actuales de cliente seleccionado.
@@ -123,36 +123,6 @@ public class ControllerPrincipal {
 	private String apellido2Nuevo = "";
 
 	// VARIABLES PARA DIRECCIONES
-
-	// Variables para guardar los datos antiguos o actuales del cliente
-	// seleccionado.
-
-	/**
-	 * direccionSeleccionado: guarda la dirección antigua o actual de la dirección
-	 * seleccionada.
-	 */
-	private String direccionSeleccionado = "";
-	/**
-	 * cpSeleccionado: guarda el código postal antiguo o actual de la dirección
-	 * seleccionada.
-	 */
-	private String cpSeleccionado = "";
-	/**
-	 * provinciaSeleccionado: guarda la provincia antigua o actual de la dirección
-	 * seleccionada.
-	 */
-	private String provinciaSeleccionado = "";
-	/**
-	 * poblacionSeleccionado: guarda la población antigua o actual de la dirección
-	 * seleccionada.
-	 */
-	private String poblacionSeleccionado = "";
-	/**
-	 * paisSeleccionado: guarda el país antiguo o actual de la dirección
-	 * seleccionada.
-	 */
-	private String paisSeleccionado = "";
-
 	// Variables para guardar los datos a actualizar de una direccion o de una
 	// direccion a crear o a modificar.
 
@@ -185,12 +155,18 @@ public class ControllerPrincipal {
 	 * Guarda la cadena con el país nuevo a crear o modificar de la tabla dirección.
 	 */
 	private String paisNuevo = "";
-	private int idDireccionOperaciones=0;
+	/**
+	 * Guarda el id de la dirección de operaciones.
+	 */
+	private int idDireccionOperaciones = 0;
 
 	/**
 	 * Guarda el Nº de registros a mostrar por página.
 	 */
 	private static int numeroDeRegistrosMostrarPorPaginaNuevo = 20;
+	/**
+	 * Guarda la cadena para Cancelar.
+	 */
 	private static String cadenaCancelar = "#q";
 
 	// FIN VARIABLES PARA LA INTRODUCCIÓN DE DATOS
@@ -239,8 +215,17 @@ public class ControllerPrincipal {
 	 * estadisticas.
 	 */
 	private Estadisticas estadisticasOperaciones = new Estadisticas();
+	/**
+	 * Gurda la cadena con el nombre del idioma usado.
+	 */
 	String idiomaSeleccionado = "Español";
+	/**
+	 * Guarda la cadena para mostrar la "Opcion seleccionar" en español o inglés.
+	 */
 	String cadenaIdiomaOpcion = "";
+	/**
+	 * Guarda la cadena para mostrar la el mensaje de inicio en español o inglés.
+	 */
 	String cadenaIdiomaInicio = "";
 
 	// FIN ESTADÍSTICAS.
@@ -277,9 +262,21 @@ public class ControllerPrincipal {
 	 * operando.
 	 */
 	List<Movimiento> movimientoOperaciones = new ArrayList<>();
+	/**
+	 * Locale por defecto en español
+	 */
 	Locale defaultLocale;
+	/**
+	 * Locale en inglés.
+	 */
 	Locale englishLocale;
+	/**
+	 * ResourceBundle en español por defecto.
+	 */
 	ResourceBundle bundlePorDefecto;
+	/**
+	 * ResourceBundle en inglés.
+	 */
 	ResourceBundle bundleIngles;
 
 	// FIN OPERACIONES
@@ -343,7 +340,7 @@ public class ControllerPrincipal {
 			// estadisticasOperaciones = estadisticasTiempoReal;-->Esto no está bien poruqe
 			// unifica los objetos
 			// Con esto lo clonamos. Forma correcta de hacerlo.
-			estadisticasOperaciones = estadisticasTiempoReal.clone();
+			estadisticasOperaciones = (Estadisticas) estadisticasTiempoReal.clone();
 			// Así podríamos clonar sólo partes.
 			// estadisticasOperaciones.setContadorInternoClientesEncontrados(estadisticasTiempoReal.getContadorInternoClientesEncontrados());
 
@@ -351,7 +348,7 @@ public class ControllerPrincipal {
 			mostramosMenuInicial();
 			// Si la conexión ha fallado mostramos el mensaje de erroe.
 		} else {
-			System.out.println("No se ha podido iniciar la aplicación. Contacte al teléfono 987654321 ");
+			viewMain.escribirEnConsola("No se ha podido iniciar la aplicación. Contacte al teléfono 987654321 ");
 			Sonido.sonar();
 		}
 		// Inicamos la aplicación y mostramos un menú con las opciones iniciales
@@ -361,6 +358,11 @@ public class ControllerPrincipal {
 	// FIN MAIN
 	// ---------------------------------------------------------------------------------//
 
+	// INTERNACIONALIZACIÓN
+	// --------------------------------------------------------------------------//
+	/**
+	 * Configuración de la internacionalización.
+	 */
 	private void internacionalizacion() {
 
 		defaultLocale = new Locale("es", "ES");
@@ -372,6 +374,8 @@ public class ControllerPrincipal {
 		Locale.setDefault(englishLocale);
 
 	}
+	// INTERNACIONALIZACIÓN
+	// ---------------------------------------------------------------------------------//
 
 	// MENUS
 	// -------------------------------------------------------------------------//
@@ -389,10 +393,12 @@ public class ControllerPrincipal {
 				// Calculamos las stadísticas y las guardamos
 				estadisticasTiempoReal = serviceCliente.calculaEstadisticas();
 				// Pasamos las estadísticas de tiempo real al de operaciones.
-				estadisticasOperaciones = estadisticasTiempoReal.clone();
+				estadisticasOperaciones = (Estadisticas) estadisticasTiempoReal.clone();
 				// Mostramos a que hora se han actualizado las estadísticas
 				viewMain.escribirEnConsola("Ha habido cambios: desde la última vez.\nActualizado a: "
 						+ Recursos.formato(LocalDateTime.now()));
+				// Una vez las estadísticas han sido actualizadas lo ponemos de nuevo a false;
+				actualizarEstadisticas = false;
 			}
 			// Mostramos las estadísticas
 			viewMain.imprimeEstadisticas(estadisticasOperaciones);
@@ -434,9 +440,8 @@ public class ControllerPrincipal {
 				break;
 			// 2. Listar todos los clientes.
 			case "2":
-				String[] resultadoEs = new String[5];
 				long[] resultado = new long[2];
-				resultado = Recursos.paginacion(serviceCliente.devolverSesion(), "Cliente",
+				resultado = Recursos.paginacion(ServiceCliente.devolverSesion(), "Cliente",
 						numeroDeRegistrosMostrarPorPaginaNuevo);
 				// resultado[0]--> Número total de registros
 				// resultado[1]--> Número total de páginas
@@ -538,8 +543,8 @@ public class ControllerPrincipal {
 	 */
 	private void mostrarMenuOperacionesConClientes() throws Exception {
 		while (true) {
-			viewMain.verClienteDireccionSaldo(
-					clienteDireccionSaldoOperaciones=serviceCliente.datosClientesDireccionSaldo(idClienteSeleccionado));
+			viewMain.verClienteDireccionSaldo(clienteDireccionSaldoOperaciones = serviceCliente
+					.datosClientesDireccionSaldo(idClienteSeleccionado));
 			viewMain.escribirEnConsola("------------------------------------------");
 			viewMain.escribirEnConsola("|   PRÁCTICA CUENTAS BANCARIAS HIBERNATE  |");
 			viewMain.escribirEnConsola(
@@ -571,9 +576,6 @@ public class ControllerPrincipal {
 			// 1. Mostrar movimientos del cliente.
 			case "1":
 				datosMovimientoNuevo();
-				// System.out.println("Opción no implementada");
-				// viewMain.verClienteDireccionSaldo(clienteDireccionSaldoOperaciones);
-				// mostrarMenuOperacionesConClientes();
 				break;
 			// 2. Mostrar movimientos del cliente.
 			case "2":
@@ -583,8 +585,6 @@ public class ControllerPrincipal {
 				break;
 			// 3. Modificar datos del cliente.
 			case "3":
-				//viewMain.verClienteDireccionSaldo(clienteDireccionSaldoOperaciones);
-				//System.out.println("clienteDireccionSaldoOperaciones: "+clienteDireccionSaldoOperaciones.getDireccionDireccion());
 				mostrarMenuModificarDatosPersonalesDireccionClientes();
 				break;
 			// 4. Eliminar cliente.
@@ -593,8 +593,8 @@ public class ControllerPrincipal {
 				break;
 			// 5. Volver atrás.
 			case "5":
-				//TODO hacer función de "RESETEO"
-				clienteDireccionSaldoOperaciones=null;
+				// TODO hacer función de "RESETEO"
+				clienteDireccionSaldoOperaciones = null;
 				mostramosMenuSeleccionarCrearClientes();
 				break;
 			// 6. Cerrar la aplicación.
@@ -610,11 +610,16 @@ public class ControllerPrincipal {
 		}
 	}
 
+	/**
+	 * Muestra el menú para modificar los datos personales de los clientes
+	 * 
+	 * @throws Exception
+	 */
 	private void mostrarMenuModificarDatosPersonalesDireccionClientes() throws Exception {
 		while (true) {
 
-			viewMain.verClienteDireccionSaldo(
-					clienteDireccionSaldoOperaciones=serviceCliente.datosClientesDireccionSaldo(idClienteSeleccionado));
+			viewMain.verClienteDireccionSaldo(clienteDireccionSaldoOperaciones = serviceCliente
+					.datosClientesDireccionSaldo(idClienteSeleccionado));
 			viewMain.escribirEnConsola("------------------------------------------");
 			viewMain.escribirEnConsola("|   PRÁCTICA CUENTAS BANCARIAS HIBERNATE. |");
 			viewMain.escribirEnConsola(
@@ -787,6 +792,13 @@ public class ControllerPrincipal {
 	// ------------------------------------------------------------------
 	// OPCION LISTAR TODOS LOS CLIENTES CON PAGINACIÓN.
 	// --------------------------------------------------------------
+	/**
+	 * Lista todos los clientes, dependiendo el número de página pasado.
+	 * 
+	 * @param numeroPagina
+	 * @throws Exception
+	 * @throws Exception
+	 */
 	private void listarTodosLosClientes(long numeroPagina) throws Exception, Exception {
 		viewMain.verListadoClientesDireccionSaldo(
 				serviceCliente.listClientesDireccionSaldo(numeroPagina, numeroDeRegistrosMostrarPorPaginaNuevo),
@@ -796,15 +808,19 @@ public class ControllerPrincipal {
 
 	// ----DELETE----OPCION BORRAR CLIENTE
 	// --------------------------------------------------------------
+	/**
+	 * Elimina el cliente seleccionado actualmente
+	 * 
+	 * @throws Exception
+	 */
 	private void deleteCliente() throws Exception {
 		if (serviceCliente.delete(idClienteSeleccionado)) {
+			actualizarEstadisticas = true;
 			viewMain.escribirEnConsola("Se ha eliminado al cliente correctamente");
 		} else {
 			viewMain.escribirEnConsola("No se ha podido eliminar al cliente correctamente");
 			Sonido.sonar();
 		}
-		//mostrarMenuOperacionesConClientes();
-
 	}
 
 	// FIN----DELETE----OPCION BORRAR CLIENTE
@@ -813,6 +829,12 @@ public class ControllerPrincipal {
 	// --------------------------------------------------------------
 	// OPCION SALIR.
 	// --------------------------------------------------------------
+	/**
+	 * Nos muestra un menú para decirnos si estamos seguros de salir, en caso de que
+	 * digamos que sí cierra la aplicación.
+	 * 
+	 * @throws SQLException
+	 */
 	private void salirDeLaAplicacion() throws SQLException {
 		if (mostrarOpcionSalir()) {
 			System.exit(0);
@@ -821,6 +843,11 @@ public class ControllerPrincipal {
 		}
 	}
 
+	/**
+	 * Muestra la opción salir, en el caso de que digamos que sí devolverá true.
+	 * 
+	 * @return
+	 */
 	private Boolean mostrarOpcionSalir() {
 		Boolean pulsadoInterno = false;
 		do {
@@ -929,6 +956,12 @@ public class ControllerPrincipal {
 		} while (seleccionadoActivadoOdesactivado == false);
 	}
 
+	/**
+	 * Sirve para que podamos configurar el número de registros a mostrar en cada
+	 * página.
+	 * 
+	 * @throws Exception
+	 */
 	private void configurarNumeroRegistrosMostrar() throws Exception {
 		Boolean noCorrecto = true;
 		viewMain.escribirEnConsola("Nº Reg. por página actualmente está configurado a: "
@@ -946,6 +979,11 @@ public class ControllerPrincipal {
 
 	}
 
+	/**
+	 * Sirve para configurar la cadena para Cancelar.
+	 * 
+	 * @throws Exception
+	 */
 	private void configurarCadenaCancelar() throws Exception {
 		Boolean noCorrecto = true;
 		viewMain.escribirEnConsola(
@@ -963,6 +1001,11 @@ public class ControllerPrincipal {
 
 	}
 
+	/**
+	 * Sirve para configurar el idioma seleccionado.
+	 * 
+	 * @throws Exception
+	 */
 	private void configurarIdioma() throws Exception {
 		Boolean noCorrecto = true;
 		viewMain.escribirEnConsola("Idioma actualmente está configurado a: " + idiomaSeleccionado + ".");
@@ -982,6 +1025,11 @@ public class ControllerPrincipal {
 	// FIN OPCION CONFIGURACION.
 	// --------------------------------------------------------------
 	// OPCIÓN SELECCIONAR CLIENTE
+	/**
+	 * Sirve para seleccionar el cliente seleccionado y con el trabajaremos.
+	 * 
+	 * @throws Exception
+	 */
 	private void seleccionarClientePrincipal() throws Exception {
 		/**
 		 * Sirve para almacenar los clientes que coinciden con la cadena de texto pasada
@@ -1010,7 +1058,7 @@ public class ControllerPrincipal {
 				// En este caso sería dististo de null si no hemos cancelado.
 				if (listaClientesEncontrados != null) {
 					// Si se ha encontrado algún cliente.
-					//Si ha encontrado uno que no impima nada, ya lo impmimos en los menús.
+					// Si ha encontrado uno que no impima nada, ya lo impmimos en los menús.
 					if (listaClientesEncontrados.size() != 1) {
 						if (listaClientesEncontrados.size() != 0) {
 							// Enviamos a imprimir la lista.
@@ -1019,14 +1067,14 @@ public class ControllerPrincipal {
 							encontrado = true;
 							// Si no encuentra ningún cliente coincidente con la cadena de texto pasada.
 						} else {
-	
+
 							// Mostramos la lista, donde nos dirá que no hay coincidencias.
 							viewMain.verClientesEncontrados(listaClientesEncontrados);
 							// Continuamos con el bucle.
 							encontrado = false;
 						}
 					} else {
-						encontrado=true;
+						encontrado = true;
 					}
 					// En el caso de que el usuario haya cancelado, devolverá null, así que
 					// pondremos encontrado
@@ -1064,17 +1112,17 @@ public class ControllerPrincipal {
 								clienteOperaciones.setApellido2(cliente.getApellido2());
 								clienteOperaciones.setDireccion(cliente.getDireccion());
 								clienteOperaciones.setMovimientos(cliente.getMovimientos());
-								idClienteSeleccionado=clienteOperaciones.getId();
+								idClienteSeleccionado = clienteOperaciones.getId();
 								try {
-									direccionOperaciones=clienteOperaciones.getDireccion();
-									idDireccionOperaciones=clienteOperaciones.getDireccion().getId();
+									direccionOperaciones = clienteOperaciones.getDireccion();
+									idDireccionOperaciones = clienteOperaciones.getDireccion().getId();
 								} catch (Exception e) {
-									direccionOperaciones=null;
-									idDireccionOperaciones=-1;
+									direccionOperaciones = null;
+									idDireccionOperaciones = -1;
 								}
 
 								// Salimos del dowhile.
-					
+
 								mostrarMenuOperacionesConClientes();
 							}
 
@@ -1090,13 +1138,13 @@ public class ControllerPrincipal {
 							clienteOperaciones.setApellido2(clienteEncontrado.getApellido2());
 							clienteOperaciones.setDireccion(clienteEncontrado.getDireccion());
 							clienteOperaciones.setMovimientos(clienteEncontrado.getMovimientos());
-							idClienteSeleccionado=clienteOperaciones.getId();
+							idClienteSeleccionado = clienteOperaciones.getId();
 							try {
-								direccionOperaciones=clienteOperaciones.getDireccion();
-								idDireccionOperaciones=clienteOperaciones.getDireccion().getId();
+								direccionOperaciones = clienteOperaciones.getDireccion();
+								idDireccionOperaciones = clienteOperaciones.getDireccion().getId();
 							} catch (Exception e) {
-								direccionOperaciones=null;
-								idDireccionOperaciones=-1;
+								direccionOperaciones = null;
+								idDireccionOperaciones = -1;
 							}
 							// Salimos del dowhile.
 							mostrarMenuOperacionesConClientes();
@@ -1156,6 +1204,14 @@ public class ControllerPrincipal {
 
 	}
 
+	/**
+	 * Sirve para seleccionar el cliente por id
+	 * 
+	 * @return
+	 * @throws NumberFormatException
+	 * @throws SQLException
+	 * @throws Exception
+	 */
 	private Cliente seleccionarCliente() throws NumberFormatException, SQLException, Exception {
 
 		do {
@@ -1190,6 +1246,7 @@ public class ControllerPrincipal {
 	// FIN OPCIONES.
 	// PAGINACION
 	/**
+	 * Sirve para configurar la paginación.
 	 * 
 	 * @param numeroTotalPaginas
 	 * @param numeroPagina
@@ -1247,31 +1304,15 @@ public class ControllerPrincipal {
 
 	// -----------------------------------------------------------------------------------
 	// EXTRAER DATOS CLIENTE SELECCIONADO
-	private void extraerDatosClienteSeleccionado() {
-		cifSeleccionado = clienteDireccionSaldoOperaciones.getClienteCif();
-		nombreSeleccionado = clienteDireccionSaldoOperaciones.getClienteNombre();
-		apellido1Seleccionado = clienteDireccionSaldoOperaciones.getClienteApellido1();
-		apellido2Seleccionado = clienteDireccionSaldoOperaciones.getClienteApellido2();
-	}
-
-	// IMPRIMIR DATOS DE CLIENTE SELECCIONADO
-
-	private void imprimirDatosClienteSeleccionado() {
-		viewMain.muestraDatosClienteSeleccionado(cifSeleccionado, nombreSeleccionado, apellido1Seleccionado,
-				apellido2Seleccionado);
-
-	}
-
-	private void imprimirDatosDireccionSeleccionado() {
-		viewMain.muestraDatosDireccionSeleccionado(direccionSeleccionado, cpSeleccionado, provinciaSeleccionado,
-				poblacionSeleccionado, paisSeleccionado);
-
-	}
-
-	private void imprimirDatosDireccionNuevo() {
-		viewMain.muestraDatosDireccionSeleccionado(direccionNuevo, cpNuevo, provinciaNuevo, poblacionNuevo, paisNuevo);
-
-	}
+//	/**
+//	 * No usado de momento
+//	 */
+//	private void extraerDatosClienteSeleccionado() {
+//		cifSeleccionado = clienteDireccionSaldoOperaciones.getClienteCif();
+//		nombreSeleccionado = clienteDireccionSaldoOperaciones.getClienteNombre();
+//		apellido1Seleccionado = clienteDireccionSaldoOperaciones.getClienteApellido1();
+//		apellido2Seleccionado = clienteDireccionSaldoOperaciones.getClienteApellido2();
+//	}
 
 	// SOLICITAR DATOS DE CLIENTE(Todos menos id y dirección), DIRECCIÓN(Todos menos
 	// id) Y MOVIMIENTO(Todos menos id, fecha y saldo)
@@ -1290,7 +1331,7 @@ public class ControllerPrincipal {
 		do {
 			viewMain.escribirEnConsola("<<< Formato: " + mensajeFormato + " >>>");
 			viewMain.escribirEnConsola(nombre + ":\n");
-			cadenaDatos = scanner.nextLine().toLowerCase();
+			cadenaDatos = scanner.nextLine();
 			// Miramos a ver si el cliente ha introducido #q para cancelar la operación.
 			if (!verSiCancelado(cadenaDatos, cadenaVerSiCancelado)) {
 				if (cadenaDatos.equals(cadenaCancelar)) {
@@ -1382,6 +1423,11 @@ public class ControllerPrincipal {
 	}
 
 	// SOLICITAR DATOS CLIENTE
+	/**
+	 * Despliega un menú para poder ir metiendo los datos del cliente, excepto la
+	 * dirección, pero también nos preguntará finalmente si queremos introducir una
+	 * dirección para el cliente recién creado.
+	 */
 	private void solicitudDatosClienteGeneral() {
 		todoCorrecto = true;
 		while (todoCorrecto) {
@@ -1412,6 +1458,7 @@ public class ControllerPrincipal {
 			if (todoCorrecto) {
 				idClienteNuevo = serviceCliente.create(cifNuevo, nombreNuevo, apellido1Nuevo, apellido2Nuevo);
 				if (idClienteNuevo != -1) {
+					actualizarEstadisticas = true;
 					viewMain.escribirEnConsola("\n\tCliente creado correctamente");
 					viewMain.muestraDatosClienteNuevo(cifNuevo, nombreNuevo, apellido1Nuevo, apellido2Nuevo);
 					ejecutarOrdenIntroducciónDatosSiNoCancelar("¿Quiere añadir una dirección?",
@@ -1430,6 +1477,12 @@ public class ControllerPrincipal {
 
 	}
 
+	/**
+	 * Muestra un menú para añadir una dirección al cliente, se le pasa el el id del
+	 * cliente al que queremos añadir la dirección.
+	 * 
+	 * @param idClienteNuevo
+	 */
 	private void solicitudDatosDirecciónGeneral(long idClienteNuevo) {
 		todoCorrecto = true;
 		while (todoCorrecto) {
@@ -1486,6 +1539,10 @@ public class ControllerPrincipal {
 
 	}
 
+	/**
+	 * Solicita los datos personales para modificar un cliente, excepto la
+	 * dirección.
+	 */
 	private void solicitudDatosClienteModificar() {
 
 		ejecutarOrdenIntroducciónDatosSiNoCancelar("¿Quiere modificar el CIF?",
@@ -1498,6 +1555,10 @@ public class ControllerPrincipal {
 				"<<< Formato: Sí<s> No<n> Cancelar<" + cadenaCancelar + "> >>>", "Modificar Segundo apellido.");
 
 	}
+
+	/**
+	 * Solicita los datos pra modificar la dirección de un cliente.
+	 */
 	private void solicitudDireccionClienteModificar() {
 
 		ejecutarOrdenIntroducciónDatosSiNoCancelar("¿Quiere modificar la Dirección?",
@@ -1514,12 +1575,18 @@ public class ControllerPrincipal {
 	}
 
 	// MOVIMIENTOS
+	/**
+	 * Sirve para introducir los datos para un nuevo movimiento.
+	 * 
+	 * @throws SQLException
+	 * @throws Exception
+	 */
 	private void datosMovimientoNuevo() throws SQLException, Exception {
 		/**
 		 * Almacena el saldo actual del cliente seleccionado
 		 */
 		BigDecimal saldoClienteSeleccionado = BigDecimal.ZERO;
-		saldoClienteSeleccionado =clienteDireccionSaldoOperaciones.getSaldo();
+		saldoClienteSeleccionado = clienteDireccionSaldoOperaciones.getSaldo();
 		/**
 		 * Controla que sean correctos los datos introducidos, la inicializamos a true
 		 * para recorra el do while
@@ -1564,7 +1631,7 @@ public class ControllerPrincipal {
 				do {
 					viewMain.escribirEnConsola(
 							"Su saldo es de 0.00€. Sólo podrá hacer ingresos. ¿Desea hacer un ingreso? <s/n>. \n<<< Formato. Cancelar<"
-								+ cadenaCancelar + "> Sí<s>. No<n>. Cancelar<+cadenaCancelar+>  >>>");
+									+ cadenaCancelar + "> Sí<s>. No<n>. Cancelar<+cadenaCancelar+>  >>>");
 					cadenaDatos = scanner.nextLine().toLowerCase();
 					if (verSiCancelado(cadenaDatos, "Hacer un ingreso")) {
 						cadenaDatos = "###";
@@ -1616,6 +1683,7 @@ public class ControllerPrincipal {
 					int estado = serviceMovimiento.create(saldoClienteSeleccionado, importeParaIngresar,
 							clienteOperaciones, 1);
 					if (estado == 1) {
+						actualizarEstadisticas = true;
 						viewMain.escribirEnConsola("Movimiento agregado correctamente");
 						errorDatosIntroducidos = false;
 					} else {
@@ -1655,6 +1723,7 @@ public class ControllerPrincipal {
 					int estado = serviceMovimiento.create(saldoClienteSeleccionado, importeParaRetirar,
 							clienteOperaciones, 2);
 					if (estado == 1) {
+						actualizarEstadisticas = true;
 						viewMain.escribirEnConsola("Movimiento agregado correctamente");
 						errorDatosIntroducidos = false;
 					} else if (estado == 2) {
@@ -1673,7 +1742,6 @@ public class ControllerPrincipal {
 					errorDatosIntroducidos = false;
 				} else {
 					if (!cadenaDatos.equals("%#%")) {
-						System.out.println("cadenaDatos vale:" + cadenaDatos);
 						viewMain.escribirEnConsola("Datos no válidos.");
 						errorDatosIntroducidos = true;
 					}
@@ -1683,6 +1751,13 @@ public class ControllerPrincipal {
 		mostrarMenuOperacionesConClientes();
 	}
 
+	/**
+	 * Ejecuta las órdenes de introdución de datos
+	 * 
+	 * @param orden
+	 * @param mensajeFormato
+	 * @param mensajeCancelado
+	 */
 	private void ejecutarOrdenIntroducciónDatosSiNoCancelar(String orden, String mensajeFormato,
 			String mensajeCancelado) {
 		todoCorrecto = true;
@@ -1701,6 +1776,7 @@ public class ControllerPrincipal {
 					if (orden.equals("¿Quiere añadir una dirección?")) {
 						solicitudDatosDirecciónGeneral(idClienteNuevo);
 						serviceCliente.updateClienteSinDireccion(idClienteNuevo, direccionOperaciones);
+						actualizarEstadisticas = true;
 						todoCorrecto = false;
 					} else if (orden.equals("¿Quiere modificar el CIF?")) {
 						viewMain.escribirEnConsola("CIF actual:" + clienteOperaciones.getCif());
@@ -1734,44 +1810,52 @@ public class ControllerPrincipal {
 						serviceCliente.updateClienteDatos(idClienteSeleccionado, clienteOperaciones);
 						viewMain.escribirEnConsola("Segundo apellido actualizado correctamente");
 						todoCorrecto = false;
-					}else if (orden.equals("¿Quiere modificar la Dirección?")) {
-						viewMain.escribirEnConsola("Dirección actual:" + clienteDireccionSaldoOperaciones.getDireccionDireccion());
-						solicitarDatosCorrectosOno("Dirección", "Introducir Dirección", 1, 30, false,
-								false, "Dirección: Longitud mínima: 1. Longitud máxima: 30");
+					} else if (orden.equals("¿Quiere modificar la Dirección?")) {
+						viewMain.escribirEnConsola(
+								"Dirección actual:" + clienteDireccionSaldoOperaciones.getDireccionDireccion());
+						solicitarDatosCorrectosOno("Dirección", "Introducir Dirección", 1, 30, false, false,
+								"Dirección: Longitud mínima: 1. Longitud máxima: 30");
 						direccionOperaciones.setDireccion(cadenaDatos);
-						serviceCliente.updateClienteDireccion(direccionOperaciones.getId(), direccionOperaciones,"direccion");
+						serviceCliente.updateClienteDireccion(direccionOperaciones.getId(), direccionOperaciones,
+								"direccion");
 						viewMain.escribirEnConsola("Dirección actualizada correctamente");
 						todoCorrecto = false;
-					}else if (orden.equals("¿Quiere modificar el C.P.?")) {
+					} else if (orden.equals("¿Quiere modificar el C.P.?")) {
 						viewMain.escribirEnConsola("C.P actual:" + clienteDireccionSaldoOperaciones.getDireccionCp());
-						solicitarDatosCorrectosOno("C.P", "Introducir C.P:", 5, 5, true,
-								false, "C.P: Longitud mínima: 5. Longitud máxima: 5");
+						solicitarDatosCorrectosOno("C.P", "Introducir C.P:", 5, 5, true, false,
+								"C.P: Longitud mínima: 5. Longitud máxima: 5");
 						direccionOperaciones.setCp(cadenaDatos);
-						serviceCliente.updateClienteDireccion(direccionOperaciones.getId(), direccionOperaciones,"cp");
+						serviceCliente.updateClienteDireccion(direccionOperaciones.getId(), direccionOperaciones, "cp");
 						viewMain.escribirEnConsola("C.P actualizado correctamente");
 						todoCorrecto = false;
-					}else if (orden.equals("¿Quiere modificar la Provincia?")) {
-						viewMain.escribirEnConsola("Provincia actual:" + clienteDireccionSaldoOperaciones.getDireccionProvincia());
-						solicitarDatosCorrectosOno("Provincia", "Introducir Provincia:", 1, 30, false,
-								false, "Provincia: Longitud mínima: 1. Longitud máxima: 30");
+					} else if (orden.equals("¿Quiere modificar la Provincia?")) {
+						viewMain.escribirEnConsola(
+								"Provincia actual:" + clienteDireccionSaldoOperaciones.getDireccionProvincia());
+						solicitarDatosCorrectosOno("Provincia", "Introducir Provincia:", 1, 30, false, false,
+								"Provincia: Longitud mínima: 1. Longitud máxima: 30");
 						direccionOperaciones.setProvincia(cadenaDatos);
-						serviceCliente.updateClienteDireccion(direccionOperaciones.getId(), direccionOperaciones,"provincia");
+						serviceCliente.updateClienteDireccion(direccionOperaciones.getId(), direccionOperaciones,
+								"provincia");
 						viewMain.escribirEnConsola("Provincia actualizada correctamente");
 						todoCorrecto = false;
-					}else if (orden.equals("¿Quiere modificar la Población?")) {
-						viewMain.escribirEnConsola("Población actual:" + clienteDireccionSaldoOperaciones.getDireccionPoblacion());
-						solicitarDatosCorrectosOno("Población", "Introducir Población:", 1, 30, false,
-								false, "Población: Longitud mínima: 1. Longitud máxima: 30");
+					} else if (orden.equals("¿Quiere modificar la Población?")) {
+						viewMain.escribirEnConsola(
+								"Población actual:" + clienteDireccionSaldoOperaciones.getDireccionPoblacion());
+						solicitarDatosCorrectosOno("Población", "Introducir Población:", 1, 30, false, false,
+								"Población: Longitud mínima: 1. Longitud máxima: 30");
 						direccionOperaciones.setPoblacion(cadenaDatos);
-						serviceCliente.updateClienteDireccion(direccionOperaciones.getId(), direccionOperaciones,"poblacion");
+						serviceCliente.updateClienteDireccion(direccionOperaciones.getId(), direccionOperaciones,
+								"poblacion");
 						viewMain.escribirEnConsola("Población actualizada correctamente");
 						todoCorrecto = false;
-					}else if (orden.equals("¿Quiere modificar el País?")) {
-						viewMain.escribirEnConsola("País actual:" + clienteDireccionSaldoOperaciones.getDireccionPais());
-						solicitarDatosCorrectosOno("País", "Introducir País:", 1, 30, false,
-								false, "País: Longitud mínima: 1. Longitud máxima: 30");
+					} else if (orden.equals("¿Quiere modificar el País?")) {
+						viewMain.escribirEnConsola(
+								"País actual:" + clienteDireccionSaldoOperaciones.getDireccionPais());
+						solicitarDatosCorrectosOno("País", "Introducir País:", 1, 30, false, false,
+								"País: Longitud mínima: 1. Longitud máxima: 30");
 						direccionOperaciones.setPais(cadenaDatos);
-						serviceCliente.updateClienteDireccion(direccionOperaciones.getId(), direccionOperaciones,"pais");
+						serviceCliente.updateClienteDireccion(direccionOperaciones.getId(), direccionOperaciones,
+								"pais");
 						viewMain.escribirEnConsola("País actualizado correctamente");
 						todoCorrecto = false;
 					}

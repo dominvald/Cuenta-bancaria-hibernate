@@ -1,60 +1,38 @@
 package test;
 
-import java.util.List;
-
-import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
-
-import java.io.PrintWriter;
 import java.math.BigDecimal;
-import java.sql.Date;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.sql.Timestamp;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Iterator;
+import java.util.List;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
-
-import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
-import org.hibernate.Transaction;
-import org.hibernate.criterion.Restrictions;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 
 import model.Cliente;
 import model.Direccion;
 import model.Movimiento;
 import resources.HibernateUtil;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.HashSet;
-import java.util.Set;
-
 public class Test {
-	
+
 	SessionFactory sessFact = HibernateUtil.getSessionFactory();
 
 	public static void main(String[] args) {
 
 		Test test = new Test();
 		/* Añadir un cliente */
-		//Direccion direccion = test.addDireccion("Calle Medul", 24750, "Leon", "La Bañeza", "España");
-		//for(int i=1;i<96;i++) {
-		//	Integer cliID1 = test.addCliente("2000", "Alberto"+i, "Domínguez", "Morán", direccion);
-		//}
-		//Integer cliID1 = test.addCliente("2000", "Alberto", "Domínguez", "Morán", direccion);
-		//Integer cliID2 = test.addCliente("1000", "pico", "D", "Mo", null);
+		// Direccion direccion = test.addDireccion("Calle Medul", 24750, "Leon", "La
+		// Bañeza", "España");
+		// for(int i=1;i<96;i++) {
+		// Integer cliID1 = test.addCliente("2000", "Alberto"+i, "Domínguez", "Morán",
+		// direccion);
+		// }
+		// Integer cliID1 = test.addCliente("2000", "Alberto", "Domínguez", "Morán",
+		// direccion);
+		// Integer cliID2 = test.addCliente("1000", "pico", "D", "Mo", null);
 		test.listDirecciones();
 		Direccion direccion1 = test.addDireccion("Calle fffffffMedul", 24750, "Lefffffffon", "La Baffffñeza", "España");
 		// test.deleteDireccion(test.findCliente(cliID1).getDireccion().getId());
@@ -63,10 +41,11 @@ public class Test {
 		BigDecimal numero1 = new BigDecimal("100");
 		BigDecimal numero2 = new BigDecimal("200");
 		BigDecimal numero3 = new BigDecimal("300");
-		//test.addMovimiento(numero1, test.findCliente(cliID1));
-		//test.addMovimiento(numero2, test.findCliente(cliID1));
-		//test.addMovimiento(numero3, test.findCliente(cliID1));
-		//test.consigueSaldo(cliID1);
+		// test.addMovimiento(numero1, test.findCliente(cliID1));
+		// test.addMovimiento(numero2, test.findCliente(cliID1));
+		
+		// test.addMovimiento(numero3, test.findCliente(cliID1));
+		// test.consigueSaldo(cliID1);
 		// test.listMovimientos();
 		// Integer cliID2 = test.addCliente("1000", "Pco", "f", "fff");
 
@@ -85,7 +64,7 @@ public class Test {
 
 		/* Listar todos los clientes */
 		// test.listClientes();
-		
+
 		System.exit(0);
 	}
 	// CLIENTES
@@ -206,15 +185,15 @@ public class Test {
 	/* Método para encontrar un cliente por id de cliente */
 	public Cliente findCliente(Integer clienteId) {
 		Cliente cliente = new Cliente();
-		Direccion direccion=new Direccion();
-		Movimiento movimiento=new Movimiento();
+		Direccion direccion = new Direccion();
+		Movimiento movimiento = new Movimiento();
 		Session session = sessFact.getCurrentSession();
 		Transaction tx = null;
 		try {
 			tx = session.beginTransaction();
 			cliente = (Cliente) session.get(Cliente.class, clienteId);
-			//direccion = (Direccion) session.get(Direccion.class, direccionId);
-			//movimiento = (Movimiento) session.get(Movimiento.class, movimientoId);
+			// direccion = (Direccion) session.get(Direccion.class, direccionId);
+			// movimiento = (Movimiento) session.get(Movimiento.class, movimientoId);
 		} catch (HibernateException e) {
 			if (tx != null)
 				tx.rollback();
@@ -236,7 +215,7 @@ public class Test {
 
 		try {
 			tx = session.beginTransaction();
-			//direccion = new Direccion(direccionCampo, cp, provincia, poblacion, pais);
+			// direccion = new Direccion(direccionCampo, cp, provincia, poblacion, pais);
 			tx.commit();
 		} catch (HibernateException e) {
 			if (tx != null)
@@ -289,7 +268,7 @@ public class Test {
 				direccion.setDireccion(direccionCampo);
 			}
 			if (cpCampo != 0) {
-				//direccion.setCp(cpCampo);
+				// direccion.setCp(cpCampo);
 			}
 			if (!provinciaCampo.equals("")) {
 				direccion.setProvincia(provinciaCampo);
@@ -321,7 +300,7 @@ public class Test {
 			tx = session.beginTransaction();
 			Direccion direccion = (Direccion) session.get(Direccion.class, DireccionID);
 			direccion.setDireccion("");
-			//direccion.setCp(0);
+			// direccion.setCp(0);
 			direccion.setProvincia("");
 			direccion.setPoblacion("");
 			direccion.setPais("");
@@ -388,25 +367,29 @@ public class Test {
 			// System.out.println(u.getNombre());
 			// }
 			// FIN Criterio ejemplo
-//			CriteriaBuilder cb = session.getCriteriaBuilder();
-//			CriteriaQuery<Movimiento> query = cb.createQuery(Movimiento.class);
-//			Root<Movimiento> root = query.from(Movimiento.class);
-//			query = query.select(root).where(cb.equal(root.get("cliente").get("id"), 358));
-//			TypedQuery<Movimiento> tq = session.createQuery(query);
-//			List<Movimiento> movimientos = new ArrayList<Movimiento>();
-//			movimientos = tq.getResultList();
-//			System.out.println("\n\n " + movimientos.size());
-//			//movimientos = tq.setFirstResult(movimientos.size()).setMaxResults(1).getResultList();
-//			for (Movimiento u : movimientos) {
-//				System.out.println(u + "\n");
-//			}
-			List movimientos1 = session.createQuery("from Movimiento mov where cliente_id='"+idCliente+"' order by mov.fecha desc, mov.id desc").setMaxResults(1).list();
-	        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+			// CriteriaBuilder cb = session.getCriteriaBuilder();
+			// CriteriaQuery<Movimiento> query = cb.createQuery(Movimiento.class);
+			// Root<Movimiento> root = query.from(Movimiento.class);
+			// query = query.select(root).where(cb.equal(root.get("cliente").get("id"),
+			// 358));
+			// TypedQuery<Movimiento> tq = session.createQuery(query);
+			// List<Movimiento> movimientos = new ArrayList<Movimiento>();
+			// movimientos = tq.getResultList();
+			// System.out.println("\n\n " + movimientos.size());
+			// //movimientos =
+			// tq.setFirstResult(movimientos.size()).setMaxResults(1).getResultList();
+			// for (Movimiento u : movimientos) {
+			// System.out.println(u + "\n");
+			// }
+			List movimientos1 = session.createQuery(
+					"from Movimiento mov where cliente_id='" + idCliente + "' order by mov.fecha desc, mov.id desc")
+					.setMaxResults(1).list();
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
 			for (Iterator iterator = movimientos1.iterator(); iterator.hasNext();) {
 				Movimiento movimiento = (Movimiento) iterator.next();
 				System.out.print("\nImporte: " + movimiento.getImporte());
-				System.out.print(" Saldo: " + movimiento.getSaldo() +" Fecha: " + movimiento.getFecha().format(formatter)+ "\n");
-
+				System.out.print(" Saldo: " + movimiento.getSaldo() + " Fecha: "
+						+ movimiento.getFecha().format(formatter) + "\n");
 
 			}
 			// List movimientos = session.createCriteria(Movimiento.class)

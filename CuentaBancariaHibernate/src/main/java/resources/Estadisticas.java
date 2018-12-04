@@ -2,23 +2,23 @@ package resources;
 
 import java.math.BigDecimal;
 
-public class Estadisticas {
+public class Estadisticas implements Cloneable {
 	/**
-	 *  Contador de clientes encontrados
+	 * Contador de clientes encontrados
 	 */
-	private long contadorInternoClientesEncontrados=0L;
+	private long contadorInternoClientesEncontrados = 0L;
 	/**
 	 * Contador de clientes con saldo 0
 	 */
-	private long contadorInternoClientesSaldoCero=0L;
+	private long contadorInternoClientesSaldoCero = 0L;
 	/**
 	 * Contador de clientes con saldo positivo
 	 */
-	private long contadorInternoClientesSaldoPositivo=0L;
+	private long contadorInternoClientesSaldoPositivo = 0L;
 	/**
 	 * Contador de clientes sin dirección
 	 */
-	private long contadorInternoClientesSinDireccion=0L;
+	private long contadorInternoClientesSinDireccion = 0L;
 	/**
 	 * Sirve para almacenar el saldo medio de los clientes
 	 */
@@ -27,9 +27,10 @@ public class Estadisticas {
 	 * Sirve para almacenar la suma de todos los saldos de los clientes
 	 */
 	private BigDecimal sumaSaldoClientes = BigDecimal.ZERO;
-	
-	public Estadisticas() {}
-	
+
+	public Estadisticas() {
+	}
+
 	public Estadisticas(long contadorInternoClientesEncontrados, long contadorInternoClientesSaldoCero,
 			long contadorInternoClientesSaldoPositivo, long contadorInternoClientesSinDirección, BigDecimal saldoMedio,
 			BigDecimal sumaSaldoClientes) {
@@ -145,17 +146,32 @@ public class Estadisticas {
 				+ saldoMedio + ", sumaSaldoClientes=" + sumaSaldoClientes + "]";
 	}
 
-	public Estadisticas clone() {
-		Estadisticas clone = new Estadisticas();
-		
-		clone.contadorInternoClientesEncontrados = this.contadorInternoClientesEncontrados;
-		clone.contadorInternoClientesSaldoCero = this.contadorInternoClientesSaldoCero;
-		clone.contadorInternoClientesSaldoPositivo = this.contadorInternoClientesSaldoPositivo;
-		clone.contadorInternoClientesSinDireccion = this.contadorInternoClientesSinDireccion;
-		clone.saldoMedio = this.saldoMedio;
-		clone.sumaSaldoClientes = this.sumaSaldoClientes;
-		
-		return clone;
+	// Esto tb funciona sin implementasr Cloneable
+	// public Estadisticas clone() {
+	// Estadisticas clone = new Estadisticas();
+	//
+	// clone.contadorInternoClientesEncontrados =
+	// this.contadorInternoClientesEncontrados;
+	// clone.contadorInternoClientesSaldoCero =
+	// this.contadorInternoClientesSaldoCero;
+	// clone.contadorInternoClientesSaldoPositivo =
+	// this.contadorInternoClientesSaldoPositivo;
+	// clone.contadorInternoClientesSinDireccion =
+	// this.contadorInternoClientesSinDireccion;
+	// clone.saldoMedio = this.saldoMedio;
+	// clone.sumaSaldoClientes = this.sumaSaldoClientes;
+	//
+	// return clone;
+	// }
+	public Object clone() {
+		Object obj = null;
+		try {
+			obj = (Estadisticas) super.clone();
+		} catch (CloneNotSupportedException ex) {
+			// TODO modificar eror y enviarlo a log
+			System.out.println(" no se puede duplicar");
+		}
+		return obj;
 	}
-	
+
 }

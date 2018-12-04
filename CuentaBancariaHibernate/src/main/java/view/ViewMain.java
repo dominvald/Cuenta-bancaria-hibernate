@@ -69,26 +69,25 @@ public class ViewMain {
 			System.out.println("No hay coincidencias.");
 		}
 	}
-	//NOTA----->MÉTODO NO USADO
+
+	// NOTA----->MÉTODO NO USADO
 	/**
 	 * Muestra los datos de un cliente por pantalla
 	 */
 	public void verCliente(Cliente cliente, String texto) {
 
-		if (cliente!=null) {
-				System.out.println(
-						"\n-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
-				System.out.println("\t"+texto+":\n");
-				System.out.printf("\t%-10s%-30s%-15s%-20s%-20s%-20s%-20s%-20s\n", "", "Reg. Nº", "--- Id ---", "Cif",
-						"Nombre", "Primer Apellido", "Segundo Apedillo", "Saldo");
-				System.out.println(
-						"-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
-				System.out.printf("\n\t%-10s%-30s%-15s%-20s%-20s%-20s%-20s%-20s\n\n", "-->",
-						"1", " << " + cliente.getId() + " >> ",
-						cliente.getCif(), cliente.getNombre(), cliente.getApellido1(),
-						cliente.getApellido2(),
-						Recursos.bigDecimalToString(daoClienteOperaciones.consigueSaldo(cliente.getId()))
-								+ "€");
+		if (cliente != null) {
+			System.out.println(
+					"\n-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
+			System.out.println("\t" + texto + ":\n");
+			System.out.printf("\t%-10s%-30s%-15s%-20s%-20s%-20s%-20s%-20s\n", "", "Reg. Nº", "--- Id ---", "Cif",
+					"Nombre", "Primer Apellido", "Segundo Apedillo", "Saldo");
+			System.out.println(
+					"-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
+			System.out.printf("\n\t%-10s%-30s%-15s%-20s%-20s%-20s%-20s%-20s\n\n", "-->", "1",
+					" << " + cliente.getId() + " >> ", cliente.getCif(), cliente.getNombre(), cliente.getApellido1(),
+					cliente.getApellido2(),
+					Recursos.bigDecimalToString(daoClienteOperaciones.consigueSaldo(cliente.getId())) + "€");
 		} else {
 			System.out.println("Cliente inexistente");
 		}
@@ -118,7 +117,7 @@ public class ViewMain {
 			// Si hay movimientos, imprimimos el título del listado y los encabezados
 			if (contadorInternoMovimientosEncontrados == 1) {
 				System.out.println("LISTADO MOVIMIENTOS:\n");
-				System.out.printf("\t%-10s%20s%15s%-10s%20s%20s\n", "Nº", "Importe", "Saldo","", "Fecha", "Hora\n");
+				System.out.printf("\t%-10s%20s%15s%-10s%20s%20s\n", "Nº", "Importe", "Saldo", "", "Fecha", "Hora\n");
 			}
 			/**
 			 * Creamos este objeto para dar el formato correcto a la fecha
@@ -128,8 +127,7 @@ public class ViewMain {
 			// Imprimos cada movimiento
 			System.out.printf("\t%-10s%20s%15s%-10s%20s%20s\n", contadorInternoMovimientosEncontrados,
 					Recursos.bigDecimalToString(movimientoOperaciones.getImporte()) + "€",
-					Recursos.bigDecimalToString(movimientoOperaciones.getSaldo()) + "€",
-					"",
+					Recursos.bigDecimalToString(movimientoOperaciones.getSaldo()) + "€", "",
 					formatoFecha.format(movimientoOperaciones.getFecha()),
 					formatoHora.format(movimientoOperaciones.getFecha()));
 		}
@@ -250,8 +248,7 @@ public class ViewMain {
 				if (claseClientesDireccionSaldoOperaciones.getDireccionDireccion() != null) {
 					contadorRegistros++;
 					System.out.printf("\t%-10s%-10s%-15s%-10s%-15s%-20s%-20s%-25s%-10s%-15s%-15s%-15s\n",
-							contadorRegistros,
-							claseClientesDireccionSaldoOperaciones.getClienteId(),
+							contadorRegistros, claseClientesDireccionSaldoOperaciones.getClienteId(),
 							Recursos.bigDecimalToString(claseClientesDireccionSaldoOperaciones.getSaldo()) + "€",
 							claseClientesDireccionSaldoOperaciones.getClienteCif(),
 							claseClientesDireccionSaldoOperaciones.getClienteNombre(),
@@ -304,20 +301,21 @@ public class ViewMain {
 		if (clienteDireccionSaldo != null) {
 			System.out.println(Recursos.generaEspaciosEnBlanco(82) + "CLIENTE SELECCIONADO:");
 			System.out.println(Recursos.generaBarras(180));
-			System.out.printf("\t%-10s%-10s%15s%-10s%-15s%-20s%-20s%-25s%-10s%-15s%-15s%-15s\n", "Reg. Nº", "Id",
-					"Saldo", "", "Nombre", "Primer Apellido", "Segundo Apedillo", "Dirección", "C.P.", "Provincia",
+			System.out.printf("\t%-10s%-10s%-15s%-15s%-20s%-20s%-25s%-10s%-15s%-15s%-15s\n", "Reg. Nº", "Id", "Saldo",
+					"CIF", "Nombre", "Primer Apellido", "Segundo Apedillo", "Dirección", "C.P.", "Provincia",
 					"Población", "País");
 			System.out.println(Recursos.generaBarras(180));
 			// Si el cliente tiene dirección, recogemos todos sus datos
 			if (clienteDireccionSaldo.getDireccionDireccion() != null) {
 				contadorRegistros++;
-				System.out.printf("\t%-10s%-10s%15s%-10s%-15s%-20s%-20s%-25s%-10s%-15s%-15s%-15s\n", contadorRegistros,
+				System.out.printf("\t%-10s%-10s%-15s%-15s%-20s%-20s%-25s%-10s%-15s%-15s%-15s\n", contadorRegistros,
 						clienteDireccionSaldo.getClienteId(),
-						Recursos.bigDecimalToString(clienteDireccionSaldo.getSaldo()) + "€", "",
-						clienteDireccionSaldo.getClienteNombre(), clienteDireccionSaldo.getClienteApellido1(),		
-						clienteDireccionSaldo.getClienteApellido2(), clienteDireccionSaldo.getDireccionDireccion(),
-						clienteDireccionSaldo.getDireccionCp(), clienteDireccionSaldo.getDireccionProvincia(),
-						clienteDireccionSaldo.getDireccionPoblacion(), clienteDireccionSaldo.getDireccionPais());
+						Recursos.bigDecimalToString(clienteDireccionSaldo.getSaldo()) + "€",
+						clienteDireccionSaldo.getClienteCif(), clienteDireccionSaldo.getClienteNombre(),
+						clienteDireccionSaldo.getClienteApellido1(), clienteDireccionSaldo.getClienteApellido2(),
+						clienteDireccionSaldo.getDireccionDireccion(), clienteDireccionSaldo.getDireccionCp(),
+						clienteDireccionSaldo.getDireccionProvincia(), clienteDireccionSaldo.getDireccionPoblacion(),
+						clienteDireccionSaldo.getDireccionPais());
 				System.out.println(Recursos.generaBarras(180));
 				// Si no tiene dirección
 			} else {
@@ -325,8 +323,9 @@ public class ViewMain {
 				System.out.printf("\t%-10s%-10s%-15s%-15s%-20s%-20s%-25s%-10s%-15s%-15s%-15s\n", contadorRegistros,
 						clienteDireccionSaldo.getClienteId(),
 						Recursos.bigDecimalToString(clienteDireccionSaldo.getSaldo()) + "€",
-						clienteDireccionSaldo.getClienteNombre(), clienteDireccionSaldo.getClienteApellido1(),
-						clienteDireccionSaldo.getClienteApellido2(), "---", "---", "---", "---", "---");
+						clienteDireccionSaldo.getClienteCif(), clienteDireccionSaldo.getClienteNombre(),
+						clienteDireccionSaldo.getClienteApellido1(), clienteDireccionSaldo.getClienteApellido2(), "---",
+						"---", "---", "---", "---");
 				System.out.println(Recursos.generaBarras(180));
 			}
 
@@ -371,68 +370,71 @@ public class ViewMain {
 
 	}
 
-	public void muestraDatosClienteNuevo(String cifNuevo, String nombreNuevo,
-			String apellido1Nuevo, String apellido2Nuevo) {
-		System.out.println("\t"+Recursos.generaBarras(81));
-		System.out.printf("\t| %-20s%56s\n", "DATOS CLIENTE:         ","|");
-		System.out.println("\t"+Recursos.generaBarras(81));
-		System.out.printf("\t| %-20s%-7s%-51s%-1s\n", "CIF: ","|", cifNuevo,"|");
-		System.out.println("\t"+Recursos.generaBarras(81));
-		System.out.printf("\t| %-20s%-7s%-51s%-1s\n", "Nombre: ","|", nombreNuevo,"|");
-		System.out.println("\t"+Recursos.generaBarras(81));
-		System.out.printf("\t| %-20s%-7s%-51s%-1s\n", "Primer apellido: ","|", apellido1Nuevo,"|");
-		System.out.println("\t"+Recursos.generaBarras(81));
-		System.out.printf("\t| %-20s%-7s%-51s%-1s\n", "Segundo apellido: ","|", apellido2Nuevo,"|");
-		System.out.println("\t"+Recursos.generaBarras(81));
-		
+	public void muestraDatosClienteNuevo(String cifNuevo, String nombreNuevo, String apellido1Nuevo,
+			String apellido2Nuevo) {
+		System.out.println("\t" + Recursos.generaBarras(81));
+		System.out.printf("\t| %-20s%56s\n", "DATOS CLIENTE:         ", "|");
+		System.out.println("\t" + Recursos.generaBarras(81));
+		System.out.printf("\t| %-20s%-7s%-51s%-1s\n", "CIF: ", "|", cifNuevo, "|");
+		System.out.println("\t" + Recursos.generaBarras(81));
+		System.out.printf("\t| %-20s%-7s%-51s%-1s\n", "Nombre: ", "|", nombreNuevo, "|");
+		System.out.println("\t" + Recursos.generaBarras(81));
+		System.out.printf("\t| %-20s%-7s%-51s%-1s\n", "Primer apellido: ", "|", apellido1Nuevo, "|");
+		System.out.println("\t" + Recursos.generaBarras(81));
+		System.out.printf("\t| %-20s%-7s%-51s%-1s\n", "Segundo apellido: ", "|", apellido2Nuevo, "|");
+		System.out.println("\t" + Recursos.generaBarras(81));
+
 	}
+
 	public void muestraDatosClienteSeleccionado(String cifSeleccionado, String nombreSeleccionado,
 			String apellido1Seleccionado, String apellido2Seleccionado) {
-		System.out.println("\t"+Recursos.generaBarras(81));
-		System.out.printf("\t| %-20s%56s\n", "DATOS CLIENTE:        ","|");
-		System.out.println("\t"+Recursos.generaBarras(81));
-		System.out.printf("\t| %-20s%-7s%-51s%-1s\n", "CIF: ","|", cifSeleccionado,"|");
-		System.out.println("\t"+Recursos.generaBarras(81));
-		System.out.printf("\t| %-20s%-7s%-51s%-1s\n", "Nombre: ","|", nombreSeleccionado,"|");
-		System.out.println("\t"+Recursos.generaBarras(81));
-		System.out.printf("\t| %-20s%-7s%-51s%-1s\n", "Primer apellido: ","|", apellido1Seleccionado,"|");
-		System.out.println("\t"+Recursos.generaBarras(81));
-		System.out.printf("\t| %-20s%-7s%-51s%-1s\n", "Segundo apellido: ","|", apellido2Seleccionado,"|");
-		System.out.println("\t"+Recursos.generaBarras(81));
-		
+		System.out.println("\t" + Recursos.generaBarras(81));
+		System.out.printf("\t| %-20s%56s\n", "DATOS CLIENTE:        ", "|");
+		System.out.println("\t" + Recursos.generaBarras(81));
+		System.out.printf("\t| %-20s%-7s%-51s%-1s\n", "CIF: ", "|", cifSeleccionado, "|");
+		System.out.println("\t" + Recursos.generaBarras(81));
+		System.out.printf("\t| %-20s%-7s%-51s%-1s\n", "Nombre: ", "|", nombreSeleccionado, "|");
+		System.out.println("\t" + Recursos.generaBarras(81));
+		System.out.printf("\t| %-20s%-7s%-51s%-1s\n", "Primer apellido: ", "|", apellido1Seleccionado, "|");
+		System.out.println("\t" + Recursos.generaBarras(81));
+		System.out.printf("\t| %-20s%-7s%-51s%-1s\n", "Segundo apellido: ", "|", apellido2Seleccionado, "|");
+		System.out.println("\t" + Recursos.generaBarras(81));
+
 	}
+
 	public void muestraDatosDireccionNuevo(String direccionSeleccionado, String cpSeleccionado,
 			String provinciaSeleccionado, String poblacionSeleccionado, String paisSeleccionado) {
-		System.out.println("\t"+Recursos.generaBarras(81));
-		System.out.printf("\t| %-20s%54s\n", "DIRECCIÓN CLIENTE:        ","|");
-		System.out.println("\t"+Recursos.generaBarras(81));
-		System.out.printf("\t| %-20s%-7s%-51s%-1s\n", "Dirección: ","|", direccionSeleccionado,"|");
-		System.out.println("\t"+Recursos.generaBarras(81));
-		System.out.printf("\t| %-20s%-7s%-51s%-1s\n", "C.P: ","|", cpSeleccionado,"|");
-		System.out.println("\t"+Recursos.generaBarras(81));
-		System.out.printf("\t| %-20s%-7s%-51s%-1s\n", "Provincia: ","|", provinciaSeleccionado,"|");
-		System.out.println("\t"+Recursos.generaBarras(81));
-		System.out.printf("\t| %-20s%-7s%-51s%-1s\n", "Población: ","|", poblacionSeleccionado,"|");
-		System.out.println("\t"+Recursos.generaBarras(81));
-		System.out.printf("\t| %-20s%-7s%-51s%-1s\n", "País: ","|", paisSeleccionado,"|");
-		System.out.println("\t"+Recursos.generaBarras(81));
-		
+		System.out.println("\t" + Recursos.generaBarras(81));
+		System.out.printf("\t| %-20s%54s\n", "DIRECCIÓN CLIENTE:        ", "|");
+		System.out.println("\t" + Recursos.generaBarras(81));
+		System.out.printf("\t| %-20s%-7s%-51s%-1s\n", "Dirección: ", "|", direccionSeleccionado, "|");
+		System.out.println("\t" + Recursos.generaBarras(81));
+		System.out.printf("\t| %-20s%-7s%-51s%-1s\n", "C.P: ", "|", cpSeleccionado, "|");
+		System.out.println("\t" + Recursos.generaBarras(81));
+		System.out.printf("\t| %-20s%-7s%-51s%-1s\n", "Provincia: ", "|", provinciaSeleccionado, "|");
+		System.out.println("\t" + Recursos.generaBarras(81));
+		System.out.printf("\t| %-20s%-7s%-51s%-1s\n", "Población: ", "|", poblacionSeleccionado, "|");
+		System.out.println("\t" + Recursos.generaBarras(81));
+		System.out.printf("\t| %-20s%-7s%-51s%-1s\n", "País: ", "|", paisSeleccionado, "|");
+		System.out.println("\t" + Recursos.generaBarras(81));
+
 	}
+
 	public void muestraDatosDireccionSeleccionado(String direccionSeleccionado, String cpSeleccionado,
 			String provinciaSeleccionado, String poblacionSeleccionado, String paisSeleccionado) {
-		System.out.println("\t"+Recursos.generaBarras(81));
-		System.out.printf("\t| %-20s%54s\n", "DIRECCIÓN CLIENTE:        ","|");
-		System.out.println("\t"+Recursos.generaBarras(81));
-		System.out.printf("\t| %-20s%-7s%-51s%-1s\n", "Dirección: ","|", direccionSeleccionado,"|");
-		System.out.println("\t"+Recursos.generaBarras(81));
-		System.out.printf("\t| %-20s%-7s%-51s%-1s\n", "C.P: ","|", cpSeleccionado,"|");
-		System.out.println("\t"+Recursos.generaBarras(81));
-		System.out.printf("\t| %-20s%-7s%-51s%-1s\n", "Provincia: ","|", provinciaSeleccionado,"|");
-		System.out.println("\t"+Recursos.generaBarras(81));
-		System.out.printf("\t| %-20s%-7s%-51s%-1s\n", "Población: ","|", poblacionSeleccionado,"|");
-		System.out.println("\t"+Recursos.generaBarras(81));
-		System.out.printf("\t| %-20s%-7s%-51s%-1s\n", "País: ","|", paisSeleccionado,"|");
-		System.out.println("\t"+Recursos.generaBarras(81));
-		
+		System.out.println("\t" + Recursos.generaBarras(81));
+		System.out.printf("\t| %-20s%54s\n", "DIRECCIÓN CLIENTE:        ", "|");
+		System.out.println("\t" + Recursos.generaBarras(81));
+		System.out.printf("\t| %-20s%-7s%-51s%-1s\n", "Dirección: ", "|", direccionSeleccionado, "|");
+		System.out.println("\t" + Recursos.generaBarras(81));
+		System.out.printf("\t| %-20s%-7s%-51s%-1s\n", "C.P: ", "|", cpSeleccionado, "|");
+		System.out.println("\t" + Recursos.generaBarras(81));
+		System.out.printf("\t| %-20s%-7s%-51s%-1s\n", "Provincia: ", "|", provinciaSeleccionado, "|");
+		System.out.println("\t" + Recursos.generaBarras(81));
+		System.out.printf("\t| %-20s%-7s%-51s%-1s\n", "Población: ", "|", poblacionSeleccionado, "|");
+		System.out.println("\t" + Recursos.generaBarras(81));
+		System.out.printf("\t| %-20s%-7s%-51s%-1s\n", "País: ", "|", paisSeleccionado, "|");
+		System.out.println("\t" + Recursos.generaBarras(81));
+
 	}
 }

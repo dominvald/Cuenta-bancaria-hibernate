@@ -12,7 +12,7 @@ public class Demo {
 	 */
 	public static void main(String[] args) throws SQLException, Exception {
 		/**
-		 * Creamos el controlador principal, para invocar sus métodos 
+		 * Creamos el controlador principal, para invocar sus métodos
 		 */
 		ControllerPrincipal controllerPrincipal = new ControllerPrincipal();
 		// Pone en funcionamiento la aplicación con su método main().
