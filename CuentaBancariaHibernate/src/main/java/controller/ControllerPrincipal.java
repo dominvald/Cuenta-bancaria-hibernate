@@ -33,8 +33,6 @@ import services.ServiceMovimiento;
  *         Controlador principal de la aplicación.
  */
 public class ControllerPrincipal {
-	// importante borrar daoClienteOperaciones, SOLO ES DE PRUEBA.
-	ClienteDaoImplementacion daoClienteOperaciones = new ClienteDaoImplementacion();// BORRAR
 	// ------------------------------------------------------------------------------------------|
 	// PROPIEDADES
 	// ---------------------------------------------------------------------------|
@@ -74,6 +72,7 @@ public class ControllerPrincipal {
 
 	// Variables para guardar los datos antiguos o actuales del cliente
 	// seleccionado.
+	private int idClienteSeleccionado=0;
 
 	/**
 	 * cifSeleccionado: guarda el cif antiguo o actuales de cliente seleccionado.
@@ -228,7 +227,7 @@ public class ControllerPrincipal {
 
 	/**
 	 * La utilizaremos para saber si hay que actualizar las estadísticas, estará en
-	 * true por ejemplo cuando se cree un movimietno, se añada una dirección, etc
+	 * true por ejemplo cuando se cree un movimiento, se añada una dirección, etc
 	 */
 	private Boolean actualizarEstadisticas = false;
 	/**
@@ -540,7 +539,7 @@ public class ControllerPrincipal {
 	private void mostrarMenuOperacionesConClientes() throws Exception {
 		while (true) {
 			viewMain.verClienteDireccionSaldo(
-					clienteDireccionSaldoOperaciones=daoClienteOperaciones.mostrarClienteDireccionSaldo(clienteOperaciones.getId()));
+					clienteDireccionSaldoOperaciones=serviceCliente.datosClientesDireccionSaldo(idClienteSeleccionado));
 			viewMain.escribirEnConsola("------------------------------------------");
 			viewMain.escribirEnConsola("|   PRÁCTICA CUENTAS BANCARIAS HIBERNATE  |");
 			viewMain.escribirEnConsola(
@@ -578,7 +577,7 @@ public class ControllerPrincipal {
 				break;
 			// 2. Mostrar movimientos del cliente.
 			case "2":
-				movimientoOperaciones = serviceMovimiento.list(clienteOperaciones.getId());
+				movimientoOperaciones = serviceMovimiento.list(idClienteSeleccionado);
 				viewMain.verMovimientosEncontrados(movimientoOperaciones);
 				mostrarMenuOperacionesConClientes();
 				break;
@@ -594,7 +593,8 @@ public class ControllerPrincipal {
 				break;
 			// 5. Volver atrás.
 			case "5":
-				viewMain.verClienteDireccionSaldo(clienteDireccionSaldoOperaciones);
+				//TODO hacer función de "RESETEO"
+				clienteDireccionSaldoOperaciones=null;
 				mostramosMenuSeleccionarCrearClientes();
 				break;
 			// 6. Cerrar la aplicación.
@@ -603,7 +603,7 @@ public class ControllerPrincipal {
 				mostrarMenuOperacionesConClientes();
 				break;
 			default:
-				viewMain.escribirEnConsola("Opción no válida. Introduzca sólo números entre 1 y 5.");
+				viewMain.escribirEnConsola("Opción no válida. Introduzca sólo números entre 1 y 6.");
 				Sonido.sonar();
 			}
 
@@ -612,12 +612,9 @@ public class ControllerPrincipal {
 
 	private void mostrarMenuModificarDatosPersonalesDireccionClientes() throws Exception {
 		while (true) {
-			idDireccionOperaciones=daoClienteOperaciones.find(clienteOperaciones.getId()).getDireccion().getId();
-			direccionOperaciones.setId(idDireccionOperaciones);
+
 			viewMain.verClienteDireccionSaldo(
-					clienteDireccionSaldoOperaciones=daoClienteOperaciones.mostrarClienteDireccionSaldo(clienteOperaciones.getId()));
-			
-			viewMain.verCliente(clienteOperaciones, "CLIENTE A MODIFICAR.");
+					clienteDireccionSaldoOperaciones=serviceCliente.datosClientesDireccionSaldo(idClienteSeleccionado));
 			viewMain.escribirEnConsola("------------------------------------------");
 			viewMain.escribirEnConsola("|   PRÁCTICA CUENTAS BANCARIAS HIBERNATE. |");
 			viewMain.escribirEnConsola(
@@ -634,6 +631,8 @@ public class ControllerPrincipal {
 			viewMain.escribirEnConsola("|  3. Eliminar cliente.                   |");
 			viewMain.escribirEnConsola("|-----------------------------------------|");
 			viewMain.escribirEnConsola("|  4. Volver atrás.                       |");
+			viewMain.escribirEnConsola("|-----------------------------------------|");
+			viewMain.escribirEnConsola("|  5. Salir.                              |");
 			viewMain.escribirEnConsola("|------------------------------------------");
 			viewMain.escribirEnConsola("|  ---------------------");
 			viewMain.escribirEnConsola("|  | " + cadenaIdiomaOpcion + " |---->");
@@ -655,10 +654,15 @@ public class ControllerPrincipal {
 			case "3":
 				mostrarMenuOperacionesConClientes();
 				break;
-			// 4. Cerrar la aplicación.
+			// 4. Volver atrás.
 			case "4":
-				salirDeLaAplicacion();
+				viewMain.verClienteDireccionSaldo(clienteDireccionSaldoOperaciones);
 				mostrarMenuOperacionesConClientes();
+				break;
+			// 5. Cerrar la aplicación.
+			case "5":
+				salirDeLaAplicacion();
+				mostrarMenuModificarDatosPersonalesDireccionClientes();
 				break;
 			default:
 				viewMain.escribirEnConsola("Opción no válida. Introduzca sólo números entre 1 y 4.");
@@ -793,13 +797,15 @@ public class ControllerPrincipal {
 	// ----DELETE----OPCION BORRAR CLIENTE
 	// --------------------------------------------------------------
 	private void deleteCliente() throws Exception {
-		if (serviceCliente.delete(clienteOperaciones)) {
+		System.out.println("-------------8888888888888888888----");
+		if (serviceCliente.delete(idClienteSeleccionado)) {
 			viewMain.escribirEnConsola("Se ha eliminado al cliente correctamente");
 		} else {
 			viewMain.escribirEnConsola("No se ha podido eliminar al cliente correctamente");
 			Sonido.sonar();
 		}
-		mostrarMenuOperacionesConClientes();
+		System.out.println("paso por aqui");
+		//mostrarMenuOperacionesConClientes();
 
 	}
 
@@ -1006,18 +1012,23 @@ public class ControllerPrincipal {
 				// En este caso sería dististo de null si no hemos cancelado.
 				if (listaClientesEncontrados != null) {
 					// Si se ha encontrado algún cliente.
-					if (listaClientesEncontrados.size() != 0) {
-						// Enviamos a imprimir la lista.
-						viewMain.verClientesEncontrados(listaClientesEncontrados);
-						// Salimos de este dowhile.
-						encontrado = true;
-						// Si no encuentra ningún cliente coincidente con la cadena de texto pasada.
+					//Si ha encontrado uno que no impima nada, ya lo impmimos en los menús.
+					if (listaClientesEncontrados.size() != 1) {
+						if (listaClientesEncontrados.size() != 0) {
+							// Enviamos a imprimir la lista.
+							viewMain.verClientesEncontrados(listaClientesEncontrados);
+							// Salimos de este dowhile.
+							encontrado = true;
+							// Si no encuentra ningún cliente coincidente con la cadena de texto pasada.
+						} else {
+	
+							// Mostramos la lista, donde nos dirá que no hay coincidencias.
+							viewMain.verClientesEncontrados(listaClientesEncontrados);
+							// Continuamos con el bucle.
+							encontrado = false;
+						}
 					} else {
-
-						// Mostramos la lista, donde nos dirá que no hay coincidencias.
-						viewMain.verClientesEncontrados(listaClientesEncontrados);
-						// Continuamos con el bucle.
-						encontrado = false;
+						encontrado=true;
 					}
 					// En el caso de que el usuario haya cancelado, devolverá null, así que
 					// pondremos encontrado
@@ -1048,8 +1059,11 @@ public class ControllerPrincipal {
 						if (listaClientesEncontrados.size() == 1) {
 							for (Cliente cliente : listaClientesEncontrados) {
 								clienteOperaciones = cliente;
-								// Enviamos a imprimir el cliente.
-								viewMain.verCliente(clienteEncontrado, "SELECCIONADO");
+								idClienteSeleccionado=clienteOperaciones.getId();
+								//idDireccionOperaciones=serviceCliente.find(idClienteSeleccionado).getDireccion().getId();
+								direccionOperaciones=serviceCliente.find(idClienteSeleccionado).getDireccion();
+
+								idDireccionOperaciones=direccionOperaciones.getId();
 								// Salimos del dowhile.
 								mostrarMenuOperacionesConClientes();
 							}
@@ -1059,14 +1073,15 @@ public class ControllerPrincipal {
 						// Si se ha encontrado algún cliente.
 						if (clienteEncontrado != null) {
 							clienteOperaciones = clienteEncontrado;
-							// Enviamos a imprimir el cliente.
-							viewMain.verCliente(clienteOperaciones, "SELECCIONADO");
+							idClienteSeleccionado=clienteOperaciones.getId();
+							direccionOperaciones=serviceCliente.find(idClienteSeleccionado).getDireccion();
+							idDireccionOperaciones=direccionOperaciones.getId();
 							// Salimos del dowhile.
 							mostrarMenuOperacionesConClientes();
 							// Si no encuentra ningún cliente coincidente con la cadena de texto pasada.
 						} else {
-							// Mostramos la lista, donde nos dirá que no hay coincidencias.
-							viewMain.verCliente(clienteEncontrado, "SELECCIONADO");
+							// Mostramos no hay coincidencias.
+							viewMain.escribirEnConsola("No hay coincidencias");
 							// Continuamos con el bucle.
 							encontrado = false;
 						}
@@ -1482,7 +1497,7 @@ public class ControllerPrincipal {
 		 * Almacena el saldo actual del cliente seleccionado
 		 */
 		BigDecimal saldoClienteSeleccionado = BigDecimal.ZERO;
-		saldoClienteSeleccionado = serviceMovimiento.consigueSaldo(clienteOperaciones.getId());
+		saldoClienteSeleccionado =clienteDireccionSaldoOperaciones.getSaldo();
 		/**
 		 * Controla que sean correctos los datos introducidos, la inicializamos a true
 		 * para recorra el do while
@@ -1526,8 +1541,8 @@ public class ControllerPrincipal {
 				retirar = false;
 				do {
 					viewMain.escribirEnConsola(
-							"Su saldo es de 0.00€. Sólo podrá hacer ingresos. ¿Desea hacer un ingreso? <s/n>. \\n<<< Formato. Cancelar<\"\r\n"
-									+ "								+ cadenaCancelar + \"> Sí<s>. No<n>. Cancelar<+cadenaCancelar+>  >>>");
+							"Su saldo es de 0.00€. Sólo podrá hacer ingresos. ¿Desea hacer un ingreso? <s/n>. \n<<< Formato. Cancelar<"
+								+ cadenaCancelar + "> Sí<s>. No<n>. Cancelar<+cadenaCancelar+>  >>>");
 					cadenaDatos = scanner.nextLine().toLowerCase();
 					if (verSiCancelado(cadenaDatos, "Hacer un ingreso")) {
 						cadenaDatos = "###";
@@ -1670,7 +1685,7 @@ public class ControllerPrincipal {
 						solicitarDatosCorrectosOno("CIF", "Introducir CIF", 9, 9, false, false,
 								"El CIF debe contener: 9 dígitos");
 						clienteOperaciones.setCif(cadenaDatos);
-						serviceCliente.updateClienteDatos(clienteOperaciones.getId(), clienteOperaciones);
+						serviceCliente.updateClienteDatos(idClienteSeleccionado, clienteOperaciones);
 						viewMain.escribirEnConsola("CIF actualizado correctamente");
 						todoCorrecto = false;
 					} else if (orden.equals("¿Quiere modificar el Nombre?")) {
@@ -1678,7 +1693,7 @@ public class ControllerPrincipal {
 						solicitarDatosCorrectosOno("Nombre", "Introducir Nombre", 1, 30, false, false,
 								"Nombre: Longitud mínima: 1. Longitud máxima: 30");
 						clienteOperaciones.setNombre(cadenaDatos);
-						serviceCliente.updateClienteDatos(clienteOperaciones.getId(), clienteOperaciones);
+						serviceCliente.updateClienteDatos(idClienteSeleccionado, clienteOperaciones);
 						viewMain.escribirEnConsola("Nombre actualizado correctamente");
 						todoCorrecto = false;
 					} else if (orden.equals("¿Quiere modificar el Primer apellido?")) {
@@ -1686,7 +1701,7 @@ public class ControllerPrincipal {
 						solicitarDatosCorrectosOno("Primer apellido", "Introducir Primer apellido", 1, 30, false, false,
 								"Primer apellido: Longitud mínima: 1. Longitud máxima: 30");
 						clienteOperaciones.setApellido1(cadenaDatos);
-						serviceCliente.updateClienteDatos(clienteOperaciones.getId(), clienteOperaciones);
+						serviceCliente.updateClienteDatos(idClienteSeleccionado, clienteOperaciones);
 						viewMain.escribirEnConsola("Primer apellido actualizado correctamente");
 						todoCorrecto = false;
 					} else if (orden.equals("¿Quiere modificar el Segundo apellido?")) {
@@ -1694,7 +1709,7 @@ public class ControllerPrincipal {
 						solicitarDatosCorrectosOno("Segundo apellido", "Introducir Primer apellido", 1, 30, false,
 								false, "Segundo apellido: Longitud mínima: 1. Longitud máxima: 30");
 						clienteOperaciones.setApellido2(cadenaDatos);
-						serviceCliente.updateClienteDatos(clienteOperaciones.getId(), clienteOperaciones);
+						serviceCliente.updateClienteDatos(idClienteSeleccionado, clienteOperaciones);
 						viewMain.escribirEnConsola("Segundo apellido actualizado correctamente");
 						todoCorrecto = false;
 					}else if (orden.equals("¿Quiere modificar la Dirección?")) {

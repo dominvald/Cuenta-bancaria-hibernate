@@ -81,6 +81,7 @@ public class ClienteDaoImplementacion {
 	// UPDATE
 	/* Método para dar una dirección a un cliente el cif ce un cliente */
 	public void updateClienteDatos(int ClienteID, Cliente clienteOperaciones) {
+
 		Session session = sessFact.getCurrentSession();
 		Transaction tx = null;
 
@@ -91,10 +92,7 @@ public class ClienteDaoImplementacion {
 			cliente.setNombre(clienteOperaciones.getNombre());
 			cliente.setApellido1(clienteOperaciones.getApellido1());
 			cliente.setApellido2(clienteOperaciones.getApellido2());
-			cliente.setDireccion(clienteOperaciones.getDireccion());
 			session.update(cliente);
-			Cliente cliente1 = (Cliente) session.get(Cliente.class, ClienteID);
-			System.out.println("el nuevo cif es:" + cliente1.getCif());
 			tx.commit();
 		} catch (HibernateException e) {
 			if (tx != null)
@@ -185,19 +183,22 @@ public class ClienteDaoImplementacion {
 	 *             le pasa un cliente a eliminar.
 	 * @return: devolverá true, si se eliminó correctamente
 	 */
-	public boolean delete(Cliente cliente) {
+	public boolean delete(int clienteId) {
+
 		Session session = sessFact.getCurrentSession();
 		Transaction tx = null;
 		try {
 			tx = session.beginTransaction();
-			if (cliente != null) {
-				session.delete(cliente);
+			
+			Cliente cliente = (Cliente) session.get(Cliente.class, clienteId);
+			System.out.println("entra a borrar:clienteId: "+cliente.toString());
+			session.delete(cliente);
+
 				tx.commit();
+
 				return true;
-			} else {
-				return false;
-			}
 		} catch (HibernateException e) {
+			System.out.println("ha habido un error");
 			if (tx != null)
 				tx.rollback();
 			e.printStackTrace();
@@ -240,11 +241,12 @@ public class ClienteDaoImplementacion {
 				ClientesDireccionSaldo clientesDireccionSaldo = new ClientesDireccionSaldo();
 				clientesDireccionSaldo.setClienteId(cliente.getId());
 				clientesDireccionSaldo.setClienteNombre(cliente.getNombre());
-				clientesDireccionSaldo.setClienteApellido1(cliente.getApellido2());
+				clientesDireccionSaldo.setClienteApellido1(cliente.getApellido1());
 				clientesDireccionSaldo.setClienteApellido2(cliente.getApellido2());
 				clientesDireccionSaldo.setClienteCif(cliente.getCif());
 				try {
 					clientesDireccionSaldo.setDireccionDireccion(cliente.getDireccion().getDireccion());
+					clientesDireccionSaldo.setDireccionCp(cliente.getDireccion().getCp());
 					clientesDireccionSaldo.setDireccionProvincia(cliente.getDireccion().getProvincia());
 					clientesDireccionSaldo.setDireccionPoblacion(cliente.getDireccion().getPoblacion());
 					clientesDireccionSaldo.setDireccionPais(cliente.getDireccion().getPais());
@@ -268,7 +270,7 @@ public class ClienteDaoImplementacion {
 	 * @throws NoSuchFieldException
 	 */
 	/* Método para listar todos los clientes sus datos */
-	public ClientesDireccionSaldo mostrarClienteDireccionSaldo(int clienteId)
+	public ClientesDireccionSaldo datosClienteDireccionSaldo(int clienteId)
 			throws NoSuchFieldException, SecurityException {
 		listaClientesOperaciones = null;
 		int contadorDeRegistros = 0;
@@ -277,7 +279,7 @@ public class ClienteDaoImplementacion {
 		ClientesDireccionSaldo clientesDireccionSaldo = new ClientesDireccionSaldo();
 		clientesDireccionSaldo.setClienteId(cliente.getId());
 		clientesDireccionSaldo.setClienteNombre(cliente.getNombre());
-		clientesDireccionSaldo.setClienteApellido1(cliente.getApellido2());
+		clientesDireccionSaldo.setClienteApellido1(cliente.getApellido1());
 		clientesDireccionSaldo.setClienteApellido2(cliente.getApellido2());
 		clientesDireccionSaldo.setClienteCif(cliente.getCif());
 		try {

@@ -69,6 +69,10 @@ public class ViewMain {
 			System.out.println("No hay coincidencias.");
 		}
 	}
+	//NOTA----->MÉTODO NO USADO
+	/**
+	 * Muestra los datos de un cliente por pantalla
+	 */
 	public void verCliente(Cliente cliente, String texto) {
 
 		if (cliente!=null) {
@@ -236,8 +240,8 @@ public class ViewMain {
 				if (contadorInternoClientesEncontrados == 1) {
 					System.out.println(Recursos.generaEspaciosEnBlanco(82) + "LISTADO CLIENTES:");
 					System.out.println(Recursos.generaBarras(180));
-					System.out.printf("\t%-10s%-10s%15s%-10s%-15s%-20s%-20s%-25s%-10s%-15s%-15s%-15s\n", "Reg. Nº",
-							"Id", "Saldo", "", "Nombre", "Primer Apellido", "Segundo Apedillo", "Dirección", "C.P.",
+					System.out.printf("\t%-10s%-10s%-15s%-10s%-15s%-20s%-20s%-25s%-10s%-15s%-15s%-15s\n", "Reg. Nº",
+							"Id", "Saldo", "CIF", "Nombre", "Primer Apellido", "Segundo Apedillo", "Dirección", "C.P.",
 							"Provincia", "Población", "País");
 
 				}
@@ -245,9 +249,11 @@ public class ViewMain {
 				// Si el cliente tiene dirección, recogemos todos sus datos
 				if (claseClientesDireccionSaldoOperaciones.getDireccionDireccion() != null) {
 					contadorRegistros++;
-					System.out.printf("\t%-10s%-10s%15s%-10s%-15s%-20s%-20s%-25s%-10s%-15s%-15s%-15s\n",
-							contadorRegistros, claseClientesDireccionSaldoOperaciones.getClienteId(),
-							Recursos.bigDecimalToString(claseClientesDireccionSaldoOperaciones.getSaldo()) + "€", "",
+					System.out.printf("\t%-10s%-10s%-15s%-10s%-15s%-20s%-20s%-25s%-10s%-15s%-15s%-15s\n",
+							contadorRegistros,
+							claseClientesDireccionSaldoOperaciones.getClienteId(),
+							Recursos.bigDecimalToString(claseClientesDireccionSaldoOperaciones.getSaldo()) + "€",
+							claseClientesDireccionSaldoOperaciones.getClienteCif(),
 							claseClientesDireccionSaldoOperaciones.getClienteNombre(),
 							claseClientesDireccionSaldoOperaciones.getClienteApellido1(),
 							claseClientesDireccionSaldoOperaciones.getClienteApellido2(),
@@ -274,6 +280,7 @@ public class ViewMain {
 					System.out.printf("\t%-10s%-10s%-15s%-15s%-20s%-20s%-25s%-10s%-15s%-15s%-15s\n", contadorRegistros,
 							claseClientesDireccionSaldoOperaciones.getClienteId(),
 							Recursos.bigDecimalToString(claseClientesDireccionSaldoOperaciones.getSaldo()) + "€",
+							claseClientesDireccionSaldoOperaciones.getClienteCif(),
 							claseClientesDireccionSaldoOperaciones.getClienteNombre(),
 							claseClientesDireccionSaldoOperaciones.getClienteApellido1(),
 							claseClientesDireccionSaldoOperaciones.getClienteApellido2(), "---", "---", "---", "---",
@@ -307,7 +314,7 @@ public class ViewMain {
 				System.out.printf("\t%-10s%-10s%15s%-10s%-15s%-20s%-20s%-25s%-10s%-15s%-15s%-15s\n", contadorRegistros,
 						clienteDireccionSaldo.getClienteId(),
 						Recursos.bigDecimalToString(clienteDireccionSaldo.getSaldo()) + "€", "",
-						clienteDireccionSaldo.getClienteNombre(), clienteDireccionSaldo.getClienteApellido1(),
+						clienteDireccionSaldo.getClienteNombre(), clienteDireccionSaldo.getClienteApellido1(),		
 						clienteDireccionSaldo.getClienteApellido2(), clienteDireccionSaldo.getDireccionDireccion(),
 						clienteDireccionSaldo.getDireccionCp(), clienteDireccionSaldo.getDireccionProvincia(),
 						clienteDireccionSaldo.getDireccionPoblacion(), clienteDireccionSaldo.getDireccionPais());

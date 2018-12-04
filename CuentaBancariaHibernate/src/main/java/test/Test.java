@@ -49,10 +49,10 @@ public class Test {
 
 		Test test = new Test();
 		/* Añadir un cliente */
-		Direccion direccion = test.addDireccion("Calle Medul", 24750, "Leon", "La Bañeza", "España");
-		for(int i=1;i<96;i++) {
-			Integer cliID1 = test.addCliente("2000", "Alberto"+i, "Domínguez", "Morán", direccion);
-		}
+		//Direccion direccion = test.addDireccion("Calle Medul", 24750, "Leon", "La Bañeza", "España");
+		//for(int i=1;i<96;i++) {
+		//	Integer cliID1 = test.addCliente("2000", "Alberto"+i, "Domínguez", "Morán", direccion);
+		//}
 		//Integer cliID1 = test.addCliente("2000", "Alberto", "Domínguez", "Morán", direccion);
 		//Integer cliID2 = test.addCliente("1000", "pico", "D", "Mo", null);
 		test.listDirecciones();

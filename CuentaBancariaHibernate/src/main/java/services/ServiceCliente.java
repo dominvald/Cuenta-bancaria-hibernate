@@ -96,33 +96,14 @@ public class ServiceCliente {
 	 * @return boolean
 	 * @throws SQLException
 	 */
-	public boolean delete(Cliente cliente) {
-		return daoClienteOperaciones.delete(cliente);
+	public boolean delete(int clienteId) {
+		return daoClienteOperaciones.delete(clienteId);
 	}
 
-	/**
-	 * Devuelve una lista tipo List<ClaseClientesDireccionSaldo> y la envía a la
-	 * vista
-	 * 
-	 * @return List<ClaseClientesDireccionSaldo>
-	 * @throws SQLException
-	 * @throws Exception
-	 * @throws NoSuchFieldException
-	 * @throws Exception
-	 */
 
 
-	public ClientesDireccionSaldo clientesDireccionSaldo(int clienteId)
-			throws SQLException, NoSuchFieldException, Exception {
-		ClientesDireccionSaldo cliente = new ClientesDireccionSaldo();
-		cliente = daoClienteOperaciones.mostrarClienteDireccionSaldo(clienteId);
-		return cliente;
-	}
-	public boolean compruebaCif(String cifBuscado) {
-		return daoClienteOperaciones.compruebaCif(cifBuscado);
-	}
 
-	// MÉTODOS PAGINACION.
+	// MÉTODOS PAGINACIÓN.
 	/**
 	 * Devuelve una lista de clientes con su dirección y saldo actual y recibe como parámetro
 	 * el número de la página a listar.
@@ -167,8 +148,38 @@ public class ServiceCliente {
 
 	}
 
+	//COMPROBACIONES
+	public boolean compruebaCif(String cifBuscado) {
+		return daoClienteOperaciones.compruebaCif(cifBuscado);
+	}
+	//LISTADOS
+	/**
+	 * Devuelve un ClientesDireccionSaldo y la envía a la
+	 * vista
+	 * 
+	 * @return List<ClaseClientesDireccionSaldo>
+	 * @throws SQLException
+	 * @throws Exception
+	 * @throws NoSuchFieldException
+	 * @throws Exception
+	 */
+
+
+	public ClientesDireccionSaldo datosClientesDireccionSaldo(int clienteId)
+			throws SQLException, NoSuchFieldException, Exception {
+		ClientesDireccionSaldo cliente = new ClientesDireccionSaldo();
+		cliente = daoClienteOperaciones.datosClienteDireccionSaldo(clienteId);
+		return cliente;
+	}
+	/**
+	 * Devuelve un listado de clientes, que contenga la cadena de datos que se le pasa
+	 * en cualquiera de los campos del cliente excepto el id de la diirección.
+	 * @param cadenaDatos
+	 * @return
+	 */
 	public List<Cliente> encuentraTexto(String cadenaDatos) {
 		return daoClienteOperaciones.encuentraTexto(cadenaDatos);
 
 	}
+
 }
