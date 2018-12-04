@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+	"http://hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<!--Consulta HQL para listar los movimientos del cliente pasado por Id -->
+	<query name="HQL_GET_MOVIMIENTOS"><![CDATA[from Movimiento mov where cliente_id=:clienteId order by mov.fecha desc, mov.id desc]]>
+	</query>
+	<!--Consulta SQL para conseguir el saldo actual del cliente pasado por Id -->
+	<sql-query name="CONSIGUE_SALDO">
+		<![CDATA[SELECT saldo FROM movimientos WHERE cliente_id=:clienteId ORDER BY fecha DESC, id desc]]>
+	</sql-query>
+</hibernate-mapping>

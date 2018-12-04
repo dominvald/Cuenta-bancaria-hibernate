@@ -31,6 +31,7 @@
 		<mapping class="model.Cliente" />
 		<mapping class="model.Direccion" />
 		<mapping class="model.Movimiento" />
+		<mapping resource="src/resources/META-INF/named-queries.hbm.xml" />
 
 	</session-factory>
 </hibernate-configuration>

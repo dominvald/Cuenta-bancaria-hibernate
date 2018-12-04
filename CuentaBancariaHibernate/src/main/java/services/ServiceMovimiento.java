@@ -39,17 +39,6 @@ public class ServiceMovimiento {
 	}
 
 	/**
-	 * Consigue el saldo de un cliente determinado.
-	 * 
-	 * @param i
-	 * @return Big Decimal con el saldo del cliente
-	 */
-	public BigDecimal consigueSaldo(int i) {
-		return daoMovimiento.consigueSaldo(i);
-
-	}
-
-	/**
 	 * Lista todos los movimientos de un cliente determinado
 	 * 
 	 * @param id

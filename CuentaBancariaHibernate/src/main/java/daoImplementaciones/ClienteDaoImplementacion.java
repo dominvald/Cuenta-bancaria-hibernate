@@ -4,6 +4,7 @@ package daoImplementaciones;
 import java.io.StringWriter;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -184,21 +185,17 @@ public class ClienteDaoImplementacion {
 	 * @return: devolverá true, si se eliminó correctamente
 	 */
 	public boolean delete(int clienteId) {
-
 		Session session = sessFact.getCurrentSession();
 		Transaction tx = null;
 		try {
-			tx = session.beginTransaction();
-			
+			tx = session.beginTransaction();		
 			Cliente cliente = (Cliente) session.get(Cliente.class, clienteId);
-			System.out.println("entra a borrar:clienteId: "+cliente.toString());
 			session.delete(cliente);
 
 				tx.commit();
 
 				return true;
 		} catch (HibernateException e) {
-			System.out.println("ha habido un error");
 			if (tx != null)
 				tx.rollback();
 			e.printStackTrace();
@@ -516,28 +513,35 @@ public class ClienteDaoImplementacion {
 		return false;
 	}
 
-	public BigDecimal consigueSaldo(int idCliente) {
-		Movimiento movimientoOperaciones = new Movimiento();
-		BigDecimal saldo = BigDecimal.ZERO;
-		Session session = sessFact.getCurrentSession();
-		tx = null;
-		try {
-			tx = session.beginTransaction();
-			List<Movimiento> list = session.createQuery(
-					"from Movimiento mov where cliente_id='" + idCliente + "' order by mov.fecha desc, mov.id desc")
-					.setMaxResults(1).list();
-			List<Movimiento> movimientos1 = list;
-			for (Iterator<Movimiento> iterator = movimientos1.iterator(); iterator.hasNext();) {
-				movimientoOperaciones = (Movimiento) iterator.next();
-				saldo = movimientoOperaciones.getSaldo();
+	/**
+	 * Consigue el saldo del cliente pasado.
+	 */
+		public BigDecimal consigueSaldo(int clienteId) {
+			BigDecimal saldo = BigDecimal.ZERO;
+			Session session = sessFact.getCurrentSession();
+			List listaMovimientos=new ArrayList<>();
+			Movimiento movimientoOperaciones=new Movimiento();
+			Transaction tx = null;
+			try {
+				tx = session.beginTransaction();
+				//Query query= session.createQuery("from Movimiento mov where cliente_id=:clienteId order by mov.fecha desc, mov.id desc");
+				//Query query= session.createSQLQuery("SELECT saldo FROM movimientos WHERE cliente_id=:clienteId ORDER BY fecha DESC, id desc");
+				Query query=session.getNamedQuery("CONSIGUE_SALDO");
+				query.setParameter("clienteId", clienteId);
+				listaMovimientos =  query.setMaxResults(1).list();
+			for(Object str : listaMovimientos) {
+				String saldoString=str.toString();
+				saldo=new BigDecimal(saldoString);
 			}
-		} catch (HibernateException e) {
-			e.printStackTrace();
-		} finally {
-			session.close();
+				
+			} catch (HibernateException e) {
+				e.printStackTrace();
+			} finally {
+				session.close();
+			}
+			return saldo;
+
 		}
-		return saldo;
-	}
 
 	/**
 	 * Comprueba que si existe un CIF en la base de datos.

@@ -20,7 +20,7 @@ import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-
+import org.hibernate.query.Query;
 
 import controller.ControllerPrincipal;
 import model.Cliente;
@@ -145,29 +145,6 @@ public class MovimientoDaoImplementacion {
 		// TODO Auto-generated method stub
 		return false;
 	}
-/**
- * Consigue el saldo del cliente pasado.
- */
-	public BigDecimal consigueSaldo(int idCliente) {
-		BigDecimal saldo = BigDecimal.ZERO;
-		Session session = sessFact.getCurrentSession();
-		Transaction tx = null;
-		try {
-			tx = session.beginTransaction();
-			List movimientos1 = session.createQuery("from Movimiento mov where cliente_id='"+idCliente+"' order by mov.fecha desc, mov.id desc").setMaxResults(1).list();
-	        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
-			for (Iterator iterator = movimientos1.iterator(); iterator.hasNext();) {
-				Movimiento movimiento = (Movimiento) iterator.next();
-				saldo=movimiento.getSaldo();
-			}
-		} catch (HibernateException e) {
-			e.printStackTrace();
-		} finally {
-			session.close();
-		}
-		return saldo;
-
-	}
 
 	/* Método para listar todos los movimientos */
 	public List<Movimiento> list(int clienteId) {
@@ -177,7 +154,9 @@ public class MovimientoDaoImplementacion {
 
 		try {
 			tx = session.beginTransaction();
-			listaMovimientos = session.createQuery("from Movimiento mov where cliente_id='"+clienteId+"' order by mov.fecha desc, mov.id desc").list();
+			Query query=session.getNamedQuery("HQL_GET_MOVIMIENTOS");
+			query.setParameter("clienteId", clienteId);
+			listaMovimientos = query.list();
 			tx.commit();
 			return listaMovimientos;
 		} catch (HibernateException e) {

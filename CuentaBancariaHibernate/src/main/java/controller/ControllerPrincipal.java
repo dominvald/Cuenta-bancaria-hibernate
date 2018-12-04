@@ -797,14 +797,12 @@ public class ControllerPrincipal {
 	// ----DELETE----OPCION BORRAR CLIENTE
 	// --------------------------------------------------------------
 	private void deleteCliente() throws Exception {
-		System.out.println("-------------8888888888888888888----");
 		if (serviceCliente.delete(idClienteSeleccionado)) {
 			viewMain.escribirEnConsola("Se ha eliminado al cliente correctamente");
 		} else {
 			viewMain.escribirEnConsola("No se ha podido eliminar al cliente correctamente");
 			Sonido.sonar();
 		}
-		System.out.println("paso por aqui");
 		//mostrarMenuOperacionesConClientes();
 
 	}
@@ -1058,13 +1056,25 @@ public class ControllerPrincipal {
 						 */
 						if (listaClientesEncontrados.size() == 1) {
 							for (Cliente cliente : listaClientesEncontrados) {
-								clienteOperaciones = cliente;
-								idClienteSeleccionado=clienteOperaciones.getId();
-								//idDireccionOperaciones=serviceCliente.find(idClienteSeleccionado).getDireccion().getId();
-								direccionOperaciones=serviceCliente.find(idClienteSeleccionado).getDireccion();
 
-								idDireccionOperaciones=direccionOperaciones.getId();
+								clienteOperaciones.setId(cliente.getId());
+								clienteOperaciones.setCif(cliente.getCif());
+								clienteOperaciones.setNombre(cliente.getNombre());
+								clienteOperaciones.setApellido1(cliente.getApellido1());
+								clienteOperaciones.setApellido2(cliente.getApellido2());
+								clienteOperaciones.setDireccion(cliente.getDireccion());
+								clienteOperaciones.setMovimientos(cliente.getMovimientos());
+								idClienteSeleccionado=clienteOperaciones.getId();
+								try {
+									direccionOperaciones=clienteOperaciones.getDireccion();
+									idDireccionOperaciones=clienteOperaciones.getDireccion().getId();
+								} catch (Exception e) {
+									direccionOperaciones=null;
+									idDireccionOperaciones=-1;
+								}
+
 								// Salimos del dowhile.
+					
 								mostrarMenuOperacionesConClientes();
 							}
 
@@ -1073,9 +1083,21 @@ public class ControllerPrincipal {
 						// Si se ha encontrado algún cliente.
 						if (clienteEncontrado != null) {
 							clienteOperaciones = clienteEncontrado;
+							clienteOperaciones.setId(clienteEncontrado.getId());
+							clienteOperaciones.setCif(clienteEncontrado.getCif());
+							clienteOperaciones.setNombre(clienteEncontrado.getNombre());
+							clienteOperaciones.setApellido1(clienteEncontrado.getApellido1());
+							clienteOperaciones.setApellido2(clienteEncontrado.getApellido2());
+							clienteOperaciones.setDireccion(clienteEncontrado.getDireccion());
+							clienteOperaciones.setMovimientos(clienteEncontrado.getMovimientos());
 							idClienteSeleccionado=clienteOperaciones.getId();
-							direccionOperaciones=serviceCliente.find(idClienteSeleccionado).getDireccion();
-							idDireccionOperaciones=direccionOperaciones.getId();
+							try {
+								direccionOperaciones=clienteOperaciones.getDireccion();
+								idDireccionOperaciones=clienteOperaciones.getDireccion().getId();
+							} catch (Exception e) {
+								direccionOperaciones=null;
+								idDireccionOperaciones=-1;
+							}
 							// Salimos del dowhile.
 							mostrarMenuOperacionesConClientes();
 							// Si no encuentra ningún cliente coincidente con la cadena de texto pasada.
