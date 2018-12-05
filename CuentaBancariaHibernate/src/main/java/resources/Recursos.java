@@ -9,10 +9,10 @@ import java.time.format.DateTimeFormatter;
 import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.query.Query;
 
 import excepciones.ExcepcionDemasiadosDecimales;
 import excepciones.ExcepcionIntervalo;
-import test.CalculaNif;
 import view.ViewMain;
 
 /**
@@ -88,6 +88,14 @@ public final class Recursos {
 		return formatter.format(fecha);
 	}
 
+	public static String truncate(String value, int length) {
+		if (value.length() > length) {
+			return value.substring(0, length) + "...";
+		} else {
+			return value;
+		}
+	}
+
 	public static String generaBarras(int numeroBarras) {
 		String resultadoBarras = "";
 		for (int i = 0; i < numeroBarras; i++) {
@@ -142,7 +150,32 @@ public final class Recursos {
 
 		}
 	}
+
 	// COMPROBACIONES
+	// Método para contar registros y paginación
+	/**
+	 * Sirve para consultar el número de registros y las páginas que necesitaremos
+	 * para mostrar el resultado de la consulta.
+	 * 
+	 * @param sessFact
+	 * @param entityName
+	 * @param numeroRegistrosPorPagina
+	 * @return
+	 */
+	public static boolean numeroDeClientesEsCero(SessionFactory sessFact) {
+		Session session = sessFact.getCurrentSession();
+		session.beginTransaction();
+		@SuppressWarnings("rawtypes")
+		Query query = session.createQuery("select count(1) from Cliente");
+		long numTotalObjetos = (long) query.getSingleResult();
+		session.close();
+		if (numTotalObjetos > 0) {
+			return false;
+		} else {
+			return true;
+		}
+
+	}
 
 	/**
 	 * Comprueba si la cantidad introducida es correcta. Si devuelve true,significa
@@ -228,6 +261,7 @@ public final class Recursos {
 	 */
 	public static Boolean noHayErroresEnDatos(String cadena, int longitudMinima, int longitudMaxima, Boolean numerico,
 			Boolean importe, String mensajeFormato, boolean comprobarCif, boolean rango) throws ExcepcionIntervalo {
+		@SuppressWarnings("unused")
 		BigDecimal bigDecimal = BigDecimal.ZERO;
 		if (comprobarCif) {
 			if (CalculaNif.isDniValido(cadena.toUpperCase())) {
@@ -266,25 +300,55 @@ public final class Recursos {
 	}
 
 	// PAGINACION
-	// Método para contar registros y paginación
+	// Método para contar registros de clientes y paginación
 	/**
 	 * Sirve para consultar el número de registros y las páginas que necesitaremos
 	 * para mostrar el resultado de la consulta.
 	 * 
 	 * @param sessFact
 	 * @param entityName
-	 * @param tamanyoPagina
+	 * @param numeroRegistrosPorPagina
 	 * @return
 	 */
-	public static long[] paginacion(SessionFactory sessFact, String entityName, long tamanyoPagina) {
+	public static long[] paginacion(SessionFactory sessFact, long numeroRegistrosPorPagina) {
 		long resultado[] = new long[2];
 		long numTotalObjetos = 0;
 		long numPaginas = 0;
 		Session session = sessFact.getCurrentSession();
 		session.beginTransaction();
-		numTotalObjetos = (long) session.createQuery("select count(1) from " + entityName).getSingleResult();
+		@SuppressWarnings("rawtypes")
+		Query query = session.createQuery("select count(1) from Cliente");
+		numTotalObjetos = (long) query.getSingleResult();
 		session.close();
-		numPaginas = (long) Math.ceil(numTotalObjetos / tamanyoPagina);
+		numPaginas = (long) Math.ceil(numTotalObjetos / numeroRegistrosPorPagina);
+		resultado[0] = numTotalObjetos;
+		resultado[1] = numPaginas;
+		return resultado;
+	}
+
+	// Método para contar registros de movimientos y paginación
+	/**
+	 * Sirve para consultar el número de registros y las páginas que necesitaremos
+	 * para mostrar el resultado de la consulta.
+	 * 
+	 * @param sessFact
+	 * @param entityName
+	 * @param numeroRegistrosPorPagina
+	 * @return
+	 */
+	public static long[] paginacionMovimientos(SessionFactory sessFact, String clienteId,
+			long numeroRegistrosPorPagina) {
+		long resultado[] = new long[2];
+		long numTotalObjetos = 0;
+		long numPaginas = 0;
+		Session session = sessFact.getCurrentSession();
+		session.beginTransaction();
+		@SuppressWarnings("rawtypes")
+		Query query = session.createQuery("select count(1) from  Movimiento mov where cliente_id=:clienteId");
+		query.setParameter("clienteId", clienteId);
+		numTotalObjetos = (long) query.getSingleResult();
+		session.close();
+		numPaginas = (long) Math.ceil(numTotalObjetos / numeroRegistrosPorPagina);
 		resultado[0] = numTotalObjetos;
 		resultado[1] = numPaginas;
 		return resultado;

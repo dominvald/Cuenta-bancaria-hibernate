@@ -46,8 +46,9 @@ public class ServiceMovimiento {
 	 * @return List<Movimiento>
 	 * @throws Exception
 	 */
-	public List<Movimiento> list(int id, int... firstResultAndMaxResult) throws Exception {
-		return daoMovimiento.list(id);
+	public List<Movimiento> list(int clienteId, long numeroPagina, int numeroDeRegistrosMostrarPorPaginaNuevo)
+			throws Exception {
+		return daoMovimiento.list(clienteId, numeroPagina, numeroDeRegistrosMostrarPorPaginaNuevo);
 
 	}
 

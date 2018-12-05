@@ -14,6 +14,7 @@ import org.hibernate.Transaction;
 import model.Cliente;
 import model.Direccion;
 import model.Movimiento;
+import resources.CalculaNif;
 import resources.HibernateUtil;
 
 public class Test {

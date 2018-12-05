@@ -138,7 +138,7 @@ public class ServiceCliente {
 	 * @return
 	 */
 	public static long[] paginacion(SessionFactory sessFact, String entityName, long tamanyoPagina) {
-		return Recursos.paginacion(sessFact, entityName, tamanyoPagina);
+		return Recursos.paginacion(sessFact, tamanyoPagina);
 	}
 
 	// ESTADÍSTICAS

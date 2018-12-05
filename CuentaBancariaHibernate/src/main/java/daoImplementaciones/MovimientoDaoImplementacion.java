@@ -25,6 +25,7 @@ public class MovimientoDaoImplementacion {
 	/**
 	 * log: logger para la clase
 	 */
+	@SuppressWarnings("unused")
 	private final static Logger lOG = Logger.getLogger("file_connections");
 
 	// GETTERS Y SETTERS-------------------------------------//
@@ -78,15 +79,6 @@ public class MovimientoDaoImplementacion {
 		return estado;
 	}
 
-	/**
-	 * No implementado todavía
-	 * 
-	 */
-	public boolean delete(Movimiento movimiento) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
 	/* Método para listar todos los movimientos. */
 	/**
 	 * Método para listar todos los movimientos.
@@ -94,18 +86,18 @@ public class MovimientoDaoImplementacion {
 	 * @param clienteId
 	 * @return
 	 */
-	public List<Movimiento> list(int clienteId, int... firstResultAndMaxResult) {
+	public List<Movimiento> list(int clienteId, long numeroPagina, int numeroDeRegistrosMostrarPorPaginaNuevo) {
 		List<Movimiento> listaMovimientos = new ArrayList<>();
 		Session session = sessFact.getCurrentSession();
 		Transaction tx = null;
 
 		try {
 			tx = session.beginTransaction();
+			@SuppressWarnings("unchecked")
 			Query<Movimiento> query = session.getNamedQuery("HQL_GET_MOVIMIENTOS");
-			
 			query.setParameter("clienteId", clienteId);
-			query.setFirstResult(startPosition);
-			query.setMaxResults(maxResult);
+			query.setFirstResult(numeroDeRegistrosMostrarPorPaginaNuevo * (int) numeroPagina);
+			query.setMaxResults(numeroDeRegistrosMostrarPorPaginaNuevo);
 			listaMovimientos = query.list();
 			tx.commit();
 			return listaMovimientos;
@@ -116,16 +108,6 @@ public class MovimientoDaoImplementacion {
 
 		}
 		return listaMovimientos;
-	}
-
-	/**
-	 * No utilizado
-	 * 
-	 * @return
-	 */
-	public boolean update(Movimiento movimiento) {
-		// TODO Auto-generated method stub
-		return false;
 	}
 
 }

@@ -99,7 +99,8 @@ public class ViewMain {
 	 * 
 	 * @param ListaMovimientos
 	 */
-	public void verMovimientosEncontrados(List<Movimiento> ListaMovimientos) {
+	public void verMovimientosEncontrados(List<Movimiento> ListaMovimientos, long numeroPagina) {
+		long contadorRegistros = numeroPagina * 20;
 		/**
 		 * Contador interno de movimientos encontrados
 		 */
@@ -110,6 +111,7 @@ public class ViewMain {
 		Movimiento movimientoOperaciones = new Movimiento();
 		// Recorremos la lista de movimientos que se nos está pasando como prámetro
 		for (Movimiento movimiento : ListaMovimientos) {
+			contadorRegistros++;
 			// Guardamos cada movimiento en nuestro movimientoOperaciones
 			movimientoOperaciones = movimiento;
 			// Incrementamos en uno el contador de movimientos.
@@ -125,18 +127,11 @@ public class ViewMain {
 			DateTimeFormatter formatoFecha = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 			DateTimeFormatter formatoHora = DateTimeFormatter.ofPattern("HH:mm:ss");
 			// Imprimos cada movimiento
-			System.out.printf("\t%-10s%20s%15s%-10s%20s%20s\n", contadorInternoMovimientosEncontrados,
+			System.out.printf("\t%-10s%20s%15s%-10s%20s%20s\n", contadorRegistros,
 					Recursos.bigDecimalToString(movimientoOperaciones.getImporte()) + "€",
 					Recursos.bigDecimalToString(movimientoOperaciones.getSaldo()) + "€", "",
 					formatoFecha.format(movimientoOperaciones.getFecha()),
 					formatoHora.format(movimientoOperaciones.getFecha()));
-		}
-		System.out.println("");
-		// Si no hay movimientos imprimimos el correspondiente mensaje.
-		if (contadorInternoMovimientosEncontrados == 0) {
-			System.err.println("\nNo hay movimientos todavía.\n");
-		} else {
-			System.out.println("\nHay: " + contadorInternoMovimientosEncontrados + " movimientos.\n");
 		}
 	}
 
@@ -187,14 +182,17 @@ public class ViewMain {
 		/**
 		 * Sirve para almacenar el número de clientes cuyo saldo es 0
 		 */
+		@SuppressWarnings("unused")
 		int contadorInternoClientesSaldoCero = 0;
 		/**
 		 * Sirve para almacenar el número de clientes cuyo saldo no es 0
 		 */
+		@SuppressWarnings("unused")
 		int contadorInternoClientesSaldoPositivo = 0;
 		/**
 		 * Sirve para almacenar el número de clientes no tienen dirección
 		 */
+		@SuppressWarnings("unused")
 		int contadorInternoClientesSinDirección = 0;
 		/**
 		 * Sirve para almacenar la suma de todos los saldos de los clientes
@@ -237,13 +235,13 @@ public class ViewMain {
 
 				if (contadorInternoClientesEncontrados == 1) {
 					System.out.println(Recursos.generaEspaciosEnBlanco(82) + "LISTADO CLIENTES:");
-					System.out.println(Recursos.generaBarras(180));
+					System.out.println(Recursos.generaBarras(190));
 					System.out.printf("\t%-10s%-10s%-15s%-10s%-15s%-20s%-20s%-25s%-10s%-15s%-15s%-15s\n", "Reg. Nº",
 							"Id", "Saldo", "CIF", "Nombre", "Primer Apellido", "Segundo Apedillo", "Dirección", "C.P.",
 							"Provincia", "Población", "País");
 
 				}
-				System.out.println(Recursos.generaBarras(180));
+				System.out.println(Recursos.generaBarras(190));
 				// Si el cliente tiene dirección, recogemos todos sus datos
 				if (claseClientesDireccionSaldoOperaciones.getDireccionDireccion() != null) {
 					contadorRegistros++;
@@ -251,15 +249,15 @@ public class ViewMain {
 							contadorRegistros, claseClientesDireccionSaldoOperaciones.getClienteId(),
 							Recursos.bigDecimalToString(claseClientesDireccionSaldoOperaciones.getSaldo()) + "€",
 							claseClientesDireccionSaldoOperaciones.getClienteCif(),
-							claseClientesDireccionSaldoOperaciones.getClienteNombre(),
-							claseClientesDireccionSaldoOperaciones.getClienteApellido1(),
-							claseClientesDireccionSaldoOperaciones.getClienteApellido2(),
-							claseClientesDireccionSaldoOperaciones.getDireccionDireccion(),
+							Recursos.truncate(claseClientesDireccionSaldoOperaciones.getClienteNombre(), 11),
+							Recursos.truncate(claseClientesDireccionSaldoOperaciones.getClienteApellido1(), 11),
+							Recursos.truncate(claseClientesDireccionSaldoOperaciones.getClienteApellido2(), 11),
+							Recursos.truncate(claseClientesDireccionSaldoOperaciones.getDireccionDireccion(), 21),
 							claseClientesDireccionSaldoOperaciones.getDireccionCp(),
-							claseClientesDireccionSaldoOperaciones.getDireccionProvincia(),
-							claseClientesDireccionSaldoOperaciones.getDireccionPoblacion(),
-							claseClientesDireccionSaldoOperaciones.getDireccionPais());
-					System.out.println(Recursos.generaBarras(180));
+							Recursos.truncate(claseClientesDireccionSaldoOperaciones.getDireccionProvincia(), 11),
+							Recursos.truncate(claseClientesDireccionSaldoOperaciones.getDireccionPoblacion(), 11),
+							Recursos.truncate(claseClientesDireccionSaldoOperaciones.getDireccionPais(), 11));
+					System.out.println(Recursos.generaBarras(190));
 					// Si no tiene dirección
 				} else {
 					// Incrementamos en uno el contador para las estadísticas de clientes que
@@ -278,11 +276,11 @@ public class ViewMain {
 							claseClientesDireccionSaldoOperaciones.getClienteId(),
 							Recursos.bigDecimalToString(claseClientesDireccionSaldoOperaciones.getSaldo()) + "€",
 							claseClientesDireccionSaldoOperaciones.getClienteCif(),
-							claseClientesDireccionSaldoOperaciones.getClienteNombre(),
-							claseClientesDireccionSaldoOperaciones.getClienteApellido1(),
-							claseClientesDireccionSaldoOperaciones.getClienteApellido2(), "---", "---", "---", "---",
-							"---");
-					System.out.println(Recursos.generaBarras(180));
+							Recursos.truncate(claseClientesDireccionSaldoOperaciones.getClienteNombre(), 11),
+							Recursos.truncate(claseClientesDireccionSaldoOperaciones.getClienteApellido1(), 11),
+							Recursos.truncate(claseClientesDireccionSaldoOperaciones.getClienteApellido2(), 11), "---",
+							"---", "---", "---", "---");
+					System.out.println(Recursos.generaBarras(190));
 				}
 
 			}
@@ -290,51 +288,58 @@ public class ViewMain {
 			System.out.println(Recursos.generaBarras(80));
 			System.err.println("No hay conexión con la base de datos");
 		}
-		System.out.println(Recursos.generaBarras(180));
-		System.out.println(Recursos.generaBarras(180) + "\n");
+		System.out.println(Recursos.generaBarras(190));
+		System.out.println(Recursos.generaBarras(190) + "\n");
 	}
 
 	public void verClienteDireccionSaldo(ClientesDireccionSaldo clienteDireccionSaldo) {
 		long contadorRegistros = 0;
-		System.out.println(Recursos.generaBarras(180));
-		System.out.println(Recursos.generaBarras(180) + "\n");
+		System.out.println(Recursos.generaBarras(190));
+		System.out.println(Recursos.generaBarras(190) + "\n");
 		if (clienteDireccionSaldo != null) {
 			System.out.println(Recursos.generaEspaciosEnBlanco(82) + "CLIENTE SELECCIONADO:");
-			System.out.println(Recursos.generaBarras(180));
-			System.out.printf("\t%-10s%-10s%-15s%-15s%-20s%-20s%-25s%-10s%-15s%-15s%-15s\n", "Reg. Nº", "Id", "Saldo",
-					"CIF", "Nombre", "Primer Apellido", "Segundo Apedillo", "Dirección", "C.P.", "Provincia",
+			System.out.println(Recursos.generaBarras(190));
+			System.out.printf("\t%-10s%-10s%-15s%-10s%-15s%-20s%-20s%-25s%-10s%-15s%-15s%-15s\n", "Reg. Nº", "Id",
+					"Saldo", "CIF", "Nombre", "Primer Apellido", "Segundo Apedillo", "Dirección", "C.P.", "Provincia",
 					"Población", "País");
-			System.out.println(Recursos.generaBarras(180));
+
+			System.out.println(Recursos.generaBarras(190));
 			// Si el cliente tiene dirección, recogemos todos sus datos
 			if (clienteDireccionSaldo.getDireccionDireccion() != null) {
 				contadorRegistros++;
-				System.out.printf("\t%-10s%-10s%-15s%-15s%-20s%-20s%-25s%-10s%-15s%-15s%-15s\n", contadorRegistros,
+				System.out.printf("\t%-10s%-10s%-15s%-10s%-15s%-20s%-20s%-25s%-10s%-15s%-15s%-15s\n", contadorRegistros,
 						clienteDireccionSaldo.getClienteId(),
 						Recursos.bigDecimalToString(clienteDireccionSaldo.getSaldo()) + "€",
-						clienteDireccionSaldo.getClienteCif(), clienteDireccionSaldo.getClienteNombre(),
-						clienteDireccionSaldo.getClienteApellido1(), clienteDireccionSaldo.getClienteApellido2(),
-						clienteDireccionSaldo.getDireccionDireccion(), clienteDireccionSaldo.getDireccionCp(),
-						clienteDireccionSaldo.getDireccionProvincia(), clienteDireccionSaldo.getDireccionPoblacion(),
-						clienteDireccionSaldo.getDireccionPais());
-				System.out.println(Recursos.generaBarras(180));
+						clienteDireccionSaldo.getClienteCif(),
+						Recursos.truncate(clienteDireccionSaldo.getClienteNombre(), 11),
+						Recursos.truncate(clienteDireccionSaldo.getClienteApellido1(), 11),
+						Recursos.truncate(clienteDireccionSaldo.getClienteApellido2(), 11),
+						Recursos.truncate(clienteDireccionSaldo.getDireccionDireccion(), 11),
+						clienteDireccionSaldo.getDireccionCp(),
+						Recursos.truncate(clienteDireccionSaldo.getDireccionProvincia(), 11),
+						Recursos.truncate(clienteDireccionSaldo.getDireccionPoblacion(), 11),
+						Recursos.truncate(clienteDireccionSaldo.getDireccionPais(), 11));
+				System.out.println(Recursos.generaBarras(190));
 				// Si no tiene dirección
 			} else {
 				// valores por "---".
-				System.out.printf("\t%-10s%-10s%-15s%-15s%-20s%-20s%-25s%-10s%-15s%-15s%-15s\n", contadorRegistros,
+				System.out.printf("\t%-10s%-10s%-15s%-10s%-15s%-20s%-20s%-25s%-10s%-15s%-15s%-15s\n", contadorRegistros,
 						clienteDireccionSaldo.getClienteId(),
 						Recursos.bigDecimalToString(clienteDireccionSaldo.getSaldo()) + "€",
-						clienteDireccionSaldo.getClienteCif(), clienteDireccionSaldo.getClienteNombre(),
-						clienteDireccionSaldo.getClienteApellido1(), clienteDireccionSaldo.getClienteApellido2(), "---",
-						"---", "---", "---", "---");
-				System.out.println(Recursos.generaBarras(180));
+						clienteDireccionSaldo.getClienteCif(),
+						Recursos.truncate(clienteDireccionSaldo.getClienteNombre(), 11),
+						Recursos.truncate(clienteDireccionSaldo.getClienteApellido1(), 11),
+						Recursos.truncate(clienteDireccionSaldo.getClienteApellido2(), 11), "---", "---", "---", "---",
+						"---");
+				System.out.println(Recursos.generaBarras(190));
 			}
 
 		} else {
 			System.out.println(Recursos.generaBarras(80));
 			System.err.println("clienteDireccionSaldo es null");
 		}
-		System.out.println(Recursos.generaBarras(180));
-		System.out.println(Recursos.generaBarras(180) + "\n");
+		System.out.println(Recursos.generaBarras(190));
+		System.out.println(Recursos.generaBarras(190) + "\n");
 	}
 
 	public void imprimeEstadisticas(Estadisticas estadisticas) {

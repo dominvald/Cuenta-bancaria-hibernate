@@ -32,6 +32,7 @@ public class ClienteDaoImplementacion {
 	 * log: logger para la clase
 	 * 
 	 */
+	@SuppressWarnings("unused")
 	private final static Logger lOG = Logger.getLogger("file_connections");
 	/**
 	 * errorSqlSW : lo utilizamos para poder imprimir los errores SQL, que nos da el
@@ -46,7 +47,6 @@ public class ClienteDaoImplementacion {
 
 	private static SessionFactory sessFact = HibernateUtil.getSessionFactory();
 	// GETTERS Y SETTERS
-	private Transaction tx;
 
 	// MÉTODOS
 	// CRUD--------------------------------------------------------------------------------//
@@ -213,16 +213,19 @@ public class ClienteDaoImplementacion {
 	 * @throws NoSuchFieldException
 	 */
 	/* Método para listar todos los clientes sus datos */
+	@SuppressWarnings("unchecked")
 	public List<ClientesDireccionSaldo> listarClientesDireccionSaldo(long numeroPagina,
 			int numeroDeRegistrosMostrarPorPaginaNuevo) throws NoSuchFieldException, SecurityException {
 		listaClientesOperaciones = null;
 		List<ClientesDireccionSaldo> listaClientesDireccionSaldo = new ArrayList<ClientesDireccionSaldo>();
 		Session session = sessFact.getCurrentSession();
-		long resultado[] = new long[2];
+		@SuppressWarnings("unused")
 		int contadorDeRegistros = 0;
+		@SuppressWarnings("unused")
 		Transaction tx = null;
 		try {
 			tx = session.beginTransaction();
+			@SuppressWarnings("rawtypes")
 			Query query = session.createQuery("FROM Cliente");
 			query.setFirstResult(numeroDeRegistrosMostrarPorPaginaNuevo * (int) numeroPagina);
 			query.setMaxResults(numeroDeRegistrosMostrarPorPaginaNuevo);
@@ -231,7 +234,7 @@ public class ClienteDaoImplementacion {
 			// "+listaClientesOperaciones.size());
 			session.close();
 			// java.util.Set<Movimiento> movimientos = new HashSet<Movimiento>();
-			for (Iterator iterator = listaClientesOperaciones.iterator(); iterator.hasNext();) {
+			for (Iterator<Cliente> iterator = listaClientesOperaciones.iterator(); iterator.hasNext();) {
 				Cliente cliente = (Cliente) iterator.next();
 				contadorDeRegistros++;
 				ClientesDireccionSaldo clientesDireccionSaldo = new ClientesDireccionSaldo();
@@ -269,9 +272,7 @@ public class ClienteDaoImplementacion {
 	public ClientesDireccionSaldo datosClienteDireccionSaldo(int clienteId)
 			throws NoSuchFieldException, SecurityException {
 		listaClientesOperaciones = null;
-		int contadorDeRegistros = 0;
 		Cliente cliente = find(clienteId);
-		contadorDeRegistros++;
 		ClientesDireccionSaldo clientesDireccionSaldo = new ClientesDireccionSaldo();
 		clientesDireccionSaldo.setClienteId(cliente.getId());
 		clientesDireccionSaldo.setClienteNombre(cliente.getNombre());
@@ -331,16 +332,19 @@ public class ClienteDaoImplementacion {
 		/**
 		 * Creamos una transacción.
 		 */
+		@SuppressWarnings("unused")
 		Transaction tx = null;
 		try {
 			// Iniciamos la transacción.
 			tx = session.beginTransaction();
 
+			@SuppressWarnings("rawtypes")
 			Query query = session.createQuery("select id from Cliente");
 			// Recogemos el listado de ids que hay en la tabla clientes
 			/**
 			 * Sirve para guardar las id de los clientes
 			 */
+			@SuppressWarnings("unchecked")
 			List<Integer> listaIds = query.list();
 			// Recuperamos el valor de los clientes encontrados
 			contadorInternoClientesEncontrados = listaIds.size();
@@ -348,8 +352,10 @@ public class ClienteDaoImplementacion {
 			// Hacemos esta consulta para obtner los ids de las direcciones de los clientes,
 			// Todos pueden tener sólo una, así que calculando el numero de direcciones
 			// y el número de clientes podremos obtener el número de clientes sin dirección.
+			@SuppressWarnings("rawtypes")
 			Query query1 = session.createQuery("select id from Direccion");
 			// Recogemos el listado de clientes de toda la
+			@SuppressWarnings("unchecked")
 			List<Integer> direcciones = query1.list();
 			// Cerramos la sesión
 			session.close();
@@ -361,7 +367,7 @@ public class ClienteDaoImplementacion {
 
 			// Como ya tenemos los ids de todos los clientes conseguimos sus saldo
 			// y realizamos las cuentas correspondientes.
-			for (Iterator iterator = listaIds.iterator(); iterator.hasNext();) {
+			for (Iterator<?> iterator = listaIds.iterator(); iterator.hasNext();) {
 				int id = (int) iterator.next();
 				if (consigueSaldo(id).compareTo(saldoCero) == 0) {
 					// Incrementamos este contador de clientes sin saldo para las estadísticas
@@ -502,12 +508,15 @@ public class ClienteDaoImplementacion {
 	/* Método para cambiar el cif ce un cliente */
 	public boolean compruebaCif(String cifBuscado) {
 		Session session = sessFact.getCurrentSession();
+		@SuppressWarnings("unused")
 		Transaction tx = null;
 
 		try {
 			tx = session.beginTransaction();
+			@SuppressWarnings("rawtypes")
 			Query query = session.createQuery("select c.cifCliente from Cliente c where c.cifCliente = :cifBusqueda");
 			query.setParameter("cifBusqueda", cifBuscado);
+			@SuppressWarnings("unchecked")
 			List<Cliente> cliente = query.setMaxResults(1).list();
 			if (cliente.size() > 0) {
 				return false;
@@ -525,11 +534,12 @@ public class ClienteDaoImplementacion {
 	/**
 	 * Consigue el saldo del cliente pasado.
 	 */
+	@SuppressWarnings("unchecked")
 	public BigDecimal consigueSaldo(int clienteId) {
 		BigDecimal saldo = BigDecimal.ZERO;
 		Session session = sessFact.getCurrentSession();
-		List listaMovimientos = new ArrayList<>();
-		Movimiento movimientoOperaciones = new Movimiento();
+		List<Movimiento> listaMovimientos = new ArrayList<Movimiento>();
+		@SuppressWarnings("unused")
 		Transaction tx = null;
 		try {
 			tx = session.beginTransaction();
@@ -537,6 +547,7 @@ public class ClienteDaoImplementacion {
 			// cliente_id=:clienteId order by mov.fecha desc, mov.id desc");
 			// Query query= session.createSQLQuery("SELECT saldo FROM movimientos WHERE
 			// cliente_id=:clienteId ORDER BY fecha DESC, id desc");
+			@SuppressWarnings("rawtypes")
 			Query query = session.getNamedQuery("CONSIGUE_SALDO");
 			query.setParameter("clienteId", clienteId);
 			listaMovimientos = query.setMaxResults(1).list();
@@ -574,8 +585,8 @@ public class ClienteDaoImplementacion {
 	}
 
 	/* Método para encontrar un cliente por id de cliente */
+	@SuppressWarnings("unchecked")
 	public List<Cliente> encuentraTexto(String cadenaDatos) {
-		Boolean opcion = false;
 		Session session = sessFact.getCurrentSession();
 		Transaction tx = null;
 		List<Cliente> listaClientesRestoCampos = new ArrayList<Cliente>();
@@ -583,6 +594,7 @@ public class ClienteDaoImplementacion {
 		listaClientesRestoCampos = null;
 		try {
 			tx = session.beginTransaction();
+			@SuppressWarnings("rawtypes")
 			Query consultaResto = session.createQuery(
 					"from Cliente cli where cli.cifCliente like ?1 or cli.nombreCliente like ?1 or cli.apellido1Cliente like ?1 or cli.apellido2Cliente like ?1 order by cli.id desc");
 			consultaResto.setParameter(1, "%" + cadenaDatos + "%");
@@ -590,6 +602,7 @@ public class ClienteDaoImplementacion {
 			if (listaClientesRestoCampos.size() == 0) {
 			}
 			try {
+				@SuppressWarnings("rawtypes")
 				Query consultaId = session.createQuery("from Cliente cli where cli.id= ?1 order by cli.id desc");
 				consultaId.setParameter(1, Integer.parseInt(cadenaDatos));
 				listaClientesId = consultaId.list();

@@ -10,7 +10,7 @@ public class Demo {
 	 * @throws Exception
 	 * @throws SQLException
 	 */
-	public static void main(String[] args) throws SQLException, Exception {
+	public static void main(String... args) throws SQLException, Exception {
 		/**
 		 * Creamos el controlador principal, para invocar sus métodos
 		 */
