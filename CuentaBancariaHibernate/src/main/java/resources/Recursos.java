@@ -12,6 +12,7 @@ import org.hibernate.SessionFactory;
 
 import excepciones.ExcepcionDemasiadosDecimales;
 import excepciones.ExcepcionIntervalo;
+import test.CalculaNif;
 import view.ViewMain;
 
 /**
@@ -132,7 +133,7 @@ public final class Recursos {
 			 */
 			String parteDecimal = numeroAcomprobar.substring(intIndex + 1, longitudNumeroAcomprobar);
 			// Si la longitud de la parte decimal es superior a 2, significará que el
-			// usuario a introducido
+			// usuario ha introducido
 			// demasiados decimales con lo cual devolveremos un error del tipo
 			// ExcepcionDemasiadosDecimales.
 			if (parteDecimal.length() > 2) {
@@ -194,6 +195,27 @@ public final class Recursos {
 	}
 
 	/**
+	 * Comprueba que los valores introducidos están dentro del rango desde 1 hasta
+	 * 100
+	 * 
+	 * @param numeroAcomprobar
+	 * @throws ExcepcionIntervalo
+	 */
+	public static boolean rangoCadenaCancelar(String numeroAcomprobar) throws ExcepcionIntervalo {
+		int numeroOperaciones = 0;
+		try {
+			numeroOperaciones = Integer.parseInt(numeroAcomprobar);
+		} catch (Exception e) {
+			return false;
+		}
+		if ((numeroOperaciones < 1) || (numeroOperaciones > 100)) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+
+	/**
 	 * Quita todos espacios, tabuladores y retornos de carro tanto del principio
 	 * como del final y asu vez si hay varios espacios en blanco, lo deja en uno.
 	 * Después comprueba que la longitud sea la correcta.
@@ -202,10 +224,25 @@ public final class Recursos {
 	 * @param longitudMinima
 	 * @param longitudMaxima
 	 * @return
+	 * @throws ExcepcionIntervalo
 	 */
 	public static Boolean noHayErroresEnDatos(String cadena, int longitudMinima, int longitudMaxima, Boolean numerico,
-			Boolean importe, String mensajeFormato) {
+			Boolean importe, String mensajeFormato, boolean comprobarCif, boolean rango) throws ExcepcionIntervalo {
 		BigDecimal bigDecimal = BigDecimal.ZERO;
+		if (comprobarCif) {
+			if (CalculaNif.isDniValido(cadena.toUpperCase())) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+		if (rango) {
+			if (rangoCadenaCancelar(cadena)) {
+				return true;
+			} else {
+				return false;
+			}
+		}
 		// Comprobamos que cumple con la longitud mínima es mayor o igual que la que se
 		// le pasa
 		// que la longitud máxima es menor o igual que longitudMaxima que se nos pasa
@@ -219,13 +256,12 @@ public final class Recursos {
 					return false;
 				}
 			}
-			bigDecimal = BigDecimal.ZERO;
-			// Cumple, devuelve true
-			return true;
+
 		} else {
 			// No cumple, devuelve false
 			return false;
 		}
+		return true;
 
 	}
 

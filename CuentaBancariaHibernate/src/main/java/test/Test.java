@@ -23,6 +23,7 @@ public class Test {
 	public static void main(String[] args) {
 
 		Test test = new Test();
+System.out.println(CalculaNif.isDniValido("51292306Y"));
 		/* Añadir un cliente */
 		// Direccion direccion = test.addDireccion("Calle Medul", 24750, "Leon", "La
 		// Bañeza", "España");
@@ -33,11 +34,11 @@ public class Test {
 		// Integer cliID1 = test.addCliente("2000", "Alberto", "Domínguez", "Morán",
 		// direccion);
 		// Integer cliID2 = test.addCliente("1000", "pico", "D", "Mo", null);
-		test.listDirecciones();
-		Direccion direccion1 = test.addDireccion("Calle fffffffMedul", 24750, "Lefffffffon", "La Baffffñeza", "España");
+		//test.listDirecciones();
+		//Direccion direccion1 = test.addDireccion("Calle fffffffMedul", 24750, "Lefffffffon", "La Baffffñeza", "España");
 		// test.deleteDireccion(test.findCliente(cliID1).getDireccion().getId());
-		System.out.println("--------------");
-		test.listDirecciones();
+		//System.out.println("--------------");
+		//test.listDirecciones();
 		BigDecimal numero1 = new BigDecimal("100");
 		BigDecimal numero2 = new BigDecimal("200");
 		BigDecimal numero3 = new BigDecimal("300");

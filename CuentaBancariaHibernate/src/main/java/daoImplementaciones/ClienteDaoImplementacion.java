@@ -189,10 +189,10 @@ public class ClienteDaoImplementacion {
 		try {
 			tx = session.beginTransaction();
 			Cliente cliente = (Cliente) session.get(Cliente.class, clienteId);
+
 			session.delete(cliente);
 
 			tx.commit();
-
 			return true;
 		} catch (HibernateException e) {
 			if (tx != null)
