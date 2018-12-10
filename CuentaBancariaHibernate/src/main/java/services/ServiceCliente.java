@@ -84,8 +84,8 @@ public class ServiceCliente {
 	public void updateClienteDireccion(int ClienteID, Direccion direccion, String campo) {
 		daoClienteOperaciones.updateClienteDireccion(ClienteID, direccion,campo);
 	}
-	public void updateClienteSinDireccion(int ClienteID, Direccion direccion) {
-		daoClienteOperaciones.updateClienteSinDireccion(ClienteID, direccion);
+	public boolean updateClienteSinDireccion(int ClienteID, Direccion direccion) {
+		return daoClienteOperaciones.updateClienteSinDireccion(ClienteID, direccion);
 	}
 
 	// DELETE

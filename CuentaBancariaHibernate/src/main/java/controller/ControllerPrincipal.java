@@ -49,9 +49,9 @@ public class ControllerPrincipal {
 	 *
 	 */
 	enum MenuInicial {
-		OPERACIONES(1, "Operaciones con clientes."), LISTAR(2, "Listar todos los clientes."), CONFIGURAR(3,
-				"Configurar aplicación."), CERRAR(4, "Cerrar la aplicación."), TITULO(5,
-						"PRÁCTICA CUENTAS BANCARIAS HIBERNATE."), SUBTITULO(6, "->>> MENÚ PRINCIPAL. <<<-");
+		OPERACIONES(1, "Operaciones con clientes."), LISTAR(2, "Listar todos los clientes."),
+		CONFIGURAR(3, "Configurar aplicación."), CERRAR(4, "Cerrar la aplicación."),
+		TITULO(5, "PRÁCTICA CUENTAS BANCARIAS HIBERNATE."), SUBTITULO(6, "->>> MENÚ PRINCIPAL. <<<-");
 		private int posicionEnumerado; // posicion propiedad
 		private String textoEnumerado; // texto propiedad
 
@@ -59,10 +59,8 @@ public class ControllerPrincipal {
 		/**
 		 * Constructor, recibe la posición y el texto.
 		 * 
-		 * @param p
-		 *            -> Posición
-		 * @param t
-		 *            -> texto
+		 * @param p -> Posición
+		 * @param t -> texto
 		 */
 		MenuInicial(int p, String t) {
 			// Lo inicializamos con los valores pasados.
@@ -465,8 +463,6 @@ public class ControllerPrincipal {
 		}
 	}
 
-
-
 	private void construyeMenuInicial() {
 		viewMain.escribirEnConsola("----------------------------------------------");
 		viewMain.escribirEnConsola("|     " + MenuInicial.TITULO.getTexto() + "   |");
@@ -487,6 +483,74 @@ public class ControllerPrincipal {
 		viewMain.escribirEnConsola("|  | " + cadenaIdiomaOpcion + "  |---->");
 		viewMain.escribirEnConsola("|  ---------------------");
 
+	}
+
+	/**
+	 * Muestra el menú seleccionar y crear clientes
+	 * 
+	 * @throws Exception
+	 */
+	private void mostramosMenuConfiguracion() throws Exception {
+		while (true) {
+			viewMain.escribirEnConsola("----------------------------------------------");
+			viewMain.escribirEnConsola("|     PRÁCTICA CUENTAS BANCARIAS HIBERNATE.   |");
+			viewMain.escribirEnConsola(
+					"-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
+			viewMain.escribirEnConsola("|         ->>> MENÚ CONFIGURACIÓN <<<-        |    Fecha y Hora: "
+					+ Recursos.formato(LocalDateTime.now()));
+			viewMain.escribirEnConsola(
+					"|         -----------------------------       |-------------------------------------------------------------------------------------------------------------------");
+			viewMain.escribirEnConsola("|---------------------------------------------|");
+			viewMain.escribirEnConsola("|   1. Configurar sonido.                     |");
+			viewMain.escribirEnConsola("|---------------------------------------------|");
+			viewMain.escribirEnConsola("|   2. Configurar Nº Reg. a mostrar.	      |");
+			viewMain.escribirEnConsola("|---------------------------------------------|");
+			viewMain.escribirEnConsola("|   3. Configurar cadena 'Cancelar'.          |");
+			viewMain.escribirEnConsola("|---------------------------------------------|");
+			viewMain.escribirEnConsola("|   4. Configurar idioma.                     |");
+			viewMain.escribirEnConsola("|---------------------------------------------|");
+			viewMain.escribirEnConsola("|   5. Volver atrás.                          |");
+			viewMain.escribirEnConsola("|---------------------------------------------|");
+			viewMain.escribirEnConsola("|   6. Cerrar la aplicación.                  |");
+			viewMain.escribirEnConsola("| ---------------------------------------------");
+			viewMain.escribirEnConsola("|  ---------------------");
+			viewMain.escribirEnConsola("|  | " + cadenaIdiomaOpcion + " |---->");
+			viewMain.escribirEnConsola("|  ---------------------");
+			opcionStringSeleccionadaMenu = scanner.nextLine();
+			opcionStringSeleccionadaMenu = Recursos.eliminaEspacios(opcionStringSeleccionadaMenu);
+
+			switch (opcionStringSeleccionadaMenu) {
+			// 1. Seleccionar cliente.
+			case "1":
+				mostrarConfiguracionSonido();
+				break;
+			// 2. Crear cliente.
+			case "2":
+				configurarNumeroRegistrosMostrar();
+				// crearCliente();
+				break;
+			// 3. Volver atrás.
+			case "3":
+				configurarCadenaCancelar();
+				break;
+			// 4. Cambiar idioma.
+			case "4":
+				configurarIdioma();
+				break;
+			// 5. Volver atrás.
+			case "5":
+				mostramosMenuInicial();
+				break;
+			// 6. Cerrar la aplicación.
+			case "6":
+				salirDeLaAplicacion();
+				mostramosMenuSeleccionarCrearClientes();
+				break;
+			default:
+				viewMain.escribirEnConsola("Opción no válida. Introduzca sólo números entre 1 y 4.");
+				Sonido.sonar();
+			}
+		}
 	}
 
 	/**
@@ -688,74 +752,6 @@ public class ControllerPrincipal {
 		}
 	}
 
-	/**
-	 * Muestra el menú seleccionar y crear clientes
-	 * 
-	 * @throws Exception
-	 */
-	private void mostramosMenuConfiguracion() throws Exception {
-		while (true) {
-			viewMain.escribirEnConsola("----------------------------------------------");
-			viewMain.escribirEnConsola("|     PRÁCTICA CUENTAS BANCARIAS HIBERNATE.   |");
-			viewMain.escribirEnConsola(
-					"-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
-			viewMain.escribirEnConsola("|         ->>> MENÚ CONFIGURACIÓN <<<-        |    Fecha y Hora: "
-					+ Recursos.formato(LocalDateTime.now()));
-			viewMain.escribirEnConsola(
-					"|         -----------------------------       |-------------------------------------------------------------------------------------------------------------------");
-			viewMain.escribirEnConsola("|---------------------------------------------|");
-			viewMain.escribirEnConsola("|   1. Configurar sonido.                     |");
-			viewMain.escribirEnConsola("|---------------------------------------------|");
-			viewMain.escribirEnConsola("|   2. Configurar Nº Reg. a mostrar.	      |");
-			viewMain.escribirEnConsola("|---------------------------------------------|");
-			viewMain.escribirEnConsola("|   3. Configurar cadena 'Cancelar'.          |");
-			viewMain.escribirEnConsola("|---------------------------------------------|");
-			viewMain.escribirEnConsola("|   4. Configurar idioma.                     |");
-			viewMain.escribirEnConsola("|---------------------------------------------|");
-			viewMain.escribirEnConsola("|   5. Volver atrás.                          |");
-			viewMain.escribirEnConsola("|---------------------------------------------|");
-			viewMain.escribirEnConsola("|   6. Cerrar la aplicación.                  |");
-			viewMain.escribirEnConsola("| ---------------------------------------------");
-			viewMain.escribirEnConsola("|  ---------------------");
-			viewMain.escribirEnConsola("|  | " + cadenaIdiomaOpcion + " |---->");
-			viewMain.escribirEnConsola("|  ---------------------");
-			opcionStringSeleccionadaMenu = scanner.nextLine();
-			opcionStringSeleccionadaMenu = Recursos.eliminaEspacios(opcionStringSeleccionadaMenu);
-
-			switch (opcionStringSeleccionadaMenu) {
-			// 1. Seleccionar cliente.
-			case "1":
-				mostrarConfiguracionSonido();
-				break;
-			// 2. Crear cliente.
-			case "2":
-				configurarNumeroRegistrosMostrar();
-				// crearCliente();
-				break;
-			// 3. Volver atrás.
-			case "3":
-				configurarCadenaCancelar();
-				break;
-			// 4. Cambiar idioma.
-			case "4":
-				configurarIdioma();
-				break;
-			// 5. Volver atrás.
-			case "5":
-				mostramosMenuInicial();
-				break;
-			// 6. Cerrar la aplicación.
-			case "6":
-				salirDeLaAplicacion();
-				mostramosMenuSeleccionarCrearClientes();
-				break;
-			default:
-				viewMain.escribirEnConsola("Opción no válida. Introduzca sólo números entre 1 y 4.");
-				Sonido.sonar();
-			}
-		}
-	}
-
 	// FIN MENUS
 	// -----------------------------------------------------------------------------------
 	// -----------------------------------------------------------------------------------
@@ -805,43 +801,66 @@ public class ControllerPrincipal {
 	// --------------------------------------------------------------
 	/**
 	 * Lista todos los clientes de la base de datos y aplica paginación.
+	 * 
 	 * @throws Exception
 	 */
 	private void opcionListarTodosLosClientesPaginacion() throws Exception {
+		long contadorDepaginas = 0L;
+		boolean soloUnaPagina = false;
 		long[] resultado = new long[2];
-		resultado = Recursos.paginacion(ServiceCliente.devolverSesion(),
-				numeroDeRegistrosMostrarPorPaginaNuevo);
+		resultado = Recursos.paginacion(ServiceCliente.devolverSesion(), numeroDeRegistrosMostrarPorPaginaNuevo);
 		// resultado[0]--> Número total de registros
 		// resultado[1]--> Número total de páginas
 		long numeroTotalRegistros = resultado[0];
 		long numeroTotalPaginas = resultado[1];
 		for (int numeroPagina = 0; numeroPagina <= numeroTotalPaginas; numeroPagina++) {
 			if (paginacion(numeroTotalPaginas, numeroPagina, numeroTotalRegistros)) {
+				if (numeroTotalPaginas == 0) {
+					soloUnaPagina = true;
+				}
 				viewMain.verListadoClientesDireccionSaldo(
 						serviceCliente.listClientesDireccionSaldo(numeroPagina, numeroDeRegistrosMostrarPorPaginaNuevo),
 						numeroPagina);
-				actualizarEstadisticas = false;
+				contadorDepaginas++;
+				if (((contadorDepaginas == numeroTotalPaginas) && numeroTotalPaginas != 1) || soloUnaPagina == true) {
+					viewMain.escribirEnConsola("\nFIN DEL LISTADO\n");
+					soloUnaPagina = false;
+					do {
+						viewMain.escribirEnConsola("Presione \"Enter\" \"Intro\" para continuar: ");
+						cadenaDatos = scanner.nextLine();
+					} while (!cadenaDatos.equals(""));
+					mostramosMenuInicial();
+				} else if (((contadorDepaginas == numeroTotalPaginas + 1) && numeroTotalPaginas == 1)
+						|| soloUnaPagina == true) {
+					viewMain.escribirEnConsola("\nFIN DEL LISTADO\n");
+					soloUnaPagina = false;
+					do {
+						viewMain.escribirEnConsola("Presione \"Enter\" \"Intro\" para continuar: ");
+						cadenaDatos = scanner.nextLine();
+					} while (!cadenaDatos.equals(""));
+					mostramosMenuInicial();
+				}
+
 			} else {
-				actualizarEstadisticas = false;
 				mostramosMenuInicial();
 			}
 		}
-		actualizarEstadisticas = false;
 	}
 
 	// OPCION LISTAR TODOS LOS MOVIMIENTOS POR id CLIENTE.
 	// --------------------------------------------------------------
 	/**
-	 * Lista  todos los movimientos del cliente selecionado.
+	 * Lista todos los movimientos del cliente selecionado.
+	 * 
 	 * @throws Exception
 	 */
 	private void opcionListarMovimientosClienteSeleccionado() throws Exception {
 		/**
-		 * Sirve para guardar el numero total de registros y el número de páginas, que usaremos
-		 * después para realizar correctamente la paginación.
+		 * Sirve para guardar el numero total de registros y el número de páginas, que
+		 * usaremos después para realizar correctamente la paginación.
 		 */
 		long resultado[] = new long[2];
-		//Extraemos los datos de la paginación.
+		// Extraemos los datos de la paginación.
 		resultado = Recursos.paginacionMovimientos(ServiceCliente.devolverSesion(), "" + idClienteSeleccionado,
 				numeroDeRegistrosMostrarPorPaginaNuevo);
 		/**
@@ -852,13 +871,18 @@ public class ControllerPrincipal {
 		 * Sirve para almacenar el número total de páginas que necesitaremos para listar
 		 * todos los movimientos
 		 */
-		
+
 		long numeroTotalPaginas = resultado[1];
-		//Comenzamos a paginar
+		// Comenzamos a paginar
 		for (int numeroPagina = 0; numeroPagina <= numeroTotalPaginas; numeroPagina++) {
 			if (paginacion(numeroTotalPaginas, numeroPagina, numeroTotalRegistros)) {
 				viewMain.verMovimientosEncontrados(serviceMovimiento.list(clienteOperaciones.getId(), numeroPagina,
 						numeroDeRegistrosMostrarPorPaginaNuevo), numeroPagina);
+				viewMain.escribirEnConsola("\nFIN DEL LISTADO\n");
+				do {
+					viewMain.escribirEnConsola("Presione \"Enter\" \"Intro\" para continuar: ");
+					cadenaDatos = scanner.nextLine();
+				} while (!cadenaDatos.equals(""));
 			} else {
 				mostramosMenuInicial();
 			}
@@ -866,8 +890,7 @@ public class ControllerPrincipal {
 		mostrarMenuOperacionesConClientes();
 	}
 
-
-	// OPCION BORRAR CLIENTE   ----DELETE----
+	// OPCION BORRAR CLIENTE ----DELETE----
 	// --------------------------------------------------------------
 	/**
 	 * Elimina el cliente seleccionado actualmente
@@ -1371,15 +1394,24 @@ public class ControllerPrincipal {
 		Boolean pulsadoInterno = false;
 		// En la primera página devolveremos true, para que no muestre el diálogo de
 		// mostrar más registros
-		if (numeroPagina != 0) {
+		if (numeroPagina != 0  && numeroTotalPaginas !=0) {
 			do {
 				if (numeroTotalPaginas != numeroPagina) {
+					if (numeroPagina != 0) {
+						viewMain.escribirEnConsola("¿Mostrar Página: Nº: " + (numeroPagina + 1L) + " de "
+								+ (numeroTotalPaginas + 1L) + " páginas?\nTotal registros: " + numeroTotalRegistros
+								+ "\nSi.<s> No.<n> <" + cadenaCancelar + ">Cancelar.");
+						cadenaDatos = scanner.nextLine().toLowerCase(); 
+					}
+
+				}else if (numeroTotalPaginas !=1){
 					viewMain.escribirEnConsola("¿Mostrar Página: Nº: " + (numeroPagina + 1L) + " de "
-							+ (numeroTotalPaginas) + " páginas?\nTotal registros: " + numeroTotalRegistros
+							+ (numeroTotalPaginas + 1L) + " páginas?\nTotal registros: " + numeroTotalRegistros
 							+ "\nSi.<s> No.<n> <" + cadenaCancelar + ">Cancelar.");
-					cadenaDatos = scanner.nextLine().toLowerCase();
+					cadenaDatos = scanner.nextLine().toLowerCase(); 
 				}
-				if (!verSiCancelado(cadenaDatos, "Mostrar siguientes 20 clientes.")) {
+				if (!verSiCancelado(cadenaDatos,
+						"Mostrar siguientes " + numeroDeRegistrosMostrarPorPaginaNuevo + " clientes.")) {
 					// Si presiona salgo del do while y paginacion() devolverá true
 					if (cadenaDatos.equals("s")) {
 						pulsadoInterno = true;
@@ -1391,10 +1423,14 @@ public class ControllerPrincipal {
 						// verSiCancelado()
 					} else {
 						if (!cadenaDatos.equals(cadenaCancelar)) {
-							viewMain.escribirEnConsola(
-									"Opción no válida. Recuerde: Si<s> No<n> Cancelar<" + cadenaCancelar + ">.");
-							Sonido.sonar();
-							pulsadoInterno = false;
+							if (!cadenaDatos.equals("")) {
+								viewMain.escribirEnConsola(
+										"Opción no válida. Recuerde: Si<s> No<n> Cancelar<" + cadenaCancelar + ">.");
+								Sonido.sonar();
+								pulsadoInterno = false;
+							} else {
+								pulsadoInterno = true;
+							}
 						}
 					}
 				} else {
@@ -1453,7 +1489,9 @@ public class ControllerPrincipal {
 		do {
 			viewMain.escribirEnConsola("<<< Formato: " + mensajeFormato + " >>>");
 			viewMain.escribirEnConsola(nombre + ":\n");
+
 			cadenaDatos = scanner.nextLine();
+
 			// Miramos a ver si el cliente ha introducido #q para cancelar la operación.
 			if (!verSiCancelado(cadenaDatos, cadenaVerSiCancelado)) {
 				if (cadenaDatos.equals(cadenaCancelar)) {
@@ -1550,10 +1588,9 @@ public class ControllerPrincipal {
 	 * dirección, pero también nos preguntará finalmente si queremos introducir una
 	 * dirección para el cliente recién creado.
 	 * 
-	 * @throws ExcepcionIntervalo
-	 * @throws NumberFormatException
+	 * @throws Exception
 	 */
-	private void solicitudDatosClienteGeneral() throws NumberFormatException, ExcepcionIntervalo {
+	private void solicitudDatosClienteGeneral() throws Exception {
 		todoCorrecto = true;
 		while (todoCorrecto) {
 			if (todoCorrecto && solicitarDatosCorrectosOno("CIF", "Introducir CIF", 9, 9, false, false,
@@ -1582,17 +1619,26 @@ public class ControllerPrincipal {
 				todoCorrecto = false;
 			}
 			if (todoCorrecto) {
-				idClienteNuevo = serviceCliente.create(cifNuevo, nombreNuevo, apellido1Nuevo, apellido2Nuevo);
-				if (idClienteNuevo != -1) {
+				mostrarQuiereHacer("crear cliente", "crear", "el", "CIF", "Crear cliente: ", "");
+				if (idClienteNuevo != -1 && idClienteNuevo != 0) {
+					idClienteSeleccionado = idClienteNuevo;
+					clienteOperaciones.setCif(cifNuevo);
+					clienteOperaciones.setNombre(nombreNuevo);
+					clienteOperaciones.setApellido1(apellido1Nuevo);
+					clienteOperaciones.setApellido2(apellido2Nuevo);
 					actualizarEstadisticas = true;
-					viewMain.escribirEnConsola("\n\tCliente creado correctamente");
+					viewMain.escribirEnConsola(
+							"\n\tCliente creado correctamente.\n Se ha asignado automáticamente el Id: "
+									+ idClienteNuevo + " al cliente recien creado con CIF: " + cifNuevo);
 					viewMain.muestraDatosClienteNuevo(cifNuevo, nombreNuevo, apellido1Nuevo, apellido2Nuevo);
-					ejecutarOrdenIntroducciónDatosSiNoCancelar("¿Quiere añadir una dirección?",
+					ejecutarOrdenIntroducciónDatosSiNoCancelar(
+							"¿Quiere añadir una dirección al cliente recién creado con CiF: " + cifNuevo + "?",
 							"<<< Formato: Sí<s> No<n> Cancelar<" + cadenaCancelar + "> >>>", "Introducir dirección.");
 					// Para que salga
 					todoCorrecto = false;
 				} else {
-					viewMain.escribirEnConsola("\n\n\tCLIENTE NO CREADO porque devolvió -1");
+					viewMain.escribirEnConsola("\n\n\tCLIENTE NO CREADO.");
+					todoCorrecto = false;
 				}
 			} else {
 				Sonido.sonar();
@@ -1611,7 +1657,8 @@ public class ControllerPrincipal {
 	 * @throws ExcepcionIntervalo
 	 * @throws NumberFormatException
 	 */
-	private void solicitudDatosDirecciónGeneral(long idClienteNuevo) throws NumberFormatException, ExcepcionIntervalo {
+	private boolean solicitudDatosDirecciónGeneral(long idClienteNuevo)
+			throws NumberFormatException, ExcepcionIntervalo {
 		todoCorrecto = true;
 		while (todoCorrecto) {
 			if (todoCorrecto && solicitarDatosCorrectosOno("Dirección", "Introducir Dirección", 1, 30, false, false,
@@ -1653,16 +1700,19 @@ public class ControllerPrincipal {
 					viewMain.muestraDatosDireccionNuevo(idDireccionNuevo, cpNuevo, provinciaNuevo, poblacionNuevo,
 							paisNuevo);
 					// Para que salga
-					todoCorrecto = false;
+					return true;
 				} else {
-					viewMain.escribirEnConsola("\n\n\tDIRECCIÓN NO CREADA");
+					viewMain.escribirEnConsola("\n\n\tDIRECCIÓN NO CREADAm");
+					return false;
 				}
 
 			} else {
 				Sonido.sonar();
 				viewMain.escribirEnConsola("\n\n\tDIRECCIÓN NO CREADA");
+				return false;
 			}
 		}
+		return false;
 
 	}
 
@@ -1670,10 +1720,9 @@ public class ControllerPrincipal {
 	 * Solicita los datos personales para modificar un cliente, excepto la
 	 * dirección.
 	 * 
-	 * @throws ExcepcionIntervalo
-	 * @throws NumberFormatException
+	 * @throws Exception
 	 */
-	private void solicitudDatosClienteModificar() throws NumberFormatException, ExcepcionIntervalo {
+	private void solicitudDatosClienteModificar() throws Exception {
 
 		ejecutarOrdenIntroducciónDatosSiNoCancelar("¿Quiere modificar el CIF?",
 				"<<< Formato: Sí<s> No<n> Cancelar<" + cadenaCancelar + "> >>>", "Modificar CIF.");
@@ -1689,10 +1738,9 @@ public class ControllerPrincipal {
 	/**
 	 * Solicita los datos pra modificar la dirección de un cliente.
 	 * 
-	 * @throws ExcepcionIntervalo
-	 * @throws NumberFormatException
+	 * @throws Exception
 	 */
-	private void solicitudDireccionClienteModificar() throws NumberFormatException, ExcepcionIntervalo {
+	private void solicitudDireccionClienteModificar() throws Exception {
 		if (clienteOperaciones.getDireccion() != null) {
 			ejecutarOrdenIntroducciónDatosSiNoCancelar("¿Quiere modificar la Dirección?",
 					"<<< Formato: Sí<s> No<n> Cancelar<" + cadenaCancelar + "> >>>", "Modificar Dirección.");
@@ -1895,11 +1943,10 @@ public class ControllerPrincipal {
 	 * @param orden
 	 * @param mensajeFormato
 	 * @param mensajeCancelado
-	 * @throws ExcepcionIntervalo
-	 * @throws NumberFormatException
+	 * @throws Exception
 	 */
 	private void ejecutarOrdenIntroducciónDatosSiNoCancelar(String orden, String mensajeFormato,
-			String mensajeCancelado) throws NumberFormatException, ExcepcionIntervalo {
+			String mensajeCancelado) throws Exception {
 		todoCorrecto = true;
 		do {
 			viewMain.escribirEnConsola(orden + "\n");
@@ -1913,11 +1960,21 @@ public class ControllerPrincipal {
 				}
 				// Si no fue cancelado finalmente y cadenaDatos es diferente a #q
 				if (cadenaDatos.equals("s")) {
-					if (orden.equals("¿Quiere añadir una dirección?")) {
-						solicitudDatosDirecciónGeneral(idClienteNuevo);
-						serviceCliente.updateClienteSinDireccion(idClienteNuevo, direccionOperaciones);
-						actualizarEstadisticas = true;
-						todoCorrecto = false;
+					if (orden.equals(
+							"¿Quiere añadir una dirección al cliente recién creado con CiF: " + cifNuevo + "?")) {
+						if (solicitudDatosDirecciónGeneral(idClienteNuevo)) {
+							if (serviceCliente.updateClienteSinDireccion(idClienteNuevo, direccionOperaciones)) {
+								clienteOperaciones.setDireccion(direccionOperaciones);
+								actualizarEstadisticas = true;
+								viewMain.escribirEnConsola(
+										"Dirección añadida correctamente al recién creado cliente con CIF: " + cifNuevo
+												+ ".");
+								mostrarMenuOperacionesConClientes();
+								todoCorrecto = false;
+							}
+						} else {
+							mostrarMenuOperacionesConClientes();
+						}
 					} else if (orden.equals("¿Quiere modificar el CIF?")) {
 						viewMain.escribirEnConsola("CIF actual:" + clienteOperaciones.getCif());
 						solicitarDatosCorrectosOno("CIF", "Introducir CIF", 9, 9, false, false,
@@ -1998,17 +2055,23 @@ public class ControllerPrincipal {
 						serviceCliente.updateClienteDireccion(direccionOperaciones.getId(), direccionOperaciones,
 								"pais");
 						viewMain.escribirEnConsola("País actualizado correctamente");
-						todoCorrecto = false;
+
 					}
 					// Si dice que no, salimos del do while
 				} else if (cadenaDatos.equals("n")) {
+					if (orden.equals(
+							"¿Quiere añadir una dirección al cliente recién creado con CiF: " + cifNuevo + "?")) {
+						System.out.println("No se ha añadido ninguna dirección al cliente con CIF: " + cifNuevo);
+					}
 					todoCorrecto = false;
 				}
 				// Si introduce otra cosa vuelve a preguntar
 				else {
-					viewMain.escribirEnConsola("     >>>ERROR<<<");
-					viewMain.escribirEnConsola(">>>Datos no válidos<<<");
-					viewMain.escribirEnConsola("RECUERDE: " + mensajeFormato + "\n");
+					if (!cadenaDatos.equals("")) {
+						viewMain.escribirEnConsola("     >>>ERROR<<<");
+						viewMain.escribirEnConsola(">>>Datos no válidos<<<");
+						viewMain.escribirEnConsola("RECUERDE: " + mensajeFormato + "\n");
+					}
 					todoCorrecto = true;
 				}
 				// Si ha cancelado devolvemos false para salir del do while
@@ -2017,6 +2080,53 @@ public class ControllerPrincipal {
 				todoCorrecto = false;
 			}
 		} while (todoCorrecto);
+	}
+
+	/**
+	 * Sirve para mostrar las opciones a la hora de eliminar a un cliente.
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	private void mostrarQuiereHacer(String opcion, String accion, String textoDeterminante, String campo,
+			String mensajeCancelar, String menuAnterior) throws Exception {
+		idClienteNuevo = 0;
+		Boolean pulsadoInterno = false;
+		do {
+			viewMain.escribirEnConsola("¿Está seguro que quiere " + opcion + " el cliente con " + textoDeterminante
+					+ " " + campo + ": " + cifNuevo + " ?\nSi<s> No<n> Cancelar<" + cadenaCancelar + ">.");
+			cadenaDatos = scanner.nextLine().toLowerCase();
+			if (!verSiCancelado(cadenaDatos, mensajeCancelar + cifNuevo + ".")) {
+				if (cadenaDatos.equals(cadenaCancelar)) {
+					cadenaDatos = "";
+				} else {
+					if (cadenaDatos.equals("s")) {
+						// Acciones disponibles.
+						if (opcion.equals("crear cliente")) {
+							idClienteNuevo = serviceCliente.create(cifNuevo, nombreNuevo, apellido1Nuevo,
+									apellido2Nuevo);
+							pulsadoInterno = true;
+
+						}
+
+						// mostramosMenuSeleccionarCrearClientes();
+					} else if (cadenaDatos.equals("n")) {
+						viewMain.escribirEnConsola("Cliente no creado.");
+						mostramosMenuSeleccionarCrearClientes();
+						pulsadoInterno = true;
+					} else {
+						if (!cadenaDatos.equals(cadenaCancelar)) {
+							viewMain.escribirEnConsola(
+									"Opción no válida. Recuerde: Si<s> No<n> Cancelar<" + cadenaCancelar + ">.");
+							Sonido.sonar();
+							pulsadoInterno = false;
+						}
+					}
+				}
+			} else {
+				pulsadoInterno = true;
+			}
+		} while (!pulsadoInterno);
 	}
 
 }

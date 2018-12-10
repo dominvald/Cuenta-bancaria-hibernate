@@ -158,7 +158,7 @@ public class ClienteDaoImplementacion {
 
 	// UPDATE
 	/* Método para dar una dirección a un cliente el cif ce un cliente */
-	public void updateClienteSinDireccion(int ClienteID, Direccion direccion) {
+	public boolean updateClienteSinDireccion(int ClienteID, Direccion direccion) {
 		Session session = sessFact.getCurrentSession();
 		Transaction tx = null;
 
@@ -168,12 +168,14 @@ public class ClienteDaoImplementacion {
 			cliente.setDireccion(direccion);
 			session.update(cliente);
 			tx.commit();
+			session.close();
+			return true;
 		} catch (HibernateException e) {
 			if (tx != null)
 				tx.rollback();
-			e.printStackTrace();
-		} finally {
 			session.close();
+			e.printStackTrace();
+			return false;
 		}
 	}
 
