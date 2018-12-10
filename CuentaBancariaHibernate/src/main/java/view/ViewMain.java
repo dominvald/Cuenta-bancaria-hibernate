@@ -99,8 +99,8 @@ public class ViewMain {
 	 * 
 	 * @param ListaMovimientos
 	 */
-	public void verMovimientosEncontrados(List<Movimiento> ListaMovimientos, long numeroPagina) {
-		long contadorRegistros = numeroPagina * 20;
+	public void verMovimientosEncontrados(List<Movimiento> ListaMovimientos, long numeroPagina, long numeroDeRegistrosMostrarPorPaginaNuevo) {
+		long contadorRegistros = numeroPagina * numeroDeRegistrosMostrarPorPaginaNuevo;
 		/**
 		 * Contador interno de movimientos encontrados
 		 */
@@ -173,8 +173,8 @@ public class ViewMain {
 	 * @param opcion
 	 */
 	public void verListadoClientesDireccionSaldo(List<ClientesDireccionSaldo> listaClaseClientesDireccionSaldo,
-			long numeroPagina) {
-		long contadorRegistros = numeroPagina * 20;
+			long numeroPagina, long numeroDeRegistrosMostrarPorPaginaNuevo) {
+		long contadorRegistros = numeroPagina * numeroDeRegistrosMostrarPorPaginaNuevo;
 		/**
 		 * Lo usamos para contar el número de clientes en la base de datos
 		 */

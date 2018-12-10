@@ -48,7 +48,7 @@ public class ControllerPrincipal {
 	 * @author Alberto Domínguez
 	 *
 	 */
-	enum MenuInicial {
+	enum EnumMenuInicial {
 		OPERACIONES(1, "Operaciones con clientes."), LISTAR(2, "Listar todos los clientes."),
 		CONFIGURAR(3, "Configurar aplicación."), CERRAR(4, "Cerrar la aplicación."),
 		TITULO(5, "PRÁCTICA CUENTAS BANCARIAS HIBERNATE."), SUBTITULO(6, "->>> MENÚ PRINCIPAL. <<<-");
@@ -62,7 +62,7 @@ public class ControllerPrincipal {
 		 * @param p -> Posición
 		 * @param t -> texto
 		 */
-		MenuInicial(int p, String t) {
+		EnumMenuInicial(int p, String t) {
 			// Lo inicializamos con los valores pasados.
 			posicionEnumerado = p;
 			textoEnumerado = t;
@@ -465,15 +465,15 @@ public class ControllerPrincipal {
 
 	private void construyeMenuInicial() {
 		viewMain.escribirEnConsola("----------------------------------------------");
-		viewMain.escribirEnConsola("|     " + MenuInicial.TITULO.getTexto() + "   |");
+		viewMain.escribirEnConsola("|     " + EnumMenuInicial.TITULO.getTexto() + "   |");
 		viewMain.escribirEnConsola(
 				"-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
-		viewMain.escribirEnConsola("|          " + MenuInicial.SUBTITULO.getTexto() + "          |    Fecha y Hora: "
+		viewMain.escribirEnConsola("|          " + EnumMenuInicial.SUBTITULO.getTexto() + "          |    Fecha y Hora: "
 				+ Recursos.formato(LocalDateTime.now()));
 		viewMain.escribirEnConsola(
 				"|               ---------------               |--------------------------------------------------------------------------------------------------------------------------------------");
 		viewMain.escribirEnConsola("|---------------------------------------------|");
-		for (MenuInicial cadena : MenuInicial.values()) {
+		for (EnumMenuInicial cadena : EnumMenuInicial.values()) {
 			if (cadena.getPosicion() < 5) {
 				viewMain.escribirEnConsola("|     " + cadena.posicionEnumerado + ". " + cadena.textoEnumerado);
 				viewMain.escribirEnConsola("----------------------------------------------|");
@@ -769,7 +769,7 @@ public class ControllerPrincipal {
 			Boolean pulsadoCanceladoInterno = false;
 			do {
 				viewMain.escribirEnConsola("¿Está seguro que quiere salir de:\nNombre de la operación: "
-						+ nombreOperacion + "\nSi<s> No<n>");
+						+ nombreOperacion + "\nSí<s> No<n>");
 				cadena = scanner.nextLine().toLowerCase();
 				if (cadena.equals(cadenaCancelar)) {
 					viewMain.escribirEnConsola("Operación cancelar no está disponible en esta operación");
@@ -780,7 +780,7 @@ public class ControllerPrincipal {
 				} else if (cadena.equals("n")) {
 					return false;
 				} else {
-					viewMain.escribirEnConsola("Opción no válida.\nRecuerde: Si<s> No<n>.");
+					viewMain.escribirEnConsola("Opción no válida.\nRecuerde: Sí<s> No<n>.");
 					Sonido.sonar();
 					pulsadoCanceladoInterno = false;
 				}
@@ -820,7 +820,7 @@ public class ControllerPrincipal {
 				}
 				viewMain.verListadoClientesDireccionSaldo(
 						serviceCliente.listClientesDireccionSaldo(numeroPagina, numeroDeRegistrosMostrarPorPaginaNuevo),
-						numeroPagina);
+						numeroPagina, numeroDeRegistrosMostrarPorPaginaNuevo);
 				contadorDepaginas++;
 				if (((contadorDepaginas == numeroTotalPaginas) && numeroTotalPaginas != 1) || soloUnaPagina == true) {
 					viewMain.escribirEnConsola("\nFIN DEL LISTADO\n");
@@ -855,6 +855,9 @@ public class ControllerPrincipal {
 	 * @throws Exception
 	 */
 	private void opcionListarMovimientosClienteSeleccionado() throws Exception {
+		long contadorDepaginas = 0L;
+		boolean soloUnaPagina = false;
+		
 		/**
 		 * Sirve para guardar el numero total de registros y el número de páginas, que
 		 * usaremos después para realizar correctamente la paginación.
@@ -876,18 +879,34 @@ public class ControllerPrincipal {
 		// Comenzamos a paginar
 		for (int numeroPagina = 0; numeroPagina <= numeroTotalPaginas; numeroPagina++) {
 			if (paginacion(numeroTotalPaginas, numeroPagina, numeroTotalRegistros)) {
-				viewMain.verMovimientosEncontrados(serviceMovimiento.list(clienteOperaciones.getId(), numeroPagina,
-						numeroDeRegistrosMostrarPorPaginaNuevo), numeroPagina);
-				viewMain.escribirEnConsola("\nFIN DEL LISTADO\n");
-				do {
-					viewMain.escribirEnConsola("Presione \"Enter\" \"Intro\" para continuar: ");
-					cadenaDatos = scanner.nextLine();
-				} while (!cadenaDatos.equals(""));
+				if (numeroTotalPaginas == 0) {
+					soloUnaPagina = true;
+				}
+				viewMain.verMovimientosEncontrados(
+						serviceMovimiento.list(idClienteSeleccionado, numeroPagina, numeroDeRegistrosMostrarPorPaginaNuevo),numeroPagina,numeroDeRegistrosMostrarPorPaginaNuevo);
+				contadorDepaginas++;
+				if (((contadorDepaginas == numeroTotalPaginas) && numeroTotalPaginas != 1) || soloUnaPagina == true) {
+					viewMain.escribirEnConsola("\nFIN DEL LISTADO\n");
+					soloUnaPagina = false;
+					do {
+						viewMain.escribirEnConsola("Presione \"Enter\" \"Intro\" para continuar: ");
+						cadenaDatos = scanner.nextLine();
+					} while (!cadenaDatos.equals(""));
+					mostrarMenuOperacionesConClientes();
+				} else if (((contadorDepaginas == numeroTotalPaginas + 1) && numeroTotalPaginas == 1)
+						|| soloUnaPagina == true) {
+					viewMain.escribirEnConsola("\nFIN DEL LISTADO\n");
+					soloUnaPagina = false;
+					do {
+						viewMain.escribirEnConsola("Presione \"Enter\" \"Intro\" para continuar: ");
+						cadenaDatos = scanner.nextLine();
+					} while (!cadenaDatos.equals(""));
+					mostrarMenuOperacionesConClientes();
+				}
 			} else {
-				mostramosMenuInicial();
+				mostrarMenuOperacionesConClientes();
 			}
 		}
-		mostrarMenuOperacionesConClientes();
 	}
 
 	// OPCION BORRAR CLIENTE ----DELETE----
@@ -932,7 +951,7 @@ public class ControllerPrincipal {
 		Boolean pulsadoInterno = false;
 		do {
 			viewMain.escribirEnConsola(
-					"¿Está seguro que quiere cerrar la aplicación?\nSi<s> No<n> Cancelar<" + cadenaCancelar + ">.");
+					"¿Está seguro que quiere cerrar la aplicación?\nSí<s> No<n> Cancelar<" + cadenaCancelar + ">.");
 			cadenaDatos = scanner.nextLine().toLowerCase();
 			if (!verSiCancelado(cadenaDatos, "Cerrar la aplicación.")) {
 				if (cadenaDatos.equals("s")) {
@@ -943,7 +962,7 @@ public class ControllerPrincipal {
 				} else {
 					if (!cadenaDatos.equals(cadenaCancelar)) {
 						viewMain.escribirEnConsola(
-								"Opción no válida. Recuerde: Si<s> No<n> Cancelar<" + cadenaCancelar + ">.");
+								"Opción no válida. Recuerde: Sí<s> No<n> Cancelar<" + cadenaCancelar + ">.");
 						Sonido.sonar();
 						pulsadoInterno = false;
 					}
@@ -967,7 +986,7 @@ public class ControllerPrincipal {
 		Boolean pulsadoInterno = false;
 		do {
 			viewMain.escribirEnConsola("¿Está seguro que quiere eliminar al cliente con el CIF: "
-					+ clienteOperaciones.getCif() + " ?\nSi<s> No<n> Cancelar<" + cadenaCancelar + ">.");
+					+ clienteOperaciones.getCif() + " ?\nSí<s> No<n> Cancelar<" + cadenaCancelar + ">.");
 			cadenaDatos = scanner.nextLine().toLowerCase();
 			if (!verSiCancelado(cadenaDatos, "Eliminar al cliente con CIF: " + clienteOperaciones.getCif() + ".")) {
 				if (cadenaDatos.equals(cadenaCancelar)) {
@@ -982,7 +1001,7 @@ public class ControllerPrincipal {
 					} else {
 						if (!cadenaDatos.equals(cadenaCancelar)) {
 							viewMain.escribirEnConsola(
-									"Opción no válida. Recuerde: Si<s> No<n> Cancelar<" + cadenaCancelar + ">.");
+									"Opción no válida. Recuerde: Sí<s> No<n> Cancelar<" + cadenaCancelar + ">.");
 							Sonido.sonar();
 							pulsadoInterno = false;
 						}
@@ -1030,7 +1049,7 @@ public class ControllerPrincipal {
 			if (Sonido.getSonar()) {
 				viewMain.escribirEnConsola("El sonido está activado");
 				viewMain.escribirEnConsola(
-						"¿Desea desactivar el sonido?\nSi<s> No<n> Cancelar<" + cadenaCancelar + ">.");
+						"¿Desea desactivar el sonido?\nSí<s> No<n> Cancelar<" + cadenaCancelar + ">.");
 				cadenaDatos = scanner.nextLine();
 				// Si ha cancelado volvemos al menú
 				if (verSiCancelado(cadenaDatos, "Configurar sonido.")) {
@@ -1057,14 +1076,14 @@ public class ControllerPrincipal {
 					} else if (!cadenaDatos.toLowerCase().equals(cadenaCancelar)) {
 						Sonido.sonar();
 						viewMain.escribirEnConsola(
-								"Opción no válida. Recuerde: Si<s> No<n> Cancelar<" + cadenaCancelar + ">.");
+								"Opción no válida. Recuerde: Sí<s> No<n> Cancelar<" + cadenaCancelar + ">.");
 					}
 				}
 				// Si el sonido está desactivado
 				// NOTA: va como el anterior
 			} else {
 				viewMain.escribirEnConsola("El sonido está desactivado");
-				viewMain.escribirEnConsola("¿Desea activar el sonido?\nSi<s> No<n> Cancelar<" + cadenaCancelar + ">.");
+				viewMain.escribirEnConsola("¿Desea activar el sonido?\nSí<s> No<n> Cancelar<" + cadenaCancelar + ">.");
 				cadenaDatos = scanner.nextLine();
 				if (verSiCancelado(cadenaDatos, "Configurar sonido")) {
 					mostramosMenuInicial();
@@ -1084,7 +1103,7 @@ public class ControllerPrincipal {
 					} else if (!cadenaDatos.toLowerCase().equals(cadenaCancelar)) {
 						Sonido.sonar();
 						viewMain.escribirEnConsola(
-								"Opción no válida. Recuerde: Si<s> No<n> Cancelar<" + cadenaCancelar + ">.");
+								"Opción no válida. Recuerde: Sí<s> No<n> Cancelar<" + cadenaCancelar + ">.");
 					}
 				}
 
@@ -1392,22 +1411,24 @@ public class ControllerPrincipal {
 	 */
 	private boolean paginacion(long numeroTotalPaginas, long numeroPagina, long numeroTotalRegistros) throws Exception {
 		Boolean pulsadoInterno = false;
+
 		// En la primera página devolveremos true, para que no muestre el diálogo de
 		// mostrar más registros
 		if (numeroPagina != 0  && numeroTotalPaginas !=0) {
 			do {
+				cadenaDatos="";
 				if (numeroTotalPaginas != numeroPagina) {
 					if (numeroPagina != 0) {
 						viewMain.escribirEnConsola("¿Mostrar Página: Nº: " + (numeroPagina + 1L) + " de "
-								+ (numeroTotalPaginas + 1L) + " páginas?\nTotal registros: " + numeroTotalRegistros
-								+ "\nSi.<s> No.<n> <" + cadenaCancelar + ">Cancelar.");
+								+ (numeroTotalPaginas) + " páginas?\nTotal registros: " + numeroTotalRegistros
+								+ "\nSí.<s> No.<n> <" + cadenaCancelar + ">Cancelar.");
 						cadenaDatos = scanner.nextLine().toLowerCase(); 
 					}
 
-				}else if (numeroTotalPaginas !=1){
+				}else if (numeroTotalPaginas ==1 && numeroTotalRegistros!=numeroDeRegistrosMostrarPorPaginaNuevo){
 					viewMain.escribirEnConsola("¿Mostrar Página: Nº: " + (numeroPagina + 1L) + " de "
 							+ (numeroTotalPaginas + 1L) + " páginas?\nTotal registros: " + numeroTotalRegistros
-							+ "\nSi.<s> No.<n> <" + cadenaCancelar + ">Cancelar.");
+							+ "\nSí.<s> No.<n> <" + cadenaCancelar + ">Cancelar.");
 					cadenaDatos = scanner.nextLine().toLowerCase(); 
 				}
 				if (!verSiCancelado(cadenaDatos,
@@ -1425,7 +1446,7 @@ public class ControllerPrincipal {
 						if (!cadenaDatos.equals(cadenaCancelar)) {
 							if (!cadenaDatos.equals("")) {
 								viewMain.escribirEnConsola(
-										"Opción no válida. Recuerde: Si<s> No<n> Cancelar<" + cadenaCancelar + ">.");
+										"Opción no válida. Recuerde: Sí<s> No<n> Cancelar<" + cadenaCancelar + ">.");
 								Sonido.sonar();
 								pulsadoInterno = false;
 							} else {
@@ -1448,7 +1469,7 @@ public class ControllerPrincipal {
 		if (numeroTotalPaginas == 0) {
 			viewMain.escribirEnConsola("Página Nº: " + (numeroPagina + 1L) + " de " + (numeroTotalPaginas + 1L));
 		} else {
-			viewMain.escribirEnConsola("Página Nº: " + (numeroPagina + 1L) + " de " + (numeroTotalPaginas));
+			viewMain.escribirEnConsola("Página Nº: " + (numeroPagina + 1L) + " de " + (numeroTotalPaginas+ 1L));
 		}
 		// Devuelve true si es la primera página, para que no salga el diálogo de
 		// mostrar más registros
@@ -1619,7 +1640,7 @@ public class ControllerPrincipal {
 				todoCorrecto = false;
 			}
 			if (todoCorrecto) {
-				mostrarQuiereHacer("crear cliente", "crear", "el", "CIF", "Crear cliente: ", "");
+				mostrarQuiereHacer("crear cliente", "crear", "el", "CIF", "Crear cliente: ", "mostramosMenuSeleccionarCrearClientes");
 				if (idClienteNuevo != -1 && idClienteNuevo != 0) {
 					idClienteSeleccionado = idClienteNuevo;
 					clienteOperaciones.setCif(cifNuevo);
@@ -1654,11 +1675,10 @@ public class ControllerPrincipal {
 	 * cliente al que queremos añadir la dirección.
 	 * 
 	 * @param idClienteNuevo
-	 * @throws ExcepcionIntervalo
-	 * @throws NumberFormatException
+	 * @throws Exception 
 	 */
 	private boolean solicitudDatosDirecciónGeneral(long idClienteNuevo)
-			throws NumberFormatException, ExcepcionIntervalo {
+			throws Exception {
 		todoCorrecto = true;
 		while (todoCorrecto) {
 			if (todoCorrecto && solicitarDatosCorrectosOno("Dirección", "Introducir Dirección", 1, 30, false, false,
@@ -1667,7 +1687,7 @@ public class ControllerPrincipal {
 			} else {
 				todoCorrecto = false;
 			}
-			if (todoCorrecto && solicitarDatosCorrectosOno("C.P.", "Introducir C.P.", 5, 5, false, false,
+			if (todoCorrecto && solicitarDatosCorrectosOno("C.P.", "Introducir C.P.", 5, 5, true, false,
 					"El C.P. debe contener: 5 dígitos y deben ser numéricos", false, false)) {
 				todoCorrecto = true;
 			} else {
@@ -1693,18 +1713,22 @@ public class ControllerPrincipal {
 			}
 
 			if (todoCorrecto) {
-				direccionOperaciones = serviceDireccion.create(idDireccionNuevo, cpNuevo, provinciaNuevo,
-						poblacionNuevo, paisNuevo);
-				if (direccionOperaciones != null) {
-					viewMain.escribirEnConsola("\n\tDirección creada correctamente");
-					viewMain.muestraDatosDireccionNuevo(idDireccionNuevo, cpNuevo, provinciaNuevo, poblacionNuevo,
-							paisNuevo);
-					// Para que salga
-					return true;
-				} else {
-					viewMain.escribirEnConsola("\n\n\tDIRECCIÓN NO CREADAm");
-					return false;
-				}
+				//mostrarQuiereHacer("crear direccion", "crear", "la", "Dirección", "Crear dirección: ", "mostramosMenuSeleccionarCrearClientes");
+					direccionOperaciones = serviceDireccion.create(idDireccionNuevo, cpNuevo, provinciaNuevo,
+							poblacionNuevo, paisNuevo);
+					if (direccionOperaciones != null) {
+						viewMain.escribirEnConsola("\n\tDirección creada correctamente");
+						viewMain.muestraDatosDireccionNuevo(idDireccionNuevo, cpNuevo, provinciaNuevo, poblacionNuevo,
+								paisNuevo);
+						clienteOperaciones.setDireccion(direccionOperaciones);
+						actualizarEstadisticas = true;
+						// Para que salga
+						return true;
+					} else {
+						viewMain.escribirEnConsola("\n\n\tDIRECCIÓN NO CREADAm");
+						return false;
+					}
+
 
 			} else {
 				Sonido.sonar();
@@ -1866,16 +1890,21 @@ public class ControllerPrincipal {
 						}
 					} while (errorDatosIntroducidos == false);
 					BigDecimal importeParaIngresar = new BigDecimal(cadenaDatos);
-					int estado = serviceMovimiento.create(saldoClienteSeleccionado, importeParaIngresar,
-							clienteOperaciones, 1);
-					if (estado == 1) {
-						actualizarEstadisticas = true;
-						viewMain.escribirEnConsola("Movimiento agregado correctamente");
-						errorDatosIntroducidos = false;
-					} else {
-						viewMain.escribirEnConsola(
-								"Movimiento no agregado.\nMotivo: Ha habido un error en la base de datos");
-						errorDatosIntroducidos = true;
+					mostrarQuiereHacer("crear ingreso", "crear", "el", "ingreso", "Crear movimiento ingreso: ", "mostramosMenuSeleccionarCrearClientes");
+					if(!cadenaDatos.equals(cadenaCancelar)) {
+						int estado = serviceMovimiento.create(saldoClienteSeleccionado, importeParaIngresar,
+								clienteOperaciones, 1);
+						if (estado == 1) {
+							actualizarEstadisticas = true;
+							viewMain.escribirEnConsola("Movimiento agregado correctamente");
+							errorDatosIntroducidos = false;
+						} else {
+							viewMain.escribirEnConsola(
+									"Movimiento no agregado.\nMotivo: Ha habido un error en la base de datos");
+							errorDatosIntroducidos = true;
+						}
+					}else {
+						viewMain.escribirEnConsola("Movimiento de ingreso no agregado.");
 					}
 
 				} while (errorDatosIntroducidos == true);
@@ -1906,20 +1935,25 @@ public class ControllerPrincipal {
 					} while (errorDatosIntroducidos == false);
 
 					BigDecimal importeParaRetirar = new BigDecimal(cadenaDatos);
-					int estado = serviceMovimiento.create(saldoClienteSeleccionado, importeParaRetirar,
-							clienteOperaciones, 2);
-					if (estado == 1) {
-						actualizarEstadisticas = true;
-						viewMain.escribirEnConsola("Movimiento agregado correctamente");
-						errorDatosIntroducidos = false;
-					} else if (estado == 2) {
-						viewMain.escribirEnConsola("Movimiento no agregado.\nMotivo: Su saldo actual es de: "
-								+ saldoClienteSeleccionado + " y usted está intentando retirar: " + importeParaRetirar);
-						errorDatosIntroducidos = true;
+					mostrarQuiereHacer("retirar dinero", "retirar", "el", "retirado de dinero", "Crear movimiento retirar dinero: ", "mostramosMenuSeleccionarCrearClientes");
+					if(!cadenaDatos.equals(cadenaCancelar)) {
+						int estado = serviceMovimiento.create(saldoClienteSeleccionado, importeParaRetirar,
+								clienteOperaciones, 2);
+						if (estado == 1) {
+							actualizarEstadisticas = true;
+							viewMain.escribirEnConsola("Movimiento agregado correctamente");
+							errorDatosIntroducidos = false;
+						} else if (estado == 2) {
+							viewMain.escribirEnConsola("Movimiento no agregado.\nMotivo: Su saldo actual es de: "
+									+ saldoClienteSeleccionado + " y usted está intentando retirar: " + importeParaRetirar);
+							errorDatosIntroducidos = true;
+						} else {
+							viewMain.escribirEnConsola(
+									"Movimiento no agregado.\nMotivo: Ha habido un error en la base de datos");
+							errorDatosIntroducidos = true;
+						}
 					} else {
-						viewMain.escribirEnConsola(
-								"Movimiento no agregado.\nMotivo: Ha habido un error en la base de datos");
-						errorDatosIntroducidos = true;
+						viewMain.escribirEnConsola("Movimiento de retirada de dinero no agregado.");
 					}
 
 				} while (errorDatosIntroducidos == true);
@@ -1963,17 +1997,17 @@ public class ControllerPrincipal {
 					if (orden.equals(
 							"¿Quiere añadir una dirección al cliente recién creado con CiF: " + cifNuevo + "?")) {
 						if (solicitudDatosDirecciónGeneral(idClienteNuevo)) {
-							if (serviceCliente.updateClienteSinDireccion(idClienteNuevo, direccionOperaciones)) {
-								clienteOperaciones.setDireccion(direccionOperaciones);
-								actualizarEstadisticas = true;
-								viewMain.escribirEnConsola(
-										"Dirección añadida correctamente al recién creado cliente con CIF: " + cifNuevo
-												+ ".");
-								mostrarMenuOperacionesConClientes();
-								todoCorrecto = false;
-							}
+									if (serviceCliente.updateClienteSinDireccion(idClienteNuevo, direccionOperaciones)) {
+										clienteOperaciones.setDireccion(direccionOperaciones);
+										actualizarEstadisticas = true;
+										viewMain.escribirEnConsola(
+												"Dirección añadida correctamente al recién creado cliente con CIF: " + cifNuevo
+														+ ".");
+										mostramosMenuSeleccionarCrearClientes();
+										todoCorrecto = false;
+									}
 						} else {
-							mostrarMenuOperacionesConClientes();
+							mostramosMenuSeleccionarCrearClientes();
 						}
 					} else if (orden.equals("¿Quiere modificar el CIF?")) {
 						viewMain.escribirEnConsola("CIF actual:" + clienteOperaciones.getCif());
@@ -2062,6 +2096,7 @@ public class ControllerPrincipal {
 					if (orden.equals(
 							"¿Quiere añadir una dirección al cliente recién creado con CiF: " + cifNuevo + "?")) {
 						System.out.println("No se ha añadido ninguna dirección al cliente con CIF: " + cifNuevo);
+						mostrarMenuOperacionesConClientes();
 					}
 					todoCorrecto = false;
 				}
@@ -2094,7 +2129,7 @@ public class ControllerPrincipal {
 		Boolean pulsadoInterno = false;
 		do {
 			viewMain.escribirEnConsola("¿Está seguro que quiere " + opcion + " el cliente con " + textoDeterminante
-					+ " " + campo + ": " + cifNuevo + " ?\nSi<s> No<n> Cancelar<" + cadenaCancelar + ">.");
+					+ " " + campo + ": " + cifNuevo + " ?\nSí<s> No<n> Cancelar<" + cadenaCancelar + ">.");
 			cadenaDatos = scanner.nextLine().toLowerCase();
 			if (!verSiCancelado(cadenaDatos, mensajeCancelar + cifNuevo + ".")) {
 				if (cadenaDatos.equals(cadenaCancelar)) {
@@ -2106,18 +2141,42 @@ public class ControllerPrincipal {
 							idClienteNuevo = serviceCliente.create(cifNuevo, nombreNuevo, apellido1Nuevo,
 									apellido2Nuevo);
 							pulsadoInterno = true;
+						}else if (opcion.equals("crear ingreso")) {
 
+							pulsadoInterno = true;
+						}
+						else if (opcion.equals("retirar dinero")) {
+
+							pulsadoInterno = true;
+						}else if (opcion.equals("crear direccion")) {
+
+							pulsadoInterno = true;
 						}
 
 						// mostramosMenuSeleccionarCrearClientes();
 					} else if (cadenaDatos.equals("n")) {
-						viewMain.escribirEnConsola("Cliente no creado.");
-						mostramosMenuSeleccionarCrearClientes();
-						pulsadoInterno = true;
+						if (opcion.equals("crear cliente")) {
+							viewMain.escribirEnConsola("Cliente no creado.");
+							mostramosMenuSeleccionarCrearClientes();
+							pulsadoInterno = true;
+						}else if (opcion.equals("crear ingreso")) {
+							viewMain.escribirEnConsola("Movimiento ingreso no creado.");
+							mostrarMenuOperacionesConClientes();
+							pulsadoInterno = true;
+						}else if (opcion.equals("retirar dinero")) {
+							viewMain.escribirEnConsola("Movimiento retirado no creado.");
+							mostrarMenuOperacionesConClientes();
+							pulsadoInterno = true;
+						}else if (opcion.equals("crear direccion")) {
+							viewMain.escribirEnConsola("Dirección no creada.");
+							mostrarMenuOperacionesConClientes();
+							pulsadoInterno = true;
+						}
+
 					} else {
 						if (!cadenaDatos.equals(cadenaCancelar)) {
 							viewMain.escribirEnConsola(
-									"Opción no válida. Recuerde: Si<s> No<n> Cancelar<" + cadenaCancelar + ">.");
+									"Opción no válida. Recuerde: Sí<s> No<n> Cancelar<" + cadenaCancelar + ">.");
 							Sonido.sonar();
 							pulsadoInterno = false;
 						}
