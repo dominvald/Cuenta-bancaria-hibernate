@@ -264,7 +264,7 @@ public final class Recursos {
 		@SuppressWarnings("unused")
 		BigDecimal bigDecimal = BigDecimal.ZERO;
 		if (comprobarCif) {
-			if (CalculaDni.(cadena.toUpperCase())) {
+			if (CalculaCif.comprobarDni(cadena)) {
 				return true;
 			} else {
 				return false;

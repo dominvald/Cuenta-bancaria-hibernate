@@ -1419,15 +1419,13 @@ public class ControllerPrincipal {
 				cadenaDatos="";
 				if (numeroTotalPaginas != numeroPagina) {
 					if (numeroPagina != 0) {
-						viewMain.escribirEnConsola("¿Mostrar Página: Nº: " + (numeroPagina + 1L) + " de "
-								+ (numeroTotalPaginas) + " páginas?\nTotal registros: " + numeroTotalRegistros
+						viewMain.escribirEnConsola("¿Mostrar Página: Nº: " + (numeroPagina + 1L)+"?\nTotal registros: " + numeroTotalRegistros
 								+ "\nSí.<s> No.<n> <" + cadenaCancelar + ">Cancelar.");
 						cadenaDatos = scanner.nextLine().toLowerCase(); 
 					}
 
 				}else if (numeroTotalPaginas ==1 && numeroTotalRegistros!=numeroDeRegistrosMostrarPorPaginaNuevo){
-					viewMain.escribirEnConsola("¿Mostrar Página: Nº: " + (numeroPagina + 1L) + " de "
-							+ (numeroTotalPaginas + 1L) + " páginas?\nTotal registros: " + numeroTotalRegistros
+					viewMain.escribirEnConsola("¿Mostrar Página: Nº: " + (numeroPagina + 1L)+"?\nTotal registros: " + numeroTotalRegistros
 							+ "\nSí.<s> No.<n> <" + cadenaCancelar + ">Cancelar.");
 					cadenaDatos = scanner.nextLine().toLowerCase(); 
 				}
@@ -1469,7 +1467,7 @@ public class ControllerPrincipal {
 		if (numeroTotalPaginas == 0) {
 			viewMain.escribirEnConsola("Página Nº: " + (numeroPagina + 1L) + " de " + (numeroTotalPaginas + 1L));
 		} else {
-			viewMain.escribirEnConsola("Página Nº: " + (numeroPagina + 1L) + " de " + (numeroTotalPaginas+ 1L));
+			viewMain.escribirEnConsola("Página Nº: " + (numeroPagina + 1L) + " de " + (numeroTotalPaginas+1L));
 		}
 		// Devuelve true si es la primera página, para que no salga el diálogo de
 		// mostrar más registros
@@ -1614,8 +1612,8 @@ public class ControllerPrincipal {
 	private void solicitudDatosClienteGeneral() throws Exception {
 		todoCorrecto = true;
 		while (todoCorrecto) {
-			if (todoCorrecto && solicitarDatosCorrectosOno("CIF", "Introducir CIF", 9, 9, false, false,
-					"El CIF debe contener: 8 dígitos, una letra, ser válido y no estar repetido. Ej: 77777777B.", true,
+			if (todoCorrecto && solicitarDatosCorrectosOno("CIF", "Introducir CIF", 8, 9, false, false,
+					"El CIF debe contener: 8 ó 7  dígitos, una letra, ser válido y no estar repetido.  Ej. 8 dígitos: 00000000T. Ej. 4 dígitos: 1234567L", true,
 					false)) {
 				todoCorrecto = true;
 			} else {
@@ -2012,7 +2010,7 @@ public class ControllerPrincipal {
 					} else if (orden.equals("¿Quiere modificar el CIF?")) {
 						viewMain.escribirEnConsola("CIF actual:" + clienteOperaciones.getCif());
 						solicitarDatosCorrectosOno("CIF", "Introducir CIF", 9, 9, false, false,
-								"El CIF debe contener: 8 dígitos, una letra, ser válido y no estar repetido. Ej: 77777777B",
+								"El CIF debe contener dígitos 8 ó 7 dígitos, una letra, ser válido y no estar repetido. Ej. 8 dígitos: 00000000T. Ej. 4 dígitos: 1234567L",
 								true, false);
 						clienteOperaciones.setCif(cadenaDatos);
 						serviceCliente.updateClienteDatos(idClienteSeleccionado, clienteOperaciones);

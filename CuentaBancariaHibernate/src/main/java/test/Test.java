@@ -14,7 +14,7 @@ import org.hibernate.Transaction;
 import model.Cliente;
 import model.Direccion;
 import model.Movimiento;
-import resources.CalculaDni;
+import resources.CalculaCif;
 import resources.HibernateUtil;
 
 public class Test {
@@ -24,7 +24,7 @@ public class Test {
 	public static void main(String[] args) {
 
 		Test test = new Test();
-System.out.println(CalculaDni.isDniValido("51292306Y"));
+System.out.println(CalculaCif.isDniValido("51292306Y"));
 		/* Añadir un cliente */
 		// Direccion direccion = test.addDireccion("Calle Medul", 24750, "Leon", "La
 		// Bañeza", "España");
