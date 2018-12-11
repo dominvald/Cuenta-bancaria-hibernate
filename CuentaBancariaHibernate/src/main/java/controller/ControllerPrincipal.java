@@ -49,9 +49,9 @@ public class ControllerPrincipal {
 	 *
 	 */
 	enum EnumMenuInicial {
-		OPERACIONES(1, "Operaciones con clientes."), LISTAR(2, "Listar todos los clientes."),
-		CONFIGURAR(3, "Configurar aplicación."), CERRAR(4, "Cerrar la aplicación."),
-		TITULO(5, "PRÁCTICA CUENTAS BANCARIAS HIBERNATE."), SUBTITULO(6, "->>> MENÚ PRINCIPAL. <<<-");
+		OPERACIONES(1, "Operaciones con clientes."), LISTAR(2, "Listar todos los clientes."), CONFIGURAR(3,
+				"Configurar aplicación."), CERRAR(4, "Cerrar la aplicación."), TITULO(5,
+						"PRÁCTICA CUENTAS BANCARIAS HIBERNATE."), SUBTITULO(6, "->>> MENÚ PRINCIPAL. <<<-");
 		private int posicionEnumerado; // posicion propiedad
 		private String textoEnumerado; // texto propiedad
 
@@ -59,8 +59,10 @@ public class ControllerPrincipal {
 		/**
 		 * Constructor, recibe la posición y el texto.
 		 * 
-		 * @param p -> Posición
-		 * @param t -> texto
+		 * @param p
+		 *            -> Posición
+		 * @param t
+		 *            -> texto
 		 */
 		EnumMenuInicial(int p, String t) {
 			// Lo inicializamos con los valores pasados.
@@ -160,7 +162,7 @@ public class ControllerPrincipal {
 	 * direccionNuevo: guarda la nueva dirección a actualizar de la dirección de un
 	 * cliente o de la dirección de un cliente nuevo.
 	 */
-	private String idDireccionNuevo = "";
+	private String direccionNuevo="";
 	/**
 	 * cpNuevo: guarda el cp a actualizar de la dirección de un cliente o del cp de
 	 * la dirección de un cliente nuevo.
@@ -239,15 +241,15 @@ public class ControllerPrincipal {
 	/**
 	 * Gurda la cadena con el nombre del idioma usado.
 	 */
-	String idiomaSeleccionado = "Español";
+	private String idiomaSeleccionado = "Español";
 	/**
 	 * Guarda la cadena para mostrar la "Opcion seleccionar" en español o inglés.
 	 */
-	String cadenaIdiomaOpcion = "";
+	private String cadenaIdiomaOpcion = "";
 	/**
 	 * Guarda la cadena para mostrar la el mensaje de inicio en español o inglés.
 	 */
-	String cadenaIdiomaInicio = "";
+	private String cadenaIdiomaInicio = "";
 
 	// FIN ESTADÍSTICAS.
 	// ---------------------------------------------------------------------------------//
@@ -258,7 +260,7 @@ public class ControllerPrincipal {
 	/**
 	 * Vista para enviar los resultados
 	 */
-	ViewMain viewMain = new ViewMain();
+	private ViewMain viewMain = new ViewMain();
 
 	// FIN VISTA
 	// ---------------------------------------------------------------------------------//
@@ -268,37 +270,25 @@ public class ControllerPrincipal {
 	/**
 	 * Lo utilizamos para guardar el cliente con el que estamos operando.
 	 */
-	Cliente clienteOperaciones = new Cliente();
+	private Cliente clienteOperaciones = new Cliente();
 	/**
 	 * Lo utilizamos para guardar la dirección con el que estamos operando.
 	 */
-	Direccion direccionOperaciones = new Direccion();
+	private Direccion direccionOperaciones = new Direccion();
 	/**
 	 * Lo utilizamos para guardar el cliente con el que estamos operando, así como
 	 * su dirección y su saldo actual
 	 */
-	ClientesDireccionSaldo clienteDireccionSaldoOperaciones = new ClientesDireccionSaldo();
+	private ClientesDireccionSaldo clienteDireccionSaldoOperaciones = new ClientesDireccionSaldo();
 	/**
 	 * Lo utilizamos para guardar la lista de movimientos con el que estamos
 	 * operando.
 	 */
-	List<Movimiento> movimientoOperaciones = new ArrayList<>();
-	/**
-	 * Locale por defecto en español
-	 */
-	Locale defaultLocale;
-	/**
-	 * Locale en inglés.
-	 */
-	Locale englishLocale;
+	private List<Movimiento> movimientoOperaciones = new ArrayList<>();
 	/**
 	 * ResourceBundle en español por defecto.
 	 */
-	ResourceBundle bundlePorDefecto;
-	/**
-	 * ResourceBundle en inglés.
-	 */
-	ResourceBundle bundleIngles;
+	private ResourceBundle mybundle;
 
 	// FIN OPERACIONES
 	// ---------------------------------------------------------------------------------//
@@ -344,13 +334,10 @@ public class ControllerPrincipal {
 		// Comprobamos la conexion e iniciamos la sessionfactory.
 		if (HibernateUtil.getSessionFactory() != null) {
 			// Hay conexión con la base de datos y mostramos el menú inicial
-			// Internacionaliación, sólo el saludo y "Elije opción".
-			internacionalizacion();
-			// Inicializamos las cadenas de internacionalización.
-			cadenaIdiomaInicio = bundlePorDefecto.getString("mi.inicio");
-			cadenaIdiomaOpcion = bundlePorDefecto.getString("mi.opcion");
+			Locale.setDefault(new Locale("es", "ES"));
+			mybundle = ResourceBundle.getBundle("Bundle");
 			// Imprimimos mensaje de bienvenida.
-			viewMain.escribirEnConsola(cadenaIdiomaInicio);
+			mybundle.getString("mi.inicio");
 			/**
 			 * Sirve para mostrar las estadísticas de la base de datos.
 			 */
@@ -377,26 +364,6 @@ public class ControllerPrincipal {
 
 	// FIN MAIN
 	// ---------------------------------------------------------------------------------//
-
-	// INTERNACIONALIZACIÓN
-	// --------------------------------------------------------------------------//
-	/**
-	 * Configuración de la internacionalización.
-	 */
-	private void internacionalizacion() {
-
-		defaultLocale = new Locale("es", "ES");
-		bundlePorDefecto = ResourceBundle.getBundle("Bundle", defaultLocale);
-		Locale.setDefault(defaultLocale);
-
-		englishLocale = new Locale("en", "US");
-		bundleIngles = ResourceBundle.getBundle("Bundle", englishLocale);
-		// Locale.setDefault(englishLocale);
-
-	}
-	// INTERNACIONALIZACIÓN
-	// ---------------------------------------------------------------------------------//
-
 	// MENUS
 	// -------------------------------------------------------------------------//
 	/**
@@ -468,8 +435,8 @@ public class ControllerPrincipal {
 		viewMain.escribirEnConsola("|     " + EnumMenuInicial.TITULO.getTexto() + "   |");
 		viewMain.escribirEnConsola(
 				"-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
-		viewMain.escribirEnConsola("|          " + EnumMenuInicial.SUBTITULO.getTexto() + "          |    Fecha y Hora: "
-				+ Recursos.formato(LocalDateTime.now()));
+		viewMain.escribirEnConsola("|          " + EnumMenuInicial.SUBTITULO.getTexto()
+				+ "          |    Fecha y Hora: " + Recursos.formato(LocalDateTime.now()));
 		viewMain.escribirEnConsola(
 				"|               ---------------               |--------------------------------------------------------------------------------------------------------------------------------------");
 		viewMain.escribirEnConsola("|---------------------------------------------|");
@@ -480,7 +447,7 @@ public class ControllerPrincipal {
 			}
 		}
 		viewMain.escribirEnConsola("|  ---------------------");
-		viewMain.escribirEnConsola("|  | " + cadenaIdiomaOpcion + "  |---->");
+		viewMain.escribirEnConsola("|  | " + mybundle.getString("mi.opcion") + "  |---->");
 		viewMain.escribirEnConsola("|  ---------------------");
 
 	}
@@ -514,26 +481,26 @@ public class ControllerPrincipal {
 			viewMain.escribirEnConsola("|   6. Cerrar la aplicación.                  |");
 			viewMain.escribirEnConsola("| ---------------------------------------------");
 			viewMain.escribirEnConsola("|  ---------------------");
-			viewMain.escribirEnConsola("|  | " + cadenaIdiomaOpcion + " |---->");
+			viewMain.escribirEnConsola("|  | " + mybundle.getString("mi.opcion") + " |---->");
 			viewMain.escribirEnConsola("|  ---------------------");
 			opcionStringSeleccionadaMenu = scanner.nextLine();
 			opcionStringSeleccionadaMenu = Recursos.eliminaEspacios(opcionStringSeleccionadaMenu);
 
 			switch (opcionStringSeleccionadaMenu) {
-			// 1. Seleccionar cliente.
+			// 1. Configurar sonido.
 			case "1":
 				mostrarConfiguracionSonido();
 				break;
-			// 2. Crear cliente.
+			// 2. Configurar Nº Reg. a mostrar
 			case "2":
 				configurarNumeroRegistrosMostrar();
 				// crearCliente();
 				break;
-			// 3. Volver atrás.
+			// 3. Configurar cadena 'Cancelar'
 			case "3":
 				configurarCadenaCancelar();
 				break;
-			// 4. Cambiar idioma.
+			// 4. Configurar idioma.
 			case "4":
 				configurarIdioma();
 				break;
@@ -582,7 +549,7 @@ public class ControllerPrincipal {
 			viewMain.escribirEnConsola("|   4. Cerrar la aplicación.                  |");
 			viewMain.escribirEnConsola("| ---------------------------------------------");
 			viewMain.escribirEnConsola("|  ---------------------");
-			viewMain.escribirEnConsola("|  | " + cadenaIdiomaOpcion + " |---->");
+			viewMain.escribirEnConsola("|  | " + mybundle.getString("mi.opcion") + " |---->");
 			viewMain.escribirEnConsola("|  ---------------------");
 			opcionStringSeleccionadaMenu = scanner.nextLine();
 			opcionStringSeleccionadaMenu = Recursos.eliminaEspacios(opcionStringSeleccionadaMenu);
@@ -646,7 +613,7 @@ public class ControllerPrincipal {
 			viewMain.escribirEnConsola("|  6. Cerrar la aplicación.               |");
 			viewMain.escribirEnConsola("|------------------------------------------");
 			viewMain.escribirEnConsola("|  ---------------------");
-			viewMain.escribirEnConsola("|  | " + cadenaIdiomaOpcion + " |---->");
+			viewMain.escribirEnConsola("|  | " + mybundle.getString("mi.opcion") + " |---->");
 			viewMain.escribirEnConsola("|  ---------------------");
 			opcionStringSeleccionadaMenu = scanner.nextLine();
 			opcionStringSeleccionadaMenu = Recursos.eliminaEspacios(opcionStringSeleccionadaMenu);
@@ -715,7 +682,7 @@ public class ControllerPrincipal {
 			viewMain.escribirEnConsola("|  5. Salir.                              |");
 			viewMain.escribirEnConsola("|------------------------------------------");
 			viewMain.escribirEnConsola("|  ---------------------");
-			viewMain.escribirEnConsola("|  | " + cadenaIdiomaOpcion + " |---->");
+			viewMain.escribirEnConsola("|  | " + mybundle.getString("mi.opcion") + " |---->");
 			;
 			viewMain.escribirEnConsola("|  ---------------------");
 			opcionStringSeleccionadaMenu = scanner.nextLine();
@@ -857,7 +824,7 @@ public class ControllerPrincipal {
 	private void opcionListarMovimientosClienteSeleccionado() throws Exception {
 		long contadorDepaginas = 0L;
 		boolean soloUnaPagina = false;
-		
+
 		/**
 		 * Sirve para guardar el numero total de registros y el número de páginas, que
 		 * usaremos después para realizar correctamente la paginación.
@@ -883,7 +850,9 @@ public class ControllerPrincipal {
 					soloUnaPagina = true;
 				}
 				viewMain.verMovimientosEncontrados(
-						serviceMovimiento.list(idClienteSeleccionado, numeroPagina, numeroDeRegistrosMostrarPorPaginaNuevo),numeroPagina,numeroDeRegistrosMostrarPorPaginaNuevo);
+						serviceMovimiento.list(idClienteSeleccionado, numeroPagina,
+								numeroDeRegistrosMostrarPorPaginaNuevo),
+						numeroPagina, numeroDeRegistrosMostrarPorPaginaNuevo);
 				contadorDepaginas++;
 				if (((contadorDepaginas == numeroTotalPaginas) && numeroTotalPaginas != 1) || soloUnaPagina == true) {
 					viewMain.escribirEnConsola("\nFIN DEL LISTADO\n");
@@ -1165,11 +1134,11 @@ public class ControllerPrincipal {
 	 */
 	private void configurarIdioma() throws Exception {
 		Boolean noCorrecto = true;
-		viewMain.escribirEnConsola("Idioma actualmente está configurado a: " + idiomaSeleccionado + ".");
+		viewMain.escribirEnConsola("Idioma actualmente está configurado a: " + Locale.getDefault() + ".");
 		while (noCorrecto) {
 			if (noCorrecto && solicitarDatosCorrectosOno("Idioma", "Configurar Idioma", 1, 1, true, false,
 					"Espanol<1> Inglés<2>", false, false)) {
-				viewMain.escribirEnConsola("Actualizado a: " + idiomaSeleccionado);
+				viewMain.escribirEnConsola("Actualizado a: " + Locale.getDefault());
 				noCorrecto = false;
 			} else {
 				noCorrecto = true;
@@ -1253,7 +1222,7 @@ public class ControllerPrincipal {
 				encontrado = false;
 				do {
 
-					if (!cadenaDatos.equals(cadenaCancelar) && !cadenaDatos.equals("s")) {
+					if (!cadenaDatos.equals(cadenaCancelar)) {
 						clienteEncontrado = null;
 						/**
 						 * Sirve para almacenar el cliente que coincide con la cadena de texto pasada en
@@ -1414,20 +1383,21 @@ public class ControllerPrincipal {
 
 		// En la primera página devolveremos true, para que no muestre el diálogo de
 		// mostrar más registros
-		if (numeroPagina != 0  && numeroTotalPaginas !=0) {
+		if (numeroPagina != 0 && numeroTotalPaginas != 0) {
 			do {
-				cadenaDatos="";
+				cadenaDatos = "";
 				if (numeroTotalPaginas != numeroPagina) {
 					if (numeroPagina != 0) {
-						viewMain.escribirEnConsola("¿Mostrar Página: Nº: " + (numeroPagina + 1L)+"?\nTotal registros: " + numeroTotalRegistros
-								+ "\nSí.<s> No.<n> <" + cadenaCancelar + ">Cancelar.");
-						cadenaDatos = scanner.nextLine().toLowerCase(); 
+						viewMain.escribirEnConsola(
+								"¿Mostrar Página: Nº: " + (numeroPagina + 1L) + "?\nTotal registros: "
+										+ numeroTotalRegistros + "\nSí.<s> No.<n> <" + cadenaCancelar + ">Cancelar.");
+						cadenaDatos = scanner.nextLine().toLowerCase();
 					}
 
-				}else if (numeroTotalPaginas ==1 && numeroTotalRegistros!=numeroDeRegistrosMostrarPorPaginaNuevo){
-					viewMain.escribirEnConsola("¿Mostrar Página: Nº: " + (numeroPagina + 1L)+"?\nTotal registros: " + numeroTotalRegistros
-							+ "\nSí.<s> No.<n> <" + cadenaCancelar + ">Cancelar.");
-					cadenaDatos = scanner.nextLine().toLowerCase(); 
+				} else if (numeroTotalPaginas == 1 && numeroTotalRegistros != numeroDeRegistrosMostrarPorPaginaNuevo) {
+					viewMain.escribirEnConsola("¿Mostrar Página: Nº: " + (numeroPagina + 1L) + "?\nTotal registros: "
+							+ numeroTotalRegistros + "\nSí.<s> No.<n> <" + cadenaCancelar + ">Cancelar.");
+					cadenaDatos = scanner.nextLine().toLowerCase();
 				}
 				if (!verSiCancelado(cadenaDatos,
 						"Mostrar siguientes " + numeroDeRegistrosMostrarPorPaginaNuevo + " clientes.")) {
@@ -1464,11 +1434,12 @@ public class ControllerPrincipal {
 			}
 		}
 		viewMain.escribirEnConsola("Número Total de registros: " + numeroTotalRegistros);
-		if (numeroTotalPaginas == 0) {
-			viewMain.escribirEnConsola("Página Nº: " + (numeroPagina + 1L) + " de " + (numeroTotalPaginas + 1L));
+		if (numeroPagina == 0 && numeroTotalRegistros == numeroDeRegistrosMostrarPorPaginaNuevo) {
+			viewMain.escribirEnConsola("Página Nº: " + (numeroPagina + 1L) + " de " + (numeroTotalPaginas));
 		} else {
-			viewMain.escribirEnConsola("Página Nº: " + (numeroPagina + 1L) + " de " + (numeroTotalPaginas+1L));
+			viewMain.escribirEnConsola("Página Nº: " + (numeroPagina + 1L) + " de " + (numeroTotalPaginas + 1));
 		}
+
 		// Devuelve true si es la primera página, para que no salga el diálogo de
 		// mostrar más registros
 		return true;
@@ -1550,7 +1521,7 @@ public class ControllerPrincipal {
 						} else if (nombre.equals("Segundo apellido")) {
 							apellido2Nuevo = cadenaDatos;
 						} else if (nombre.equals("Dirección")) {
-							idDireccionNuevo = cadenaDatos;
+							direccionNuevo = cadenaDatos;
 						} else if (nombre.equals("C.P.")) {
 							cpNuevo = cadenaDatos;
 						} else if (nombre.equals("Provincia")) {
@@ -1566,15 +1537,11 @@ public class ControllerPrincipal {
 							viewMain.escribirEnConsola("Actualizada cadena para'Cancelar: " + cadenaCancelar);
 						} else if (nombre.equals("Idioma")) {
 							if (cadenaDatos.equals("1")) {
-								idiomaSeleccionado = "Espanol";
-								cadenaIdiomaInicio = bundlePorDefecto.getString("mi.inicio");
-								cadenaIdiomaOpcion = bundlePorDefecto.getString("mi.opcion");
+								Locale.setDefault(new Locale("es", "ES"));
 							} else if (cadenaDatos.equals("2")) {
-								idiomaSeleccionado = "Ingles";
-								cadenaIdiomaInicio = bundleIngles.getString("mi.inicio");
-								cadenaIdiomaOpcion = bundleIngles.getString("mi.opcion");
+								Locale.setDefault(new Locale("en", "US"));
 							}
-							viewMain.escribirEnConsola("Idioma: " + idiomaSeleccionado);
+							mybundle = ResourceBundle.getBundle("Bundle");
 						}
 						// La función termina aquí y devuelve true. Datos correctos.
 						return true;
@@ -1613,8 +1580,8 @@ public class ControllerPrincipal {
 		todoCorrecto = true;
 		while (todoCorrecto) {
 			if (todoCorrecto && solicitarDatosCorrectosOno("CIF", "Introducir CIF", 8, 9, false, false,
-					"El CIF debe contener: 8 ó 7  dígitos, una letra, ser válido y no estar repetido.  Ej. 8 dígitos: 00000000T. Ej. 4 dígitos: 1234567L", true,
-					false)) {
+					"El CIF debe contener: 8 ó 7  dígitos, una letra, ser válido y no estar repetido.  Ej. 8 dígitos: 00000000T. Ej. 4 dígitos: 1234567L",
+					true, false)) {
 				todoCorrecto = true;
 			} else {
 				todoCorrecto = false;
@@ -1638,7 +1605,8 @@ public class ControllerPrincipal {
 				todoCorrecto = false;
 			}
 			if (todoCorrecto) {
-				mostrarQuiereHacer("crear cliente", "crear", "el", "CIF", "Crear cliente: ", "mostramosMenuSeleccionarCrearClientes");
+				mostrarQuiereHacer("crear cliente", "crear", "el", "CIF", "Crear cliente: ",
+						"mostramosMenuSeleccionarCrearClientes");
 				if (idClienteNuevo != -1 && idClienteNuevo != 0) {
 					idClienteSeleccionado = idClienteNuevo;
 					clienteOperaciones.setCif(cifNuevo);
@@ -1673,10 +1641,9 @@ public class ControllerPrincipal {
 	 * cliente al que queremos añadir la dirección.
 	 * 
 	 * @param idClienteNuevo
-	 * @throws Exception 
+	 * @throws Exception
 	 */
-	private boolean solicitudDatosDirecciónGeneral(long idClienteNuevo)
-			throws Exception {
+	private boolean solicitudDatosDirecciónGeneral(long idClienteNuevo) throws Exception {
 		todoCorrecto = true;
 		while (todoCorrecto) {
 			if (todoCorrecto && solicitarDatosCorrectosOno("Dirección", "Introducir Dirección", 1, 30, false, false,
@@ -1711,22 +1678,22 @@ public class ControllerPrincipal {
 			}
 
 			if (todoCorrecto) {
-				//mostrarQuiereHacer("crear direccion", "crear", "la", "Dirección", "Crear dirección: ", "mostramosMenuSeleccionarCrearClientes");
-					direccionOperaciones = serviceDireccion.create(idDireccionNuevo, cpNuevo, provinciaNuevo,
-							poblacionNuevo, paisNuevo);
-					if (direccionOperaciones != null) {
-						viewMain.escribirEnConsola("\n\tDirección creada correctamente");
-						viewMain.muestraDatosDireccionNuevo(idDireccionNuevo, cpNuevo, provinciaNuevo, poblacionNuevo,
-								paisNuevo);
-						clienteOperaciones.setDireccion(direccionOperaciones);
-						actualizarEstadisticas = true;
-						// Para que salga
-						return true;
-					} else {
-						viewMain.escribirEnConsola("\n\n\tDIRECCIÓN NO CREADAm");
-						return false;
-					}
-
+				// mostrarQuiereHacer("crear direccion", "crear", "la", "Dirección", "Crear
+				// dirección: ", "mostramosMenuSeleccionarCrearClientes");
+				direccionOperaciones = serviceDireccion.create(direccionNuevo, cpNuevo, provinciaNuevo,
+						poblacionNuevo, paisNuevo);
+				if (direccionOperaciones != null) {
+					viewMain.escribirEnConsola("\n\tDirección creada correctamente");
+					viewMain.muestraDatosDireccionNuevo(direccionNuevo, cpNuevo, provinciaNuevo, poblacionNuevo,
+							paisNuevo);
+					clienteOperaciones.setDireccion(direccionOperaciones);
+					actualizarEstadisticas = true;
+					// Para que salga
+					return true;
+				} else {
+					viewMain.escribirEnConsola("\n\n\tDIRECCIÓN NO CREADAm");
+					return false;
+				}
 
 			} else {
 				Sonido.sonar();
@@ -1888,8 +1855,9 @@ public class ControllerPrincipal {
 						}
 					} while (errorDatosIntroducidos == false);
 					BigDecimal importeParaIngresar = new BigDecimal(cadenaDatos);
-					mostrarQuiereHacer("crear ingreso", "crear", "el", "ingreso", "Crear movimiento ingreso: ", "mostramosMenuSeleccionarCrearClientes");
-					if(!cadenaDatos.equals(cadenaCancelar)) {
+					mostrarQuiereHacer("crear ingreso", "crear", "el", "ingreso", "Crear movimiento ingreso: ",
+							"mostramosMenuSeleccionarCrearClientes");
+					if (!cadenaDatos.equals(cadenaCancelar)) {
 						int estado = serviceMovimiento.create(saldoClienteSeleccionado, importeParaIngresar,
 								clienteOperaciones, 1);
 						if (estado == 1) {
@@ -1901,7 +1869,7 @@ public class ControllerPrincipal {
 									"Movimiento no agregado.\nMotivo: Ha habido un error en la base de datos");
 							errorDatosIntroducidos = true;
 						}
-					}else {
+					} else {
 						viewMain.escribirEnConsola("Movimiento de ingreso no agregado.");
 					}
 
@@ -1933,8 +1901,9 @@ public class ControllerPrincipal {
 					} while (errorDatosIntroducidos == false);
 
 					BigDecimal importeParaRetirar = new BigDecimal(cadenaDatos);
-					mostrarQuiereHacer("retirar dinero", "retirar", "el", "retirado de dinero", "Crear movimiento retirar dinero: ", "mostramosMenuSeleccionarCrearClientes");
-					if(!cadenaDatos.equals(cadenaCancelar)) {
+					mostrarQuiereHacer("retirar dinero", "retirar", "el", "retirado de dinero",
+							"Crear movimiento retirar dinero: ", "mostramosMenuSeleccionarCrearClientes");
+					if (!cadenaDatos.equals(cadenaCancelar)) {
 						int estado = serviceMovimiento.create(saldoClienteSeleccionado, importeParaRetirar,
 								clienteOperaciones, 2);
 						if (estado == 1) {
@@ -1943,7 +1912,8 @@ public class ControllerPrincipal {
 							errorDatosIntroducidos = false;
 						} else if (estado == 2) {
 							viewMain.escribirEnConsola("Movimiento no agregado.\nMotivo: Su saldo actual es de: "
-									+ saldoClienteSeleccionado + " y usted está intentando retirar: " + importeParaRetirar);
+									+ saldoClienteSeleccionado + " y usted está intentando retirar: "
+									+ importeParaRetirar);
 							errorDatosIntroducidos = true;
 						} else {
 							viewMain.escribirEnConsola(
@@ -1995,15 +1965,28 @@ public class ControllerPrincipal {
 					if (orden.equals(
 							"¿Quiere añadir una dirección al cliente recién creado con CiF: " + cifNuevo + "?")) {
 						if (solicitudDatosDirecciónGeneral(idClienteNuevo)) {
-									if (serviceCliente.updateClienteSinDireccion(idClienteNuevo, direccionOperaciones)) {
-										clienteOperaciones.setDireccion(direccionOperaciones);
-										actualizarEstadisticas = true;
-										viewMain.escribirEnConsola(
-												"Dirección añadida correctamente al recién creado cliente con CIF: " + cifNuevo
-														+ ".");
-										mostramosMenuSeleccionarCrearClientes();
-										todoCorrecto = false;
-									}
+							if (serviceCliente.updateClienteSinDireccion(idClienteNuevo, direccionOperaciones)) {
+								clienteOperaciones.setDireccion(direccionOperaciones);
+								actualizarEstadisticas = true;
+								viewMain.escribirEnConsola(
+										"Dirección añadida correctamente al recién creado cliente con CIF: " + cifNuevo
+												+ ".");
+								mostramosMenuSeleccionarCrearClientes();
+								todoCorrecto = false;
+							}
+						} else {
+							mostramosMenuSeleccionarCrearClientes();
+						}
+					} else if (orden.equals("¿Quiere añadir una dirección?")) {
+						if (solicitudDatosDirecciónGeneral(idClienteNuevo)) {
+							if (serviceCliente.updateClienteSinDireccion(idClienteNuevo, direccionOperaciones)) {
+								clienteOperaciones.setDireccion(direccionOperaciones);
+								actualizarEstadisticas = true;
+								viewMain.escribirEnConsola(
+										"Dirección añadida correctamente.");
+								mostrarMenuModificarDatosPersonalesDireccionClientes();
+								todoCorrecto = false;
+							}
 						} else {
 							mostramosMenuSeleccionarCrearClientes();
 						}
@@ -2087,6 +2070,7 @@ public class ControllerPrincipal {
 						serviceCliente.updateClienteDireccion(direccionOperaciones.getId(), direccionOperaciones,
 								"pais");
 						viewMain.escribirEnConsola("País actualizado correctamente");
+						todoCorrecto = false;
 
 					}
 					// Si dice que no, salimos del do while
@@ -2139,35 +2123,13 @@ public class ControllerPrincipal {
 							idClienteNuevo = serviceCliente.create(cifNuevo, nombreNuevo, apellido1Nuevo,
 									apellido2Nuevo);
 							pulsadoInterno = true;
-						}else if (opcion.equals("crear ingreso")) {
-
-							pulsadoInterno = true;
-						}
-						else if (opcion.equals("retirar dinero")) {
-
-							pulsadoInterno = true;
-						}else if (opcion.equals("crear direccion")) {
-
-							pulsadoInterno = true;
-						}
+						} 
 
 						// mostramosMenuSeleccionarCrearClientes();
 					} else if (cadenaDatos.equals("n")) {
 						if (opcion.equals("crear cliente")) {
 							viewMain.escribirEnConsola("Cliente no creado.");
 							mostramosMenuSeleccionarCrearClientes();
-							pulsadoInterno = true;
-						}else if (opcion.equals("crear ingreso")) {
-							viewMain.escribirEnConsola("Movimiento ingreso no creado.");
-							mostrarMenuOperacionesConClientes();
-							pulsadoInterno = true;
-						}else if (opcion.equals("retirar dinero")) {
-							viewMain.escribirEnConsola("Movimiento retirado no creado.");
-							mostrarMenuOperacionesConClientes();
-							pulsadoInterno = true;
-						}else if (opcion.equals("crear direccion")) {
-							viewMain.escribirEnConsola("Dirección no creada.");
-							mostrarMenuOperacionesConClientes();
 							pulsadoInterno = true;
 						}
 

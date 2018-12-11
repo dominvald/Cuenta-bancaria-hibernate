@@ -263,10 +263,18 @@ public final class Recursos {
 			Boolean importe, String mensajeFormato, boolean comprobarCif, boolean rango) throws ExcepcionIntervalo {
 		@SuppressWarnings("unused")
 		BigDecimal bigDecimal = BigDecimal.ZERO;
+		boolean nifBueno = false;
 		if (comprobarCif) {
-			if (CalculaCif.comprobarDni(cadena)) {
-				return true;
-			} else {
+
+			try {
+				nifBueno = CalculaNif.isValido(cadena);
+				if (nifBueno) {
+					return true;
+				} else {
+					return false;
+				}
+
+			} catch (Exception e) {
 				return false;
 			}
 		}
